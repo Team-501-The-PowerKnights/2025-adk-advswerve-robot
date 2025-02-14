@@ -17,10 +17,13 @@
  */
 package frc.robot.subsystems.intake;
 
+import static frc.robot.util.SparkUtil.tryUntilOk;
+
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,8 +31,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
 
   public enum Task {
+    IDLE("Idle", 0.0),
     INTAKING("Intaking", 1.0),
-    IDLE("Idle", 0.0);
+    EJECTING("Ejecting", -1.0);
 
     private final String taskName;
     private final double speed;
@@ -61,9 +65,18 @@ public class Intake extends SubsystemBase {
     // Create controller
     intakeSpark = new SparkMax(IntakeConstants.intakeCanId, MotorType.kBrushless);
     // Factory reset (but don't burn to flash)
-    SparkMaxConfig config = new SparkMaxConfig();
-    intakeSpark.configure(
-        config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    SparkMaxConfig intakeConfig = new SparkMaxConfig();
+    intakeConfig
+        .inverted(IntakeConstants.intakeInverted)
+        .idleMode(IdleMode.kBrake)
+        .smartCurrentLimit(IntakeConstants.intakeMotorCurrentLimit)
+        .voltageCompensation(12.0);
+    tryUntilOk(
+        intakeSpark,
+        5,
+        () ->
+            intakeSpark.configure(
+                intakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 
   public Command setTask(Task task) {
