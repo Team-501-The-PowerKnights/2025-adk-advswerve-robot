@@ -29,6 +29,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
+import frc.robot.subsystems.intake.Intake;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -40,12 +41,16 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Intake intake;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
   // Dashboard inputs
+  @SuppressWarnings("unused")
   private final LoggedDashboardChooser<Command> autoChooser;
+
+  private final LoggedDashboardChooser<Command> sysIdChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -83,24 +88,26 @@ public class RobotContainer {
                 new ModuleIO() {});
         break;
     }
+    intake = new Intake();
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
-    autoChooser.addOption(
+    sysIdChooser = new LoggedDashboardChooser<>("SysId Choices", AutoBuilder.buildAutoChooser());
+    sysIdChooser.addOption(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
+    sysIdChooser.addOption(
         "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
+    sysIdChooser.addOption(
         "Drive SysId (Quasistatic Forward)",
         drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
+    sysIdChooser.addOption(
         "Drive SysId (Quasistatic Reverse)",
         drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
+    sysIdChooser.addOption(
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
+    sysIdChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
@@ -118,8 +125,8 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> controller.getLeftY() * 0.4,
-            () -> controller.getLeftX() * 0.4,
+            () -> controller.getLeftY() * 0.6,
+            () -> controller.getLeftX() * 0.6,
             () -> -controller.getRightX() * 0.4));
 
     // Lock to 0° when A button is held
@@ -128,8 +135,8 @@ public class RobotContainer {
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> controller.getLeftY() * 0.4,
-                () -> controller.getLeftX() * 0.4,
+                () -> controller.getLeftY() * 0.6,
+                () -> controller.getLeftX() * 0.6,
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
@@ -145,6 +152,12 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    // Intake is controlled by Driver
+    controller.leftBumper().onTrue(intake.setTask(Intake.Task.INTAKE));
+    controller.leftBumper().onFalse(intake.setTask(Intake.Task.IDLE));
+    controller.rightBumper().onTrue(intake.setTask(Intake.Task.EJECT));
+    controller.rightBumper().onFalse(intake.setTask(Intake.Task.IDLE));
   }
 
   /**
@@ -153,6 +166,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return null;
+    // TODO Implement get of autonomous command
+    // return autoChooser.get();
   }
 }
