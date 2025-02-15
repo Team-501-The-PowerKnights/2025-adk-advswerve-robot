@@ -19,8 +19,12 @@ package frc.robot.subsystems.intake;
 
 class IntakeConstants {
 
-  public static final int intakeCanId = 30;
+  static final int intakeCanId = 30;
 
-  public static final boolean intakeInverted = false;
-  public static final int intakeMotorCurrentLimit = 20;
+  static final boolean intakeInverted = true;
+  static final int intakeMotorCurrentLimit = 20;
+
+  // Intake is +, eject is -
+  static final double intakeSpeed = 0.70;
+  static final double ejectSpeed = -1.0;
 }

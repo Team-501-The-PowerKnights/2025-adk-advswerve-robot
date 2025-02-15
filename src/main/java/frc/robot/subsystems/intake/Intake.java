@@ -27,13 +27,14 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
 
   public enum Task {
     IDLE("Idle", 0.0),
-    INTAKING("Intaking", 1.0),
-    EJECTING("Ejecting", -1.0);
+    INTAKE("Intake", IntakeConstants.intakeSpeed),
+    EJECT("Eject", IntakeConstants.ejectSpeed);
 
     private final String taskName;
     private final double speed;
@@ -93,5 +94,8 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     // Update current task
     setSpeed(currentTask.getSpeed());
+
+    Logger.recordOutput("Intake/CurrentTask", currentTask.getTaskName());
+    Logger.recordOutput("Intake/Output", intakeSpark.get());
   }
 }
