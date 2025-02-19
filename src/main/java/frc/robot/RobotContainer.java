@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -42,7 +43,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Intake intake;
-  // private final Arm arm;
+  private final Arm arm;
 
   // Controller
   private final CommandXboxController driverPad = new CommandXboxController(0);
@@ -91,7 +92,7 @@ public class RobotContainer {
         break;
     }
     intake = new Intake();
-    // arm = new Arm();
+    arm = new Arm();
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
