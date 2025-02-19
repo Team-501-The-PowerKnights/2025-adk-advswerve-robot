@@ -42,9 +42,11 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Intake intake;
+  // private final Arm arm;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController driverPad = new CommandXboxController(0);
+  private final CommandXboxController operPad = new CommandXboxController(1);
 
   // Dashboard inputs
   @SuppressWarnings("unused")
@@ -89,6 +91,7 @@ public class RobotContainer {
         break;
     }
     intake = new Intake();
+    // arm = new Arm();
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -125,25 +128,25 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> controller.getLeftY() * 0.6,
-            () -> controller.getLeftX() * 0.6,
-            () -> -controller.getRightX() * 0.4));
+            () -> driverPad.getLeftY() * 0.6,
+            () -> driverPad.getLeftX() * 0.6,
+            () -> -driverPad.getRightX() * 0.4));
 
     // Lock to 0° when A button is held
-    controller
+    driverPad
         .a()
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> controller.getLeftY() * 0.6,
-                () -> controller.getLeftX() * 0.6,
+                () -> driverPad.getLeftY() * 0.6,
+                () -> driverPad.getLeftX() * 0.6,
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    driverPad.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     // Reset gyro to 0° when B button is pressed
-    controller
+    driverPad
         .b()
         .onTrue(
             Commands.runOnce(
@@ -154,10 +157,12 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     // Intake is controlled by Driver
-    controller.leftBumper().onTrue(intake.setTask(Intake.Task.INTAKE));
-    controller.leftBumper().onFalse(intake.setTask(Intake.Task.IDLE));
-    controller.rightBumper().onTrue(intake.setTask(Intake.Task.EJECT));
-    controller.rightBumper().onFalse(intake.setTask(Intake.Task.IDLE));
+    driverPad.leftBumper().onTrue(intake.setTask(Intake.Task.INTAKE));
+    driverPad.leftBumper().onFalse(intake.setTask(Intake.Task.IDLE));
+    driverPad.rightBumper().onTrue(intake.setTask(Intake.Task.EJECT));
+    driverPad.rightBumper().onFalse(intake.setTask(Intake.Task.IDLE));
+
+    // Arm is controlled by Operator
   }
 
   /**
