@@ -23,12 +23,12 @@
 
 | Module         | Module Type      | CAN ID | Position    | PDB ID |
 | -------------- | ---------------- | ------ | ----------- | ------ |
-| Power          | Rev Robotics PDB | 1      |             |        | 
-| Voltage        | CTRE VRM         |        |             | ??     | 
-| Processor      | NI RoboRIO V2    | 0      |             | ??     | 
-| Radio Power    |                  |        |             | ??     | 
-|                |                  |        |             |        | 
-|                |                  |        |             |        | 
+| Power          | Rev Robotics PDB | 1      |             |        |
+| Voltage        | CTRE VRM         |        |             | ??     |
+| Processor      | NI RoboRIO V2    | 0      |             | ??     |
+| Radio Power    |                  |        |             | ??     |
+|                |                  |        |             |        |
+|                |                  |        |             |        |
 
 ## Sensors
 
