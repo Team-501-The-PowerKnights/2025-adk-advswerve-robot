@@ -1,0 +1,167 @@
+{
+  "tabPane": [
+    {
+      "title": "SmartDashboard",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "1,4": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Alerts",
+              "_source0": "network_table:///SmartDashboard/Alerts",
+              "_title": "/SmartDashboard/Alerts",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,0": {
+            "size": [
+              6,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/SysId Choices",
+              "_title": "/SmartDashboard/SysId Choices",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/CurrentTask",
+              "_title": "/AdvantageKit/RealOutputs/Intake/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/Output",
+              "_title": "/AdvantageKit/RealOutputs/Intake/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "16,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "/AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/CurrentTask",
+              "_title": "/AdvantageKit/RealOutputs/Arm/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Output",
+              "_title": "/AdvantageKit/RealOutputs/Arm/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Position",
+              "_title": "/AdvantageKit/RealOutputs/Arm/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "34,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Chooser",
+              "_title": "/SmartDashboard/Auto Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "34,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Delay Chooser",
+              "_title": "/SmartDashboard/Auto Delay Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "LiveWindow",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "LiveWindow/",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {}
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": 0.0,
+    "y": 0.0,
+    "width": 1920.0,
+    "height": 810.0
+  }
+}
