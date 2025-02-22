@@ -14,10 +14,16 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -50,8 +56,8 @@ public class RobotContainer {
   private final CommandXboxController operPad = new CommandXboxController(1);
 
   // Dashboard inputs
-  @SuppressWarnings("unused")
-  private final LoggedDashboardChooser<Command> autoChooser;
+  // @SuppressWarnings("unused")
+  // private final LoggedDashboardChooser<Command> autoChooser;
 
   private final LoggedDashboardChooser<Command> sysIdChooser;
 
@@ -94,9 +100,6 @@ public class RobotContainer {
     intake = new Intake();
     arm = new Arm();
 
-    // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
     // Set up SysId routines
     sysIdChooser = new LoggedDashboardChooser<>("SysId Choices", AutoBuilder.buildAutoChooser());
     sysIdChooser.addOption(
@@ -116,6 +119,13 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    // Create the auto choosers for dashboard
+    createAutoChooser();
+    createAutoDelayChooser();
+
+    // Register the commands for Path Planner
+    configurePathPlannerCommands();
   }
 
   /**
@@ -166,14 +176,167 @@ public class RobotContainer {
     // Arm is controlled by Operator
   }
 
+  /***************************************************************************
+   * Auto Chooser Stuff
+   ***************************************************************************/
+
+  //
+  private enum AutoSelection {
+    // @formatter:off
+    doNothing("Do Nothing", "Do Nothing Auto"),
+    //
+    sitStillAuto("Sit Still", "Still Auto"),
+    sitStillMidAuto("Sit Still (Mid)", "Still Mid Auto"),
+    sitStillCenterAuto("Sit Still (Center)", "Still Center Auto"),
+    sitStillEdgeAuto("Sit Still (Edge)", "Still Edge Auto");
+    // @formatter:on
+
+    private final String name;
+
+    private final String pathName;
+
+    private AutoSelection(String name, String pathName) {
+      this.name = name;
+      this.pathName = pathName;
+    }
+
+    @SuppressWarnings("unused")
+    public String getName() {
+      return name;
+    }
+
+    public String getPathName() {
+      return pathName;
+    }
+  }
+
+  // Chooser for autonomous command from Dashboard
+  private SendableChooser<AutoSelection> autoChooser;
+  // Command that was selected
+  private AutoSelection autoSelected;
+
+  public void createAutoChooser() {
+    autoChooser = new SendableChooser<>();
+
+    // Default option is safety of "do nothing"
+    autoChooser.setDefaultOption("Do Nothing", AutoSelection.doNothing);
+
+    /** Simple */
+    //
+    autoChooser.addOption("Sit Still", AutoSelection.sitStillAuto);
+    //
+    autoChooser.addOption("Sit Still (Mid)", AutoSelection.sitStillMidAuto);
+    //
+    autoChooser.addOption("Sit Still (Center)", AutoSelection.sitStillCenterAuto);
+    //
+    autoChooser.addOption("Sit Still (Edge)", AutoSelection.sitStillEdgeAuto);
+
+    // Put the chooser on the dashboard
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+  }
+
+  public boolean isRealAutoSelected() {
+    return (autoChooser.getSelected() != AutoSelection.doNothing);
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
-    // TODO Implement get of autonomous command
-    // return autoChooser.get();
+    autoSelected = autoChooser.getSelected();
+    if (autoSelected == AutoSelection.doNothing) {
+      return null;
+    } else {
+      return new PathPlannerAuto(autoSelected.getPathName());
+    }
+  }
+
+  /***************************************************************************
+   * Auto Delay Chooser Stuff
+   ***************************************************************************/
+
+  // Chooser for autonomous delay from Dashboard
+  private SendableChooser<Integer> autoDelayChooser;
+  // Delay that was selected
+  private Integer autoDelaySelected;
+
+  public void createAutoDelayChooser() {
+    autoDelayChooser = new SendableChooser<>();
+
+    // Default option is "no delay"
+    autoDelayChooser.setDefaultOption("No Delay", Integer.valueOf(0));
+
+    //
+    autoDelayChooser.addOption("1 Sec", Integer.valueOf(1));
+    autoDelayChooser.addOption("2 Sec", Integer.valueOf(2));
+    autoDelayChooser.addOption("3 Sec", Integer.valueOf(3));
+    autoDelayChooser.addOption("4 Sec", Integer.valueOf(4));
+    autoDelayChooser.addOption("5 Sec", Integer.valueOf(5));
+    autoDelayChooser.addOption("6 Sec", Integer.valueOf(6));
+    autoDelayChooser.addOption("7 Sec", Integer.valueOf(7));
+    autoDelayChooser.addOption("8 Sec", Integer.valueOf(8));
+    autoDelayChooser.addOption("9 Sec", Integer.valueOf(9));
+    autoDelayChooser.addOption("10 Sec", Integer.valueOf(10));
+    autoDelayChooser.addOption("11 Sec", Integer.valueOf(11));
+    autoDelayChooser.addOption("12 Sec", Integer.valueOf(12));
+    autoDelayChooser.addOption("13 Sec", Integer.valueOf(13));
+    autoDelayChooser.addOption("14 Sec", Integer.valueOf(14));
+
+    // Put the chooser on the dashboard
+    SmartDashboard.putData("Auto Delay Chooser", autoDelayChooser);
+  }
+
+  public Integer getAutonomousDelay() {
+    autoDelaySelected = autoDelayChooser.getSelected();
+    return autoDelaySelected;
+  }
+
+  private class DelayAutoCommand extends Command {
+    /** The timer used for waiting. */
+    protected Timer m_timer = new Timer();
+
+    private double m_duration;
+
+    public DelayAutoCommand() {}
+
+    @Override
+    public void initialize() {
+      m_duration = getAutonomousDelay().doubleValue();
+      m_timer.restart();
+      System.out.println("AutoDelayCommand initialized");
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+      m_timer.stop();
+      System.out.println("AutoDelayCommand done");
+    }
+
+    @Override
+    public boolean isFinished() {
+      return m_timer.hasElapsed(m_duration);
+    }
+
+    @Override
+    public boolean runsWhenDisabled() {
+      return true;
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+      super.initSendable(builder);
+      builder.addDoubleProperty("duration", () -> m_duration, null);
+    }
+  }
+
+  /***************************************************************************
+   * Path Planner Stuff
+   ***************************************************************************/
+
+  void configurePathPlannerCommands() {
+    //
+    NamedCommands.registerCommand("Delay Auto Start", Commands.sequence(new DelayAutoCommand()));
   }
 }
