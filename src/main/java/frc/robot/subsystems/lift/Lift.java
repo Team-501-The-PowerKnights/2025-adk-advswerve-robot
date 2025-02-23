@@ -20,10 +20,13 @@ package frc.robot.subsystems.lift;
 import static frc.robot.util.SparkUtil.tryUntilOk;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -67,10 +70,13 @@ public class Lift extends SubsystemBase {
   private Task currentTask;
   //
   private double currentSpeed;
+  //
+  private double currentTarget;
 
   // Hardware objects
   private final SparkMax armSpark;
   private final AbsoluteEncoder armEncoder;
+  private final SparkClosedLoopController armController;
 
   public Lift() {
     // Startup in Manual
@@ -79,17 +85,26 @@ public class Lift extends SubsystemBase {
     currentTask = Task.IDLE;
     // Startup stationary
     currentSpeed = 0.0;
+    // TODO - Fix initialization of currentHoldPoint
+    currentTarget = 0.0;
 
     // Create controller
-    armSpark = new SparkMax(LiftConstants.liftCanId, MotorType.kBrushless);
+    armSpark = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
     armEncoder = armSpark.getAbsoluteEncoder();
+    armController = armSpark.getClosedLoopController();
+
     // Factory reset (but don't burn to flash)
     SparkMaxConfig armConfig = new SparkMaxConfig();
     armConfig
-        .inverted(LiftConstants.liftInverted)
+        .inverted(LiftConstants.motorInverted)
         .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(LiftConstants.liftMotorCurrentLimit)
+        .smartCurrentLimit(LiftConstants.motorCurrentLimit)
         .voltageCompensation(12.0);
+    armConfig.absoluteEncoder.inverted(LiftConstants.encoderInverted);
+    armConfig
+        .closedLoop
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .pidf(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd, LiftConstants.pidFF);
     tryUntilOk(
         armSpark,
         5,
@@ -119,9 +134,21 @@ public class Lift extends SubsystemBase {
    * @param speed - The speed to set. Value should be between -1.0 and +1.0.
    */
   public void acceptTeleopInput(double speed) {
-    if (DriverStation.isTeleopEnabled()) {
+    if (!DriverStation.isTeleopEnabled()) {
+      return;
+    }
+
+    if (Math.abs(speed) < LiftConstants.joystickDeadZone) {
+      // In dead zone (so either revert to PID or ignore if currently PID)
+      if (currentMode == Mode.MANUAL) {
+        currentMode = Mode.PID;
+        currentTarget = armEncoder.getPosition();
+      }
+    } else {
+      // Valid teleop inputs (so either swith to MANUAL or just update speed)
       if (currentMode != Mode.MANUAL) {
         currentMode = Mode.MANUAL;
+        armController.setReference(speed, ControlType.kDutyCycle);
       }
       currentSpeed = speed;
     }
@@ -131,19 +158,22 @@ public class Lift extends SubsystemBase {
     armSpark.set(speed);
   }
 
+  private void setTarget(double position) {
+    armController.setReference(position, ControlType.kPosition);
+  }
+
   @Override
   public void periodic() {
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
-      // Update current task
-      currentSpeed = 0.0;
-      setSpeed(currentSpeed);
+      setTarget(currentTarget);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
     Logger.recordOutput("Lift/CurrentTask", currentTask.getName());
     Logger.recordOutput("Lift/Output", armSpark.get());
+    Logger.recordOutput("Lift/Target", currentTarget);
     Logger.recordOutput("Lift/Position", armEncoder.getPosition());
   }
 }

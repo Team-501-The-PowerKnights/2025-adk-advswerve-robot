@@ -19,10 +19,29 @@ package frc.robot.subsystems.lift;
 
 class LiftConstants {
 
-  static final int liftCanId = 34;
+  /** CAN ID of the speed controller */
+  static final int canId = 34;
 
-  static final boolean liftInverted = true;
-  static final int liftMotorCurrentLimit = 20;
+  /** Is the motor inverted? (should be positive going up) */
+  static final boolean motorInverted = false;
+  /** */
+  static final int motorCurrentLimit = 20;
 
-  static final double liftSpeed = 0.70;
+  /** Is the encoder inverted? (should be positive going up) */
+  static final boolean encoderInverted = false;
+
+  /** Default speed to use for motion */
+  static final double defaultSpeed = 0.70;
+
+  /** Joystick deadzone to use for manual control of subsystem */
+  static final double joystickDeadZone = 0.05;
+
+  /** PID control loop constants */
+  static final double pidKp = 0.0;
+
+  static final double pidKi = 0.0;
+  static final double pidKd = 0.0;
+  static final double pidFF = 0.0;
+  static final double pidMaxPosOut = 0.0;
+  static final double pidMaxNegOut = -0.0;
 }
