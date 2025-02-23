@@ -37,6 +37,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.lift.Lift;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -49,9 +50,10 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Intake intake;
+  private final Lift lift;
   private final Arm arm;
 
-  // Controller
+  // Controllers
   private final CommandXboxController driverPad = new CommandXboxController(0);
   private final CommandXboxController operPad = new CommandXboxController(1);
 
@@ -99,6 +101,7 @@ public class RobotContainer {
     }
     intake = new Intake();
     arm = new Arm();
+    lift = new Lift();
 
     // Set up SysId routines
     sysIdChooser = new LoggedDashboardChooser<>("SysId Choices", AutoBuilder.buildAutoChooser());
@@ -174,6 +177,9 @@ public class RobotContainer {
     driverPad.rightBumper().onFalse(intake.setTask(Intake.Task.IDLE));
 
     // Arm is controlled by Operator
+
+    // Lift is controlled by Operator
+    lift.run(() -> lift.acceptTeleopInput(-operPad.getLeftY()));
   }
 
   /***************************************************************************

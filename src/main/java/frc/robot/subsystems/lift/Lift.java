@@ -26,25 +26,34 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Lift extends SubsystemBase {
 
+  public enum Mode {
+    /** Operating based on PID set point. (Default) */
+    PID,
+    /** Operating with input from joysticks. */
+    MANUAL
+  }
+
   public enum Task {
+    STOP("Stop", 0.0),
     IDLE("Idle", 0.0);
 
-    private final String taskName;
+    private final String name;
     private final double speed;
 
-    Task(String taskName, double speed) {
-      this.taskName = taskName;
+    Task(String name, double speed) {
+      this.name = name;
       this.speed = speed;
     }
 
-    public String getTaskName() {
-      return taskName;
+    public String getName() {
+      return name;
     }
 
     public double getSpeed() {
@@ -52,16 +61,24 @@ public class Lift extends SubsystemBase {
     }
   }
 
+  // Current Intake mode
+  private Mode currentMode;
+  // Current Intake task
+  private Task currentTask;
+  //
+  private double currentSpeed;
+
   // Hardware objects
   private final SparkMax armSpark;
   private final AbsoluteEncoder armEncoder;
 
-  // Current Intake task
-  private Task currentTask;
-
   public Lift() {
+    // Startup in Manual
+    currentMode = Mode.MANUAL;
     // Startup in Idle
     currentTask = Task.IDLE;
+    // Startup stationary
+    currentSpeed = 0.0;
 
     // Create controller
     armSpark = new SparkMax(LiftConstants.liftCanId, MotorType.kBrushless);
@@ -81,6 +98,13 @@ public class Lift extends SubsystemBase {
                 armConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 
+  public Command setMode(Mode mode) {
+    return this.runOnce(
+        () -> {
+          currentMode = mode;
+        });
+  }
+
   public Command setTask(Task task) {
     return this.runOnce(
         () -> {
@@ -88,15 +112,37 @@ public class Lift extends SubsystemBase {
         });
   }
 
+  /**
+   * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
+   * of the position. Positive values lift and negative values lower.
+   *
+   * @param speed - The speed to set. Value should be between -1.0 and +1.0.
+   */
+  public void acceptTeleopInput(double speed) {
+    if (DriverStation.isTeleopEnabled()) {
+      if (currentMode != Mode.MANUAL) {
+        currentMode = Mode.MANUAL;
+      }
+      currentSpeed = speed;
+    }
+  }
+
   private void setSpeed(double speed) {
     armSpark.set(speed);
   }
 
+  @Override
   public void periodic() {
-    // Update current task
-    setSpeed(currentTask.getSpeed());
+    if (currentMode == Mode.MANUAL) {
+      setSpeed(currentSpeed);
+    } else {
+      // Update current task
+      currentSpeed = 0.0;
+      setSpeed(currentSpeed);
+    }
 
-    Logger.recordOutput("Lift/CurrentTask", currentTask.getTaskName());
+    Logger.recordOutput("Lift/CurrentMode", currentMode.name());
+    Logger.recordOutput("Lift/CurrentTask", currentTask.getName());
     Logger.recordOutput("Lift/Output", armSpark.get());
     Logger.recordOutput("Lift/Position", armEncoder.getPosition());
   }
