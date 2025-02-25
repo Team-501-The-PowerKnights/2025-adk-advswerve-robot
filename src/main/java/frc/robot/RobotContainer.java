@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.LiftCommands;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -48,7 +49,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Intake intake;
   private final Lift lift;
-  // private final Arm arm;
+  private final Arm arm;
 
   // Controllers
   private final CommandXboxController driverPad = new CommandXboxController(0);
@@ -94,7 +95,7 @@ public class RobotContainer {
         break;
     }
     intake = new Intake();
-    // arm = new Arm();
+    arm = new Arm();
     lift = new Lift();
 
     // // Set up SysId routines
