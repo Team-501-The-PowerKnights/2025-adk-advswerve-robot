@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the implementation of the <code>Lift</code> subsystem.
+ * This class contains the implementation of the <code>Lift</code> subsystem.
  *
  * <p>More detail ...
  *
@@ -85,7 +85,7 @@ public class Lift extends SubsystemBase {
     currentTask = Task.IDLE;
     // Startup stationary
     currentSpeed = 0.0;
-    // TODO - Fix initialization of currentHoldPoint
+    // TODO: Fix initialization of currentHoldPoint
     currentTarget = 0.0;
 
     // Create controller
@@ -97,7 +97,7 @@ public class Lift extends SubsystemBase {
     SparkMaxConfig armConfig = new SparkMaxConfig();
     armConfig
         .inverted(LiftConstants.motorInverted)
-        .idleMode(IdleMode.kCoast)
+        .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(LiftConstants.motorCurrentLimit)
         .voltageCompensation(12.0);
     armConfig.absoluteEncoder.inverted(LiftConstants.encoderInverted);
@@ -138,24 +138,24 @@ public class Lift extends SubsystemBase {
       return;
     }
 
-    if (Math.abs(speed) < LiftConstants.joystickDeadZone) {
+    if (speed == 0) {
       // In dead zone (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
+        //
         currentMode = Mode.PID;
         currentTarget = armEncoder.getPosition();
       }
     } else {
-      // Valid teleop inputs (so either swith to MANUAL or just update speed)
-      if (currentMode != Mode.MANUAL) {
+      // Valid teleop inputs (so either switch to MANUAL or just update speed)
+      if (currentMode == Mode.PID) {
         currentMode = Mode.MANUAL;
-        armController.setReference(speed, ControlType.kDutyCycle);
       }
       currentSpeed = speed;
     }
   }
 
   private void setSpeed(double speed) {
-    armSpark.set(speed);
+    armController.setReference(speed, ControlType.kDutyCycle);
   }
 
   private void setTarget(double position) {
@@ -168,10 +168,13 @@ public class Lift extends SubsystemBase {
       setSpeed(currentSpeed);
     } else {
       setTarget(currentTarget);
+      // currentSpeed = 0;
+      // setSpeed(currentSpeed);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
     Logger.recordOutput("Lift/CurrentTask", currentTask.getName());
+    Logger.recordOutput("Lift/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Lift/Output", armSpark.get());
     Logger.recordOutput("Lift/Target", currentTarget);
     Logger.recordOutput("Lift/Position", armEncoder.getPosition());

@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the constants for the <code>Lift</code> subsystem.
+ * This class contains the constants for the <code>Lift</code> subsystem.
  *
  * <p>More detail ...
  *
@@ -20,7 +20,7 @@ package frc.robot.subsystems.lift;
 class LiftConstants {
 
   /** CAN ID of the speed controller */
-  static final int canId = 34;
+  static final int canId = 33;
 
   /** Is the motor inverted? (should be positive going up) */
   static final boolean motorInverted = false;

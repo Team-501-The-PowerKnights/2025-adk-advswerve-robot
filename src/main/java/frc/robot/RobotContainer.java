@@ -13,7 +13,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,9 +26,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.subsystems.arm.Arm;
+import frc.robot.commands.LiftCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -38,7 +36,6 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.lift.Lift;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -51,17 +48,14 @@ public class RobotContainer {
   private final Drive drive;
   private final Intake intake;
   private final Lift lift;
-  private final Arm arm;
+  // private final Arm arm;
 
   // Controllers
   private final CommandXboxController driverPad = new CommandXboxController(0);
   private final CommandXboxController operPad = new CommandXboxController(1);
 
   // Dashboard inputs
-  // @SuppressWarnings("unused")
-  // private final LoggedDashboardChooser<Command> autoChooser;
-
-  private final LoggedDashboardChooser<Command> sysIdChooser;
+  // private final LoggedDashboardChooser<Command> sysIdChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -100,25 +94,25 @@ public class RobotContainer {
         break;
     }
     intake = new Intake();
-    arm = new Arm();
+    // arm = new Arm();
     lift = new Lift();
 
-    // Set up SysId routines
-    sysIdChooser = new LoggedDashboardChooser<>("SysId Choices", AutoBuilder.buildAutoChooser());
-    sysIdChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    sysIdChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    sysIdChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    sysIdChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    sysIdChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    sysIdChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // // Set up SysId routines
+    // sysIdChooser = new LoggedDashboardChooser<>("SysId Choices", AutoBuilder.buildAutoChooser());
+    // sysIdChooser.addOption(
+    //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    // sysIdChooser.addOption(
+    //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+    // sysIdChooser.addOption(
+    //     "Drive SysId (Quasistatic Forward)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // sysIdChooser.addOption(
+    //     "Drive SysId (Quasistatic Reverse)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // sysIdChooser.addOption(
+    //     "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // sysIdChooser.addOption(
+    //     "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -170,16 +164,23 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    // Intake is controlled by Driver
+    /*
+     * Intake is controlled by Driver
+     */
     driverPad.leftBumper().onTrue(intake.setTask(Intake.Task.INTAKE));
     driverPad.leftBumper().onFalse(intake.setTask(Intake.Task.IDLE));
     driverPad.rightBumper().onTrue(intake.setTask(Intake.Task.EJECT));
     driverPad.rightBumper().onFalse(intake.setTask(Intake.Task.IDLE));
 
-    // Arm is controlled by Operator
+    /*
+     * Arm is controlled by Operator
+     */
 
-    // Lift is controlled by Operator
-    lift.run(() -> lift.acceptTeleopInput(-operPad.getLeftY()));
+    /*
+     * Lift is controlled by Operator
+     */
+    // Default command, manual control via joystick
+    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY()));
   }
 
   /***************************************************************************
