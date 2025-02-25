@@ -21,8 +21,8 @@ import static frc.robot.util.SparkUtil.tryUntilOk;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,7 +54,7 @@ public class Intake extends SubsystemBase {
   }
 
   // Hardware objects
-  private final SparkMax intakeSpark;
+  private final SparkFlex intakeSpark;
 
   // Current Intake task
   private Task currentTask;
@@ -64,7 +64,7 @@ public class Intake extends SubsystemBase {
     currentTask = Task.IDLE;
 
     // Create controller
-    intakeSpark = new SparkMax(IntakeConstants.intakeCanId, MotorType.kBrushless);
+    intakeSpark = new SparkFlex(IntakeConstants.intakeCanId, MotorType.kBrushless);
     // Factory reset (but don't burn to flash)
     SparkMaxConfig intakeConfig = new SparkMaxConfig();
     intakeConfig
