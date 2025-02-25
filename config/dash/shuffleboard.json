@@ -37,7 +37,7 @@
               "_showGlyph": false
             }
           },
-          "14,3": {
+          "19,5": {
             "size": [
               4,
               2
@@ -50,7 +50,7 @@
               "_showGlyph": false
             }
           },
-          "14,5": {
+          "19,7": {
             "size": [
               4,
               2
@@ -76,7 +76,7 @@
               "_showGlyph": false
             }
           },
-          "9,3": {
+          "14,5": {
             "size": [
               4,
               2
@@ -89,7 +89,7 @@
               "_showGlyph": false
             }
           },
-          "9,5": {
+          "14,7": {
             "size": [
               4,
               2
@@ -102,7 +102,7 @@
               "_showGlyph": false
             }
           },
-          "9,7": {
+          "14,9": {
             "size": [
               4,
               2
@@ -115,7 +115,7 @@
               "_showGlyph": false
             }
           },
-          "34,2": {
+          "34,3": {
             "size": [
               5,
               2
@@ -140,6 +140,71 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "9,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/CurrentMode",
+              "_title": "AdvantageKit/RealOutputs/Lift/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/CurrentTask",
+              "_title": "AdvantageKit/RealOutputs/Lift/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Output",
+              "_title": "AdvantageKit/RealOutputs/Lift/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,9": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Position",
+              "_title": "AdvantageKit/RealOutputs/Lift/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "9,11": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Target",
+              "_title": "AdvantageKit/RealOutputs/Lift/Target",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -155,6 +220,244 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {}
+      }
+    },
+    {
+      "title": "Lift",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "10,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/CurrentMode",
+              "_title": "AdvantageKit/RealOutputs/Lift/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/CurrentTask",
+              "_title": "AdvantageKit/RealOutputs/Lift/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Output",
+              "_title": "AdvantageKit/RealOutputs/Lift/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Position",
+              "_title": "AdvantageKit/RealOutputs/Lift/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,9": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Target",
+              "_title": "AdvantageKit/RealOutputs/Lift/Target",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "15,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/CurrentSpeed",
+              "_title": "AdvantageKit/RealOutputs/Lift/CurrentSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Arm",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "33,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Intake",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "33,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Climber",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "33,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
       }
     }
   ],
