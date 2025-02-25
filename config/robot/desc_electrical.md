@@ -8,14 +8,14 @@
 | -------------- | --------------- | ------------- | ------ | ----------- | ------ |
 | Drive
 |   (MO) Drive   | Rev Spark Max   | NEO Brushless | 11     | Left Front  | ?      |
-|   (M0) Turn    | Rev Spark Max   | NEO Brushless | 21     | Left Front  | ?      |
+|   (M0) Turn    | Rev Spark Flex  | NEO Brushless | 21     | Left Front  | ?      |
 |   (M1) Drive   | Rev Spark Max   | NEO Brushless | 12     | Right Front | ?      |
-|   (M1) Turn    | Rev Spark Max   | NEO Brushless | 21     | Right Front | ?      |
+|   (M1) Turn    | Rev Spark Flex  | NEO Brushless | 21     | Right Front | ?      |
 |   (M2) Drive   | Rev Spark Max   | NEO Brushless | 13     | Left Rear   | ?      |
-|   (M2) Turn    | Rev Spark Max   | NEO Brushless | 21     | Left Rear   | ?      |
+|   (M2) Turn    | Rev Spark Flex  | NEO Brushless | 21     | Left Rear   | ?      |
 |   (M3) Drive   | Rev Spark Max   | NEO Brushless | 14     | Right Rear  | ?      |
-|   (M3) Turn    | Rev Spark Max   | NEO Brushless | 21     | Right Rear  | ?      |
-| Intake         | Rev Spark Max   | NEO Brushless | 30     | --          | ??     |
+|   (M3) Turn    | Rev Spark Flex  | NEO Brushless | 21     | Right Rear  | ?      |
+| Intake         | Rev Spark Flex  | NEO Brushless | 30     | --          | ??     |
 | Lift           | Rev Spark Max   | NEO Brushless | 33     | --          | ??     |
 | Arm            | Rev Spark Max   | NEO Brushless | 34     | --          | ??     |
 
@@ -23,12 +23,12 @@
 
 | Module         | Module Type      | CAN ID | Position    | PDB ID |
 | -------------- | ---------------- | ------ | ----------- | ------ |
-| Power          | Rev Robotics PDB | 1      |             |        | 
-| Voltage        | CTRE VRM         |        |             | ??     | 
-| Processor      | NI RoboRIO V2    | 0      |             | ??     | 
-| Radio Power    |                  |        |             | ??     | 
-|                |                  |        |             |        | 
-|                |                  |        |             |        | 
+| Power          | Rev Robotics PDB | 1      |             |        |
+| Voltage        | CTRE VRM         |        |             | ??     |
+| Processor      | NI RoboRIO V2    | 0      |             | ??     |
+| Radio Power    |                  |        |             | ??     |
+|                |                  |        |             |        |
+|                |                  |        |             |        |
 
 ## Sensors
 
