@@ -182,6 +182,12 @@ public class RobotContainer {
      */
     // Default command, manual control via joystick
     lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY()));
+    // operPad.y().onTrue(Commands.runOnce(() -> lift.setTask(Lift.Task.REEF_3), lift));
+    // operPad.b().onTrue(Commands.runOnce(() -> lift.setTask(Lift.Task.REEF_2), lift));
+    // operPad.a().onTrue(Commands.runOnce(() -> lift.setTask(Lift.Task.REEF_1), lift));
+    operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
+    operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
+    operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
   }
 
   /***************************************************************************

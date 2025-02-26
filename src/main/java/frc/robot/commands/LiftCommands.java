@@ -38,4 +38,12 @@ public class LiftCommands {
         },
         lift);
   }
+
+  public static Command setTask(Lift lift, Lift.Task task) {
+    return Commands.runOnce(
+        () -> {
+          lift.setTask(task);
+        },
+        lift);
+  }
 }
