@@ -91,7 +91,7 @@ public class Lift extends SubsystemBase {
     // Startup w/ no (manual) speed control
     currentSpeed = 0.0;
     // TODO: Fix initialization of currentHoldPoint
-    currentTarget = 0.0;
+    currentTarget = 0.0; // currentTask.getTarget(); ??
 
     // Create controller
     motor = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
@@ -176,9 +176,10 @@ public class Lift extends SubsystemBase {
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
-      setTarget(currentTarget);
-      // currentSpeed = 0;
-      // setSpeed(currentSpeed);
+      // FIXME - Enable PID target setting when ready
+      // setTarget(currentTarget);
+      currentSpeed = 0;
+      setSpeed(currentSpeed);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
