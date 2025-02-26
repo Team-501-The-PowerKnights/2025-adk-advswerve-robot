@@ -70,7 +70,7 @@ public class Intake extends SubsystemBase {
     intakeConfig
         .inverted(IntakeConstants.intakeInverted)
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(IntakeConstants.intakeMotorCurrentLimit)
+        //        .smartCurrentLimit(IntakeConstants.intakeMotorCurrentLimit)
         .voltageCompensation(12.0);
     tryUntilOk(
         intakeSpark,
