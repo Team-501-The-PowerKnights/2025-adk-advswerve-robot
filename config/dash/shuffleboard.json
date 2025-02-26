@@ -102,19 +102,6 @@
               "_showGlyph": false
             }
           },
-          "14,9": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Position",
-              "_title": "/AdvantageKit/RealOutputs/Arm/Position",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
           "34,3": {
             "size": [
               5,
@@ -176,32 +163,6 @@
               "_type": "Text View",
               "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Output",
               "_title": "AdvantageKit/RealOutputs/Lift/Output",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,9": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Position",
-              "_title": "AdvantageKit/RealOutputs/Lift/Position",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "9,11": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Target",
-              "_title": "AdvantageKit/RealOutputs/Lift/Target",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -373,6 +334,84 @@
               "_type": "Text View",
               "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
               "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/CurrentTask",
+              "_title": "AdvantageKit/RealOutputs/Arm/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Output",
+              "_title": "AdvantageKit/RealOutputs/Arm/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Position",
+              "_title": "AdvantageKit/RealOutputs/Arm/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/CurrentMode",
+              "_title": "/AdvantageKit/RealOutputs/Arm/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,9": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Target",
+              "_title": "/AdvantageKit/RealOutputs/Arm/Target",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "15,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/CurrentSpeed",
+              "_title": "/AdvantageKit/RealOutputs/Arm/CurrentSpeed",
               "_glyph": 148,
               "_showGlyph": false
             }
