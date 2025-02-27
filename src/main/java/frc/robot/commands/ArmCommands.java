@@ -13,6 +13,7 @@
  *
  * @since 2025.0.0
  * @author first.stu
+ * @author2 first.fasano
  * @version 2025.0.0
  */
 package frc.robot.commands;
@@ -35,6 +36,15 @@ public class ArmCommands {
         () -> {
           double speed = MathUtil.applyDeadband(speedSupplier.getAsDouble(), DEADBAND);
           arm.acceptTeleopInput(speed);
+        },
+        arm);
+  }
+
+  public static Command setTask(Arm arm, Arm.Task task) {
+    return Commands.runOnce(
+        () -> {
+          System.out.println("Calling arm setTask");
+          arm.setTask(task);
         },
         arm);
   }

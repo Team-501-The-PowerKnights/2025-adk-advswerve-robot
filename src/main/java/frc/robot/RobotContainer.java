@@ -178,6 +178,10 @@ public class RobotContainer {
      * Arm is controlled by Operator
      */
     arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY()));
+    operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
+    operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
+    operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
+    operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
 
     /*
      * Lift is controlled by Operator
