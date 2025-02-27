@@ -19,7 +19,7 @@ package frc.robot.subsystems.lift;
 
 import static frc.robot.util.SparkUtil.tryUntilOk;
 
-import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -47,9 +47,9 @@ public class Lift extends SubsystemBase {
     START("Start", 0.0),
     HOME("Home", 0.0),
     COLLECT("Collect", 0.5),
-    REEF_1("Reef_1", 1.0),
-    REEF_2("Reef_2", 1.5),
-    REEF_3("Reef_3", 2.0),
+    REEF_1("Reef_1", 0.5),
+    REEF_2("Reef_2", 1.0),
+    REEF_3("Reef_3", 1.5),
     REEF_4("Reef_4", 2.5);
 
     private final String name;
@@ -80,7 +80,7 @@ public class Lift extends SubsystemBase {
 
   // Hardware objects
   private final SparkMax motor;
-  private final AbsoluteEncoder encoder;
+  private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
   public Lift() {
@@ -95,7 +95,8 @@ public class Lift extends SubsystemBase {
 
     // Create controller
     motor = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
-    encoder = motor.getAbsoluteEncoder();
+    encoder = motor.getEncoder();
+    encoder.setPosition(motor.getAbsoluteEncoder().getPosition());
     controller = motor.getClosedLoopController();
 
     // Factory reset (but don't burn to flash)
@@ -116,6 +117,11 @@ public class Lift extends SubsystemBase {
         () ->
             motor.configure(
                 armConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+  }
+
+  private double getPosition() {
+
+    return encoder.getPosition() / 48;
   }
 
   // public Command setMode(Mode mode) {
@@ -152,7 +158,7 @@ public class Lift extends SubsystemBase {
       if (currentMode == Mode.MANUAL) {
         //
         currentMode = Mode.PID;
-        currentTarget = encoder.getPosition();
+        currentTarget = getPosition();
       }
     } else {
       // Valid teleop inputs (so either switch to MANUAL or just update speed)
@@ -187,6 +193,6 @@ public class Lift extends SubsystemBase {
     Logger.recordOutput("Lift/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Lift/Output", motor.get());
     Logger.recordOutput("Lift/Target", currentTarget);
-    Logger.recordOutput("Lift/Position", encoder.getPosition());
+    Logger.recordOutput("Lift/Position", getPosition());
   }
 }

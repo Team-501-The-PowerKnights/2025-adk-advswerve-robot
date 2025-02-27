@@ -42,6 +42,7 @@ public class LiftCommands {
   public static Command setTask(Lift lift, Lift.Task task) {
     return Commands.runOnce(
         () -> {
+          System.out.println("Calling setTask");
           lift.setTask(task);
         },
         lift);
