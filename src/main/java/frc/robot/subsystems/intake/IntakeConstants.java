@@ -22,9 +22,8 @@ class IntakeConstants {
   static final int intakeCanId = 30;
 
   static final boolean intakeInverted = true;
-  static final int intakeMotorCurrentLimit = 20;
 
   // Intake is +, eject is -
-  static final double intakeSpeed = 0.70;
-  static final double ejectSpeed = -1.0;
+  static final double intakeSpeed = 0.25;
+  static final double ejectSpeed = -0.25;
 }

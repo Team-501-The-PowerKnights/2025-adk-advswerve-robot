@@ -19,7 +19,7 @@ package frc.robot.subsystems.lift;
 
 import static frc.robot.util.SparkUtil.tryUntilOk;
 
-import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -30,7 +30,6 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -43,24 +42,30 @@ public class Lift extends SubsystemBase {
     MANUAL
   }
 
+  /** Enumeration of set positions */
   public enum Task {
-    STOP("Stop", 0.0),
-    IDLE("Idle", 0.0);
+    START("Start", 0.0),
+    HOME("Home", 0.0),
+    COLLECT("Collect", 0.5),
+    REEF_1("Reef_1", 0.5),
+    REEF_2("Reef_2", 1.0),
+    REEF_3("Reef_3", 1.5),
+    REEF_4("Reef_4", 2.5);
 
     private final String name;
-    private final double speed;
+    private final double target;
 
-    Task(String name, double speed) {
+    Task(String name, double target) {
       this.name = name;
-      this.speed = speed;
+      this.target = target;
     }
 
     public String getName() {
       return name;
     }
 
-    public double getSpeed() {
-      return this.speed;
+    public double getTarget() {
+      return this.target;
     }
   }
 
@@ -74,24 +79,25 @@ public class Lift extends SubsystemBase {
   private double currentTarget;
 
   // Hardware objects
-  private final SparkMax armSpark;
-  private final AbsoluteEncoder armEncoder;
-  private final SparkClosedLoopController armController;
+  private final SparkMax motor;
+  private final RelativeEncoder encoder;
+  private final SparkClosedLoopController controller;
 
   public Lift() {
     // Startup in Manual
     currentMode = Mode.MANUAL;
-    // Startup in Idle
-    currentTask = Task.IDLE;
-    // Startup stationary
+    // Startup at Start
+    currentTask = Task.START;
+    // Startup w/ no (manual) speed control
     currentSpeed = 0.0;
     // TODO: Fix initialization of currentHoldPoint
-    currentTarget = 0.0;
+    currentTarget = 0.0; // currentTask.getTarget(); ??
 
     // Create controller
-    armSpark = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
-    armEncoder = armSpark.getAbsoluteEncoder();
-    armController = armSpark.getClosedLoopController();
+    motor = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
+    encoder = motor.getEncoder();
+    encoder.setPosition(motor.getAbsoluteEncoder().getPosition());
+    controller = motor.getClosedLoopController();
 
     // Factory reset (but don't burn to flash)
     SparkMaxConfig armConfig = new SparkMaxConfig();
@@ -106,25 +112,34 @@ public class Lift extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
         .pidf(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd, LiftConstants.pidFF);
     tryUntilOk(
-        armSpark,
+        motor,
         5,
         () ->
-            armSpark.configure(
+            motor.configure(
                 armConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 
-  public Command setMode(Mode mode) {
-    return this.runOnce(
-        () -> {
-          currentMode = mode;
-        });
+  private double getPosition() {
+
+    return encoder.getPosition() / 48;
   }
 
-  public Command setTask(Task task) {
-    return this.runOnce(
-        () -> {
-          currentTask = task;
-        });
+  // public Command setMode(Mode mode) {
+  //   return this.runOnce(
+  //       () -> {
+  //         currentMode = mode;
+  //       });
+  // }
+
+  /**
+   * Accepts a <code>Task</code> which defines a set point target to use for PID control of the
+   * position.
+   *
+   * @param task - The task to set.
+   */
+  public void setTask(Task task) {
+    currentTask = task;
+    currentTarget = task.getTarget();
   }
 
   /**
@@ -143,7 +158,7 @@ public class Lift extends SubsystemBase {
       if (currentMode == Mode.MANUAL) {
         //
         currentMode = Mode.PID;
-        currentTarget = armEncoder.getPosition();
+        currentTarget = getPosition();
       }
     } else {
       // Valid teleop inputs (so either switch to MANUAL or just update speed)
@@ -155,11 +170,11 @@ public class Lift extends SubsystemBase {
   }
 
   private void setSpeed(double speed) {
-    armController.setReference(speed, ControlType.kDutyCycle);
+    controller.setReference(speed, ControlType.kDutyCycle);
   }
 
   private void setTarget(double position) {
-    armController.setReference(position, ControlType.kPosition);
+    controller.setReference(position, ControlType.kPosition);
   }
 
   @Override
@@ -167,16 +182,17 @@ public class Lift extends SubsystemBase {
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
-      setTarget(currentTarget);
-      // currentSpeed = 0;
-      // setSpeed(currentSpeed);
+      // FIXME - Enable PID target setting when ready
+      // setTarget(currentTarget);
+      currentSpeed = 0;
+      setSpeed(currentSpeed);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
     Logger.recordOutput("Lift/CurrentTask", currentTask.getName());
     Logger.recordOutput("Lift/CurrentSpeed", currentSpeed);
-    Logger.recordOutput("Lift/Output", armSpark.get());
+    Logger.recordOutput("Lift/Output", motor.get());
     Logger.recordOutput("Lift/Target", currentTarget);
-    Logger.recordOutput("Lift/Position", armEncoder.getPosition());
+    Logger.recordOutput("Lift/Position", getPosition());
   }
 }
