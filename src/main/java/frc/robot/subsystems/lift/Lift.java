@@ -44,6 +44,8 @@ public class Lift extends SubsystemBase {
 
   /** Enumeration of set positions */
   public enum Task {
+    // Special case of previously manual setting
+    MANUAL("Manual", 0.0),
     START("Start", 0.0),
     HOME("Home", 0.0),
     COLLECT("Collect", 0.5),
@@ -53,7 +55,7 @@ public class Lift extends SubsystemBase {
     REEF_4("Reef_4", 2.5);
 
     private final String name;
-    private final double target;
+    private double target;
 
     Task(String name, double target) {
       this.name = name;
@@ -66,6 +68,14 @@ public class Lift extends SubsystemBase {
 
     public double getTarget() {
       return this.target;
+    }
+
+    public void setTarget(double target) {
+      if (this.getName().equals("Manual")) {
+        this.target = target;
+      } else {
+        // TODO - Add a logged error here
+      }
     }
   }
 
@@ -96,40 +106,36 @@ public class Lift extends SubsystemBase {
     // Create controller
     motor = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
     encoder = motor.getEncoder();
-    encoder.setPosition(motor.getAbsoluteEncoder().getPosition());
     controller = motor.getClosedLoopController();
 
     // Factory reset (but don't burn to flash)
-    SparkMaxConfig armConfig = new SparkMaxConfig();
-    armConfig
+    SparkMaxConfig config = new SparkMaxConfig();
+    config
         .inverted(LiftConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(LiftConstants.motorCurrentLimit)
         .voltageCompensation(12.0);
-    armConfig.absoluteEncoder.inverted(LiftConstants.encoderInverted);
-    armConfig
+    // TODO - Not sure we need this any more?
+    config.absoluteEncoder.inverted(LiftConstants.encoderInverted);
+    config.encoder.inverted(LiftConstants.encoderInverted);
+    config
         .closedLoop
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        .pidf(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd, LiftConstants.pidFF);
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd)
+        .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut);
     tryUntilOk(
         motor,
         5,
         () ->
             motor.configure(
-                armConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+                config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+
+    encoder.setPosition(motor.getAbsoluteEncoder().getPosition());
   }
 
   private double getPosition() {
-
-    return encoder.getPosition() / 48;
+    return encoder.getPosition() / LiftConstants.gearRatio;
   }
-
-  // public Command setMode(Mode mode) {
-  //   return this.runOnce(
-  //       () -> {
-  //         currentMode = mode;
-  //       });
-  // }
 
   /**
    * Accepts a <code>Task</code> which defines a set point target to use for PID control of the
@@ -153,19 +159,21 @@ public class Lift extends SubsystemBase {
       return;
     }
 
+    currentSpeed = speed;
+
     if (speed == 0) {
       // In dead zone (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
-        //
+        // Use current position for hold point
+        Task.MANUAL.setTarget(getPosition());
+        setTask(Task.MANUAL);
         currentMode = Mode.PID;
-        currentTarget = getPosition();
       }
     } else {
       // Valid teleop inputs (so either switch to MANUAL or just update speed)
       if (currentMode == Mode.PID) {
         currentMode = Mode.MANUAL;
       }
-      currentSpeed = speed;
     }
   }
 
@@ -184,8 +192,7 @@ public class Lift extends SubsystemBase {
     } else {
       // FIXME - Enable PID target setting when ready
       // setTarget(currentTarget);
-      currentSpeed = 0;
-      setSpeed(currentSpeed);
+      setSpeed(0);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
