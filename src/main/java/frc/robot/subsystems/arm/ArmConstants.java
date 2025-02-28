@@ -26,18 +26,21 @@ class ArmConstants {
   /** Is the encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;
 
-  static final double armSpeed = 0.70;
+  /** Default speed to use for motion */
+  static final double defaultSpeed = 0.70;
+
   static final double motorGearRatio = 125.0;
   static final double armLowerGear = 30.0; // DOUBLE VERIFY
   static final double armUpperGear = 48.0;
+  static final double gearRatio = (armUpperGear / armLowerGear) * motorGearRatio;
+
   static final double motorKv = 473.0;
 
   /** Joystick deadzone to use for manual control of subsystem */
   static final double joystickDeadZone = 0.05;
 
-  /** PID control loop constants */
+  /* PID control loop constants */
   static final double pidKp = 0.0;
-
   static final double pidKi = 0.0;
   static final double pidKd = 0.0;
   static final double pidFF = 0.0;

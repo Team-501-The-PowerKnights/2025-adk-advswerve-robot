@@ -33,6 +33,8 @@ class LiftConstants {
   /** Default speed to use for motion */
   static final double defaultSpeed = 0.70;
 
+  static final double gearRatio = 48;
+
   /** Joystick deadzone to use for manual control of subsystem */
   static final double joystickDeadZone = 0.05;
 

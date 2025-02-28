@@ -100,36 +100,30 @@ public class Lift extends SubsystemBase {
     controller = motor.getClosedLoopController();
 
     // Factory reset (but don't burn to flash)
-    SparkMaxConfig armConfig = new SparkMaxConfig();
-    armConfig
+    SparkMaxConfig config = new SparkMaxConfig();
+    config
         .inverted(LiftConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(LiftConstants.motorCurrentLimit)
         .voltageCompensation(12.0);
-    armConfig.absoluteEncoder.inverted(LiftConstants.encoderInverted);
-    armConfig
+    // TODO - Not sure we need this any more?
+    config.absoluteEncoder.inverted(LiftConstants.encoderInverted);
+    config.encoder.inverted(LiftConstants.encoderInverted);
+    config
         .closedLoop
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pidf(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd, LiftConstants.pidFF);
     tryUntilOk(
         motor,
         5,
         () ->
             motor.configure(
-                armConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+                config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 
   private double getPosition() {
-
-    return encoder.getPosition() / 48;
+    return encoder.getPosition();
   }
-
-  // public Command setMode(Mode mode) {
-  //   return this.runOnce(
-  //       () -> {
-  //         currentMode = mode;
-  //       });
-  // }
 
   /**
    * Accepts a <code>Task</code> which defines a set point target to use for PID control of the
@@ -156,9 +150,9 @@ public class Lift extends SubsystemBase {
     if (speed == 0) {
       // In dead zone (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
-        //
-        currentMode = Mode.PID;
+        // Use current position for hold point
         currentTarget = getPosition();
+        currentMode = Mode.PID;
       }
     } else {
       // Valid teleop inputs (so either switch to MANUAL or just update speed)

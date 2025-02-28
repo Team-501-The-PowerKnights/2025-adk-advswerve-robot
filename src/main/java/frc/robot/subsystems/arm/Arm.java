@@ -31,7 +31,6 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -70,67 +69,69 @@ public class Arm extends SubsystemBase {
   }
 
   // Hardware objects
-  private final SparkMax armSpark;
-  private final RelativeEncoder armEncoder;
-  private final SparkClosedLoopController armController;
+  private final SparkMax motor;
+  private final RelativeEncoder encoder;
+  private final SparkClosedLoopController controller;
 
   // Current Intake task
   private Task currentTask;
   private Mode currentMode;
   private double currentSpeed;
   private double currentTarget;
-  private double gearRatio;
 
   public Arm() {
-    // Startup in Idle
-    currentTask = Task.START;
+    // Startup in Manual
     currentMode = Mode.MANUAL;
+    // Startup at Start
+    currentTask = Task.START;
+    // Startup w/ no (manual) speed control
     currentSpeed = 0.0;
-    currentTarget = 0.0;
-    gearRatio =
-        (ArmConstants.armUpperGear / ArmConstants.armLowerGear) * ArmConstants.motorGearRatio;
+    // TODO: Fix initialization of currentHoldPoint
+    currentTarget = 0.0; // currentTask.getTarget(); ??
+
     // Create controller
-    armSpark = new SparkMax(ArmConstants.armCanId, MotorType.kBrushless);
-    armEncoder = armSpark.getEncoder();
-    armEncoder.setPosition(armSpark.getAbsoluteEncoder().getPosition());
-    armController = armSpark.getClosedLoopController();
+    motor = new SparkMax(ArmConstants.armCanId, MotorType.kBrushless);
+    encoder = motor.getEncoder();
+    encoder.setPosition(motor.getAbsoluteEncoder().getPosition());
+    controller = motor.getClosedLoopController();
 
     // Factory reset (but don't burn to flash)
-    SparkMaxConfig armConfig = new SparkMaxConfig();
-    armConfig
+    SparkMaxConfig config = new SparkMaxConfig();
+    config
         .inverted(ArmConstants.armInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(ArmConstants.armMotorCurrentLimit)
         .voltageCompensation(12.0);
-    armConfig.absoluteEncoder.inverted(ArmConstants.encoderInverted);
-    armConfig
+    // TODO - Not sure we need this any more?
+    config.absoluteEncoder.inverted(ArmConstants.encoderInverted);
+    config.encoder.inverted(ArmConstants.encoderInverted);
+    config
         .closedLoop
-        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pidf(ArmConstants.pidKp, ArmConstants.pidKi, ArmConstants.pidKd, ArmConstants.pidFF);
     tryUntilOk(
-        armSpark,
+        motor,
         5,
         () ->
-            armSpark.configure(
-                armConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+            motor.configure(
+                config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
   }
 
   private double getPosition() {
-
-    return armEncoder.getPosition() / gearRatio;
+    return encoder.getPosition() / ArmConstants.gearRatio;
   }
 
-  public Command setMode(Mode mode) {
-    return this.runOnce(
-        () -> {
-          currentMode = mode;
-        });
-  }
-
+  /**
+   * Accepts a <code>Task</code> which defines a set point target to use for PID control of the
+   * position.
+   *
+   * @param task - The task to set.
+   */
   public void setTask(Task task) {
     currentTask = task;
     currentTarget = task.getTarget();
   }
+
   /**
    * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
    * of the position. Positive values lift and negative values lower.
@@ -145,9 +146,9 @@ public class Arm extends SubsystemBase {
     if (speed == 0) {
       // In dead zone (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
-        //
-        currentMode = Mode.PID;
+        // Use current position for hold point
         currentTarget = getPosition();
+        currentMode = Mode.PID;
       }
     } else {
       // Valid teleop inputs (so either switch to MANUAL or just update speed)
@@ -155,16 +156,15 @@ public class Arm extends SubsystemBase {
         currentMode = Mode.MANUAL;
       }
       currentSpeed = speed;
-      // currentAngle = armEncoder.getPosition() + speed;
     }
   }
 
   private void setSpeed(double speed) {
-    armController.setReference(speed, ControlType.kDutyCycle);
+    controller.setReference(speed, ControlType.kDutyCycle);
   }
 
   private void setTarget(double position) {
-    armController.setReference(position, ControlType.kPosition);
+    controller.setReference(position, ControlType.kPosition);
   }
 
   @Override
@@ -172,6 +172,7 @@ public class Arm extends SubsystemBase {
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
+      // FIXME - Enable PID target setting when ready
       // setTarget(currentTarget);
       currentSpeed = 0;
       setSpeed(currentSpeed);
@@ -180,7 +181,7 @@ public class Arm extends SubsystemBase {
     Logger.recordOutput("Arm/CurrentMode", currentMode.name());
     Logger.recordOutput("Arm/CurrentTask", currentTask.getName());
     Logger.recordOutput("Arm/CurrentSpeed", currentSpeed);
-    Logger.recordOutput("Arm/Output", armSpark.get());
+    Logger.recordOutput("Arm/Output", motor.get());
     Logger.recordOutput("Arm/Target", currentTarget);
     Logger.recordOutput("Arm/Position", getPosition());
   }
