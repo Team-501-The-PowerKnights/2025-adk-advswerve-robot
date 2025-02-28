@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ArmCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.subsystems.arm.Arm;
@@ -176,6 +177,11 @@ public class RobotContainer {
     /*
      * Arm is controlled by Operator
      */
+    arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY()));
+    operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
+    operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
+    operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
+    operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
 
     /*
      * Lift is controlled by Operator
