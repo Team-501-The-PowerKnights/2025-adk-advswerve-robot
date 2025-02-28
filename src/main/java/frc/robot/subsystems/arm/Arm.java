@@ -113,7 +113,7 @@ public class Arm extends SubsystemBase {
         .voltageCompensation(12.0);
     // TODO - Not sure we need this any more?
     config.absoluteEncoder.inverted(ArmConstants.encoderInverted);
-    config.encoder.inverted(ArmConstants.encoderInverted);
+    // config.encoder.inverted(ArmConstants.encoderInverted);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
