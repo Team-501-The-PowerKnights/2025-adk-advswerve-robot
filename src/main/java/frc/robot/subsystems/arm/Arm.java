@@ -117,7 +117,8 @@ public class Arm extends SubsystemBase {
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(ArmConstants.pidKp, ArmConstants.pidKi, ArmConstants.pidKd, ArmConstants.pidFF);
+        .pid(ArmConstants.pidKp, ArmConstants.pidKi, ArmConstants.pidKd)
+        .outputRange(ArmConstants.pidMaxNegOut, ArmConstants.pidMaxPosOut);
     tryUntilOk(
         motor,
         5,

@@ -121,7 +121,8 @@ public class Lift extends SubsystemBase {
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pidf(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd, LiftConstants.pidFF);
+        .pid(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd)
+        .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut);
     tryUntilOk(
         motor,
         5,

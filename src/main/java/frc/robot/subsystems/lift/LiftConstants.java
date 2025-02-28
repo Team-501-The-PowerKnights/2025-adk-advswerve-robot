@@ -42,7 +42,6 @@ class LiftConstants {
   static final double pidKp = 0.6;
   static final double pidKi = 0.0;
   static final double pidKd = 0.0;
-  static final double pidFF = 0.0;
-  static final double pidMaxPosOut = 0.7;
   static final double pidMaxNegOut = -0.5;
+  static final double pidMaxPosOut = 0.7;
 }
