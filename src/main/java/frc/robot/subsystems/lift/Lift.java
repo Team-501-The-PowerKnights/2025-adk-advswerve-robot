@@ -45,7 +45,7 @@ public class Lift extends SubsystemBase {
   /** Enumeration of set positions */
   public enum Task {
     // Special case of previously manual setting
-    MANUAL("Manual", 0.0),
+    JOYSTICK("Joystick", 0.0),
     START("Start", 0.0),
     HOME("Home", 0.0),
     COLLECT("Collect", 0.5),
@@ -71,7 +71,7 @@ public class Lift extends SubsystemBase {
     }
 
     public void setTarget(double target) {
-      if (this.getName().equals("Manual")) {
+      if (this.getName().equals("Joystick")) {
         this.target = target;
       } else {
         // TODO - Add a logged error here
@@ -94,15 +94,6 @@ public class Lift extends SubsystemBase {
   private final SparkClosedLoopController controller;
 
   public Lift() {
-    // Startup in Manual
-    currentMode = Mode.MANUAL;
-    // Startup at Start
-    currentTask = Task.START;
-    // Startup w/ no (manual) speed control
-    currentSpeed = 0.0;
-    // TODO: Fix initialization of currentHoldPoint
-    currentTarget = 0.0; // currentTask.getTarget(); ??
-
     // Create controller
     motor = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
     encoder = motor.getEncoder();
@@ -117,7 +108,7 @@ public class Lift extends SubsystemBase {
         .voltageCompensation(12.0);
     // TODO - Not sure we need this any more?
     config.absoluteEncoder.inverted(LiftConstants.encoderInverted);
-    config.encoder.inverted(LiftConstants.encoderInverted);
+    // config.encoder.inverted(LiftConstants.encoderInverted);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -130,7 +121,18 @@ public class Lift extends SubsystemBase {
             motor.configure(
                 config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
 
-    encoder.setPosition(motor.getAbsoluteEncoder().getPosition());
+    // Initialize encoder based on absolute
+    encoder.setPosition(motor.getAbsoluteEncoder().getPosition() * LiftConstants.gearRatio);
+
+    // Startup in Manual
+    currentMode = Mode.MANUAL;
+    // FIXME - Initialize in PID when it works
+    // currentMode = Mode.PID;
+    // Startup at Joystick
+    Task.JOYSTICK.setTarget(getPosition());
+    setTask(Task.JOYSTICK);
+    // Startup w/ no (manual) speed control
+    currentSpeed = 0.0;
   }
 
   private double getPosition() {
@@ -165,8 +167,8 @@ public class Lift extends SubsystemBase {
       // In dead zone (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
         // Use current position for hold point
-        Task.MANUAL.setTarget(getPosition());
-        setTask(Task.MANUAL);
+        Task.JOYSTICK.setTarget(getPosition());
+        setTask(Task.JOYSTICK);
         currentMode = Mode.PID;
       }
     } else {
@@ -191,8 +193,8 @@ public class Lift extends SubsystemBase {
       setSpeed(currentSpeed);
     } else {
       // FIXME - Enable PID target setting when ready
-      // setTarget(currentTarget);
-      setSpeed(0);
+      setTarget(currentTarget);
+      // setSpeed(0);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());

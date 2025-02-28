@@ -15,6 +15,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -61,6 +62,9 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    CameraServer.startAutomaticCapture();
+
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -177,7 +181,7 @@ public class RobotContainer {
     /*
      * Arm is controlled by Operator
      */
-    arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY()));
+    arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.30));
     operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
     operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
     operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
