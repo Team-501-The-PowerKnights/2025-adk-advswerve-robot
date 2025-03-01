@@ -105,7 +105,15 @@ public class Lift extends SubsystemBase {
         .inverted(LiftConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(LiftConstants.motorCurrentLimit)
-        .voltageCompensation(12.0);
+        .voltageCompensation(12.0)
+        .softLimit
+        .forwardSoftLimitEnabled(false)
+        .reverseSoftLimitEnabled(false);
+    // .softLimit
+    // .forwardSoftLimit(LiftConstants.maxHeight)
+    // .forwardSoftLimitEnabled(true);
+    // .reverseSoftLimit(LiftConstants.minHeight)
+    // .reverseSoftLimitEnabled(true);
     // TODO - Not sure we need this any more?
     config.absoluteEncoder.inverted(LiftConstants.encoderInverted);
     // config.encoder.inverted(LiftConstants.encoderInverted);

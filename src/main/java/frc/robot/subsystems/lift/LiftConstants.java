@@ -48,5 +48,5 @@ class LiftConstants {
 
   //
   static final double minHeight = 0.15; // Should this be higher?
-  static final double maxHeight = 5.35;
+  static final double maxHeight = 2.00; // 5.35;
 }
