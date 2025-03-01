@@ -188,7 +188,7 @@ public class RobotContainer {
      * Lift is controlled by Operator
      */
     // Default command, manual control via joystick
-    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.60));
+    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.80));
     operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
     operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
     operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
