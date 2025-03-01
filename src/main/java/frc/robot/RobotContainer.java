@@ -161,7 +161,7 @@ public class RobotContainer {
     /*
      * Arm is controlled by Operator
      */
-    arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.30));
+    arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.60));
     operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
     operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
     operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
@@ -171,7 +171,7 @@ public class RobotContainer {
      * Lift is controlled by Operator
      */
     // Default command, manual control via joystick
-    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.80));
+    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 1.0));
     operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
     operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
     operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
@@ -185,83 +185,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.get();
   }
-
-  /***************************************************************************
-   * Auto Chooser Stuff
-   ***************************************************************************/
-
-  //
-  // private enum AutoSelection {
-  //   // @formatter:off
-  //   doNothing("Do Nothing", "Do Nothing Auto"),
-  //   //
-  //   sitStillAuto("Sit Still", "Still Auto"),
-  //   sitStillMidAuto("Sit Still (Mid)", "Still Mid Auto"),
-  //   sitStillCenterAuto("Sit Still (Center)", "Still Center Auto"),
-  //   sitStillEdgeAuto("Sit Still (Edge)", "Still Edge Auto");
-  //   // @formatter:on
-
-  //   private final String name;
-
-  //   private final String pathName;
-
-  //   private AutoSelection(String name, String pathName) {
-  //     this.name = name;
-  //     this.pathName = pathName;
-  //   }
-
-  //   @SuppressWarnings("unused")
-  //   public String getName() {
-  //     return name;
-  //   }
-
-  //   public String getPathName() {
-  //     return pathName;
-  //   }
-  // }
-
-  // // Chooser for autonomous command from Dashboard
-  // private SendableChooser<AutoSelection> autoChooser;
-  // // Command that was selected
-  // private AutoSelection autoSelected;
-
-  // public void createAutoChooser() {
-  //   autoChooser = new SendableChooser<>();
-
-  //   // Default option is safety of "do nothing"
-  //   autoChooser.setDefaultOption("Do Nothing", AutoSelection.doNothing);
-
-  //   /** Simple */
-  //   //
-  //   autoChooser.addOption("Sit Still", AutoSelection.sitStillAuto);
-  //   //
-  //   autoChooser.addOption("Sit Still (Mid)", AutoSelection.sitStillMidAuto);
-  //   //
-  //   autoChooser.addOption("Sit Still (Center)", AutoSelection.sitStillCenterAuto);
-  //   //
-  //   autoChooser.addOption("Sit Still (Edge)", AutoSelection.sitStillEdgeAuto);
-
-  //   // Put the chooser on the dashboard
-  //   SmartDashboard.putData("Auto Chooser", autoChooser);
-  // }
-
-  // public boolean isRealAutoSelected() {
-  //   return (autoChooser.getSelected() != AutoSelection.doNothing);
-  // }
-
-  // /**
-  //  * Use this to pass the autonomous command to the main {@link Robot} class.
-  //  *
-  //  * @return the command to run in autonomous
-  //  */
-  // public Command getAutonomousCommand() {
-  //   autoSelected = autoChooser.getSelected();
-  //   if (autoSelected == AutoSelection.doNothing) {
-  //     return null;
-  //   } else {
-  //     return new PathPlannerAuto(autoSelected.getPathName());
-  //   }
-  // }
 
   /***************************************************************************
    * Auto Delay Chooser Stuff
