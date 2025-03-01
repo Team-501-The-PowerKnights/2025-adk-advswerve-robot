@@ -28,6 +28,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -46,13 +47,13 @@ public class Lift extends SubsystemBase {
   public enum Task {
     // Special case of previously manual setting
     JOYSTICK("Joystick", 0.0),
-    START("Start", 0.0),
-    HOME("Home", 0.0),
+    START("Start", LiftConstants.minHeight),
+    HOME("Home", LiftConstants.minHeight),
     COLLECT("Collect", 0.5),
     REEF_1("Reef_1", 0.5),
     REEF_2("Reef_2", 1.0),
     REEF_3("Reef_3", 1.5),
-    REEF_4("Reef_4", 2.5);
+    REEF_4("Reef_4", 2.0);
 
     private final String name;
     private double target;
@@ -193,8 +194,8 @@ public class Lift extends SubsystemBase {
       setSpeed(currentSpeed);
     } else {
       // FIXME - Enable PID target setting when ready
-      setTarget(currentTarget);
-      // setSpeed(0);
+      // setTarget(currentTarget);
+      setSpeed(0);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
