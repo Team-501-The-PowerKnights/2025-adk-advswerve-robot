@@ -24,6 +24,6 @@ class IntakeConstants {
   static final boolean intakeInverted = true;
 
   // Intake is +, eject is -
-  static final double intakeSpeed = 0.25;
-  static final double ejectSpeed = -0.25;
+  static final double intakeSpeed = 0.30;
+  static final double ejectSpeed = -0.30;
 }
