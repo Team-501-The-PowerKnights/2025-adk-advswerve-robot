@@ -127,7 +127,7 @@ public class Lift extends SubsystemBase {
         5,
         () ->
             motor.configure(
-                config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+                config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
     encoder.setPosition(motor.getAbsoluteEncoder().getPosition() * LiftConstants.gearRatio);
