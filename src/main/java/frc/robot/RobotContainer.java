@@ -15,7 +15,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -62,8 +61,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    CameraServer.startAutomaticCapture();
 
     switch (Constants.currentMode) {
       case REAL:
@@ -191,7 +188,7 @@ public class RobotContainer {
      * Lift is controlled by Operator
      */
     // Default command, manual control via joystick
-    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.30));
+    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.60));
     operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
     operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
     operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
