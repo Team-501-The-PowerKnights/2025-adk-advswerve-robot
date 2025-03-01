@@ -44,7 +44,7 @@ public class Arm extends SubsystemBase {
 
   public enum Task {
     // Special case of previously manual setting
-    MANUAL("Manual", 0.0),
+    JOYSTICK("Joystick", 0.0),
     START("Start", 0.0),
     HOME("Home", 0.0),
     COLLECT("Collect", 0.5),
@@ -70,7 +70,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void setTarget(double target) {
-      if (this.getName().equals("Manual")) {
+      if (this.getName().equals("Joystick")) {
         this.target = target;
       } else {
         // TODO - Add a logged error here
@@ -78,27 +78,21 @@ public class Arm extends SubsystemBase {
     }
   }
 
+  // Current Intake mode
+  private Mode currentMode;
+  // Current Intake task
+  private Task currentTask;
+  //
+  private double currentSpeed;
+  //
+  private double currentTarget;
+
   // Hardware objects
   private final SparkMax motor;
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
-  // Current Intake task
-  private Task currentTask;
-  private Mode currentMode;
-  private double currentSpeed;
-  private double currentTarget;
-
   public Arm() {
-    // Startup in Manual
-    currentMode = Mode.MANUAL;
-    // Startup at Start
-    currentTask = Task.START;
-    // Startup w/ no (manual) speed control
-    currentSpeed = 0.0;
-    // TODO: Fix initialization of currentHoldPoint
-    currentTarget = 0.0; // currentTask.getTarget(); ??
-
     // Create controller
     motor = new SparkMax(ArmConstants.armCanId, MotorType.kBrushless);
     encoder = motor.getEncoder();
@@ -126,7 +120,18 @@ public class Arm extends SubsystemBase {
             motor.configure(
                 config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
 
-    encoder.setPosition(motor.getAbsoluteEncoder().getPosition());
+    // Initialize encoder based on absolute
+    encoder.setPosition(motor.getAbsoluteEncoder().getPosition() * ArmConstants.gearRatio);
+
+    // Startup in Manual
+    currentMode = Mode.MANUAL;
+    // FIXME - Initialize in PID when it works
+    // currentMode = Mode.PID;
+    // Startup at Joystick
+    Task.JOYSTICK.setTarget(getPosition());
+    setTask(Task.JOYSTICK);
+    // Startup w/ no (manual) speed control
+    currentSpeed = 0.0;
   }
 
   private double getPosition() {
@@ -161,8 +166,8 @@ public class Arm extends SubsystemBase {
       // In dead zone (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
         // Use current position for hold point
-        Task.MANUAL.setTarget(getPosition());
-        setTask(Task.MANUAL);
+        Task.JOYSTICK.setTarget(getPosition());
+        setTask(Task.JOYSTICK);
         currentMode = Mode.PID;
       }
     } else {
