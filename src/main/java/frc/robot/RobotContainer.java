@@ -16,6 +16,8 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -63,6 +65,10 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // For USB drive team camera
+    // TODO - Uncomment when USB camera connected
+    //CameraServer.startAutomaticCapture();
 
     switch (Constants.currentMode) {
       case REAL:
