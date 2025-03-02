@@ -15,6 +15,8 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.FollowPathCommand;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -109,6 +111,8 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+    FollowPathCommand.warmupCommand().schedule();
   }
 
   /**
