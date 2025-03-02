@@ -208,7 +208,6 @@ public class Lift extends SubsystemBase {
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
     Logger.recordOutput("Lift/CurrentTask", currentTask.getName());
     Logger.recordOutput("Lift/CurrentSpeed", currentSpeed);
-    Logger.recordOutput("Lift/Output", motor.get());
     Logger.recordOutput("Lift/Target", currentTarget);
     Logger.recordOutput("Lift/Position", getPosition());
   }

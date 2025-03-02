@@ -199,7 +199,6 @@ public class Arm extends SubsystemBase {
     Logger.recordOutput("Arm/CurrentMode", currentMode.name());
     Logger.recordOutput("Arm/CurrentTask", currentTask.getName());
     Logger.recordOutput("Arm/CurrentSpeed", currentSpeed);
-    Logger.recordOutput("Arm/Output", motor.get());
     Logger.recordOutput("Arm/Target", currentTarget);
     Logger.recordOutput("Arm/Position", getPosition());
   }
