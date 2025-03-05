@@ -46,13 +46,13 @@ public class Lift extends SubsystemBase {
   public enum Task {
     // Special case of previously manual setting
     JOYSTICK("Joystick", 0.0),
-    START("Start", 0.0),
-    HOME("Home", 0.0),
+    START("Start", LiftConstants.minHeight),
+    HOME("Home", LiftConstants.minHeight),
     COLLECT("Collect", 0.5),
     REEF_1("Reef_1", 0.5),
     REEF_2("Reef_2", 1.0),
     REEF_3("Reef_3", 1.5),
-    REEF_4("Reef_4", 2.5);
+    REEF_4("Reef_4", 2.0);
 
     private final String name;
     private double target;
@@ -105,7 +105,15 @@ public class Lift extends SubsystemBase {
         .inverted(LiftConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(LiftConstants.motorCurrentLimit)
-        .voltageCompensation(12.0);
+        .voltageCompensation(12.0)
+        .softLimit
+        .forwardSoftLimitEnabled(false)
+        .reverseSoftLimitEnabled(false);
+    // .softLimit
+    // .forwardSoftLimit(LiftConstants.maxHeight)
+    // .forwardSoftLimitEnabled(true);
+    // .reverseSoftLimit(LiftConstants.minHeight)
+    // .reverseSoftLimitEnabled(true);
     // TODO - Not sure we need this any more?
     config.absoluteEncoder.inverted(LiftConstants.encoderInverted);
     // config.encoder.inverted(LiftConstants.encoderInverted);
@@ -119,7 +127,7 @@ public class Lift extends SubsystemBase {
         5,
         () ->
             motor.configure(
-                config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+                config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
     encoder.setPosition(motor.getAbsoluteEncoder().getPosition() * LiftConstants.gearRatio);
@@ -193,14 +201,13 @@ public class Lift extends SubsystemBase {
       setSpeed(currentSpeed);
     } else {
       // FIXME - Enable PID target setting when ready
-      setTarget(currentTarget);
-      // setSpeed(0);
+      // setTarget(currentTarget);
+      setSpeed(0);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
     Logger.recordOutput("Lift/CurrentTask", currentTask.getName());
     Logger.recordOutput("Lift/CurrentSpeed", currentSpeed);
-    Logger.recordOutput("Lift/Output", motor.get());
     Logger.recordOutput("Lift/Target", currentTarget);
     Logger.recordOutput("Lift/Position", getPosition());
   }

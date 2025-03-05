@@ -13,8 +13,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.commands.FollowPathCommand;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,6 +41,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.lift.Lift;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -58,12 +61,14 @@ public class RobotContainer {
   private final CommandXboxController operPad = new CommandXboxController(1);
 
   // Dashboard inputs
-  // private final LoggedDashboardChooser<Command> sysIdChooser;
+  private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    CameraServer.startAutomaticCapture();
+    // For USB drive team camera
+    // TODO - Uncomment when USB camera connected
+    //CameraServer.startAutomaticCapture();
 
     switch (Constants.currentMode) {
       case REAL:
@@ -103,32 +108,36 @@ public class RobotContainer {
     arm = new Arm();
     lift = new Lift();
 
-    // // Set up SysId routines
-    // sysIdChooser = new LoggedDashboardChooser<>("SysId Choices", AutoBuilder.buildAutoChooser());
-    // sysIdChooser.addOption(
-    //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    // sysIdChooser.addOption(
-    //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    // sysIdChooser.addOption(
-    //     "Drive SysId (Quasistatic Forward)",
-    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    // sysIdChooser.addOption(
-    //     "Drive SysId (Quasistatic Reverse)",
-    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    // sysIdChooser.addOption(
-    //     "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    // sysIdChooser.addOption(
-    //     "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // Set up auto routines
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    // Create auto delay chooser
+    createAutoDelayChooser();
+    // Register the commands for Path Planner
+    configurePathPlannerCommands();
+
+    /* TODO - SysID routines
+    // Set up SysId routines
+    autoChooser.addOption(
+        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    autoChooser.addOption(
+        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Forward)",
+        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Reverse)",
+        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    */
 
     // Configure the button bindings
     configureButtonBindings();
 
-    // Create the auto choosers for dashboard
-    createAutoChooser();
-    createAutoDelayChooser();
-
-    // Register the commands for Path Planner
-    configurePathPlannerCommands();
+    // Run through a full path following command to get all Java classes loaded, etc.
+    FollowPathCommand.warmupCommand().schedule();
   }
 
   /**
@@ -181,7 +190,7 @@ public class RobotContainer {
     /*
      * Arm is controlled by Operator
      */
-    arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.30));
+    arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.60));
     operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
     operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
     operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
@@ -191,73 +200,10 @@ public class RobotContainer {
      * Lift is controlled by Operator
      */
     // Default command, manual control via joystick
-    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.30));
+    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 1.0));
     operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
     operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
     operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
-  }
-
-  /***************************************************************************
-   * Auto Chooser Stuff
-   ***************************************************************************/
-
-  //
-  private enum AutoSelection {
-    // @formatter:off
-    doNothing("Do Nothing", "Do Nothing Auto"),
-    //
-    sitStillAuto("Sit Still", "Still Auto"),
-    sitStillMidAuto("Sit Still (Mid)", "Still Mid Auto"),
-    sitStillCenterAuto("Sit Still (Center)", "Still Center Auto"),
-    sitStillEdgeAuto("Sit Still (Edge)", "Still Edge Auto");
-    // @formatter:on
-
-    private final String name;
-
-    private final String pathName;
-
-    private AutoSelection(String name, String pathName) {
-      this.name = name;
-      this.pathName = pathName;
-    }
-
-    @SuppressWarnings("unused")
-    public String getName() {
-      return name;
-    }
-
-    public String getPathName() {
-      return pathName;
-    }
-  }
-
-  // Chooser for autonomous command from Dashboard
-  private SendableChooser<AutoSelection> autoChooser;
-  // Command that was selected
-  private AutoSelection autoSelected;
-
-  public void createAutoChooser() {
-    autoChooser = new SendableChooser<>();
-
-    // Default option is safety of "do nothing"
-    autoChooser.setDefaultOption("Do Nothing", AutoSelection.doNothing);
-
-    /** Simple */
-    //
-    autoChooser.addOption("Sit Still", AutoSelection.sitStillAuto);
-    //
-    autoChooser.addOption("Sit Still (Mid)", AutoSelection.sitStillMidAuto);
-    //
-    autoChooser.addOption("Sit Still (Center)", AutoSelection.sitStillCenterAuto);
-    //
-    autoChooser.addOption("Sit Still (Edge)", AutoSelection.sitStillEdgeAuto);
-
-    // Put the chooser on the dashboard
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-  }
-
-  public boolean isRealAutoSelected() {
-    return (autoChooser.getSelected() != AutoSelection.doNothing);
   }
 
   /**
@@ -266,12 +212,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    autoSelected = autoChooser.getSelected();
-    if (autoSelected == AutoSelection.doNothing) {
-      return null;
-    } else {
-      return new PathPlannerAuto(autoSelected.getPathName());
-    }
+    return autoChooser.get();
   }
 
   /***************************************************************************

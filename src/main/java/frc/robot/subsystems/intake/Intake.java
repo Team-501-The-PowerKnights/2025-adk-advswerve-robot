@@ -59,6 +59,8 @@ public class Intake extends SubsystemBase {
   // Current Intake task
   private Task currentTask;
 
+  // TODO - Fix the initialization of Spark to match Arm & Lift
+  // TODO - Fix to use the control loop kDutyCycle?
   public Intake() {
     // Startup in Idle
     currentTask = Task.IDLE;
