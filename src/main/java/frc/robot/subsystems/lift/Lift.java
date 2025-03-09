@@ -49,10 +49,10 @@ public class Lift extends SubsystemBase {
     START("Start", LiftConstants.minHeight),
     HOME("Home", LiftConstants.minHeight),
     COLLECT("Collect", 0.5),
-    REEF_1("Reef_1", 0.5),
-    REEF_2("Reef_2", 1.0),
-    REEF_3("Reef_3", 1.5),
-    REEF_4("Reef_4", 2.0);
+    REEF_1("Reef_1", 0.25),
+    REEF_2("Reef_2", 0.5),
+    REEF_3("Reef_3", 1.0),
+    REEF_4("Reef_4", 1.5);
 
     private final String name;
     private double target;
@@ -120,8 +120,8 @@ public class Lift extends SubsystemBase {
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd)
-        .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut);
+        .pid(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd);
+    // .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut);
     tryUntilOk(
         motor,
         5,
@@ -201,8 +201,8 @@ public class Lift extends SubsystemBase {
       setSpeed(currentSpeed);
     } else {
       // FIXME - Enable PID target setting when ready
-      // setTarget(currentTarget);
-      setSpeed(0);
+      setTarget(currentTarget);
+      // setSpeed(0);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
@@ -210,5 +210,6 @@ public class Lift extends SubsystemBase {
     Logger.recordOutput("Lift/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Lift/Target", currentTarget);
     Logger.recordOutput("Lift/Position", getPosition());
+    Logger.recordOutput("Lift/Output", motor.getAppliedOutput());
   }
 }

@@ -34,4 +34,11 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static final boolean doSysId = false;
+
+  public static final boolean useIntake = false;
+  public static final boolean useLift = true;
+  public static final boolean useArm = false;
+  public static final boolean useGripper = false;
 }

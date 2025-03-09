@@ -16,8 +16,6 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
-
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -29,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.LiftCommands;
@@ -41,6 +40,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.lift.Lift;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -50,6 +50,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // Subsystems
   private final Drive drive;
   private final Intake intake;
@@ -68,7 +69,7 @@ public class RobotContainer {
 
     // For USB drive team camera
     // TODO - Uncomment when USB camera connected
-    //CameraServer.startAutomaticCapture();
+    // CameraServer.startAutomaticCapture();
 
     switch (Constants.currentMode) {
       case REAL:
@@ -104,9 +105,15 @@ public class RobotContainer {
                 new ModuleIO() {});
         break;
     }
-    intake = new Intake();
-    arm = new Arm();
-    lift = new Lift();
+
+    Logger.recordOutput("Intake/useIntake", Constants.useIntake);
+    Logger.recordOutput("Lift/useLift", Constants.useLift);
+    Logger.recordOutput("Arm/useArm", Constants.useArm);
+    Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
+
+    intake = Constants.useIntake ? new Intake() : null;
+    lift = Constants.useLift ? new Lift() : null;
+    arm = Constants.useArm ? new Arm() : null;
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -115,23 +122,24 @@ public class RobotContainer {
     // Register the commands for Path Planner
     configurePathPlannerCommands();
 
-    /* TODO - SysID routines
+    // TODO - SysID routines
     // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    */
+    if (Constants.doSysId) {
+      autoChooser.addOption(
+          "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+      autoChooser.addOption(
+          "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+      autoChooser.addOption(
+          "Drive SysId (Quasistatic Forward)",
+          drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+      autoChooser.addOption(
+          "Drive SysId (Quasistatic Reverse)",
+          drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+      autoChooser.addOption(
+          "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+      autoChooser.addOption(
+          "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    }
 
     // Configure the button bindings
     configureButtonBindings();
@@ -182,28 +190,34 @@ public class RobotContainer {
     /*
      * Intake is controlled by Driver
      */
-    driverPad.leftBumper().onTrue(intake.setTask(Intake.Task.INTAKE));
-    driverPad.leftBumper().onFalse(intake.setTask(Intake.Task.IDLE));
-    driverPad.rightBumper().onTrue(intake.setTask(Intake.Task.EJECT));
-    driverPad.rightBumper().onFalse(intake.setTask(Intake.Task.IDLE));
+    if (Constants.useIntake) {
+      driverPad.leftBumper().onTrue(intake.setTask(Intake.Task.INTAKE));
+      driverPad.leftBumper().onFalse(intake.setTask(Intake.Task.IDLE));
+      driverPad.rightBumper().onTrue(intake.setTask(Intake.Task.EJECT));
+      driverPad.rightBumper().onFalse(intake.setTask(Intake.Task.IDLE));
+    }
 
     /*
      * Arm is controlled by Operator
      */
-    arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.60));
-    operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
-    operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
-    operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
-    operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
+    if (Constants.useArm) {
+      arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.60));
+      operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
+      operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
+      operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
+      operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
+    }
 
     /*
      * Lift is controlled by Operator
      */
-    // Default command, manual control via joystick
-    lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 1.0));
-    operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
-    operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
-    operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
+    if (Constants.useLift) {
+      // Default command, manual control via joystick
+      lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.40));
+      operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
+      operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
+      operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
+    }
   }
 
   /**

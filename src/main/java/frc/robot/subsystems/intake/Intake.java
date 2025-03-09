@@ -62,9 +62,6 @@ public class Intake extends SubsystemBase {
   // TODO - Fix the initialization of Spark to match Arm & Lift
   // TODO - Fix to use the control loop kDutyCycle?
   public Intake() {
-    // Startup in Idle
-    currentTask = Task.IDLE;
-
     // Create controller
     intakeSpark = new SparkFlex(IntakeConstants.intakeCanId, MotorType.kBrushless);
     // Factory reset (but don't burn to flash)
@@ -79,6 +76,9 @@ public class Intake extends SubsystemBase {
         () ->
             intakeSpark.configure(
                 intakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+
+    // Startup in Idle
+    currentTask = Task.IDLE;
   }
 
   public Command setTask(Task task) {
