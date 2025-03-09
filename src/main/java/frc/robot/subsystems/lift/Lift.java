@@ -117,6 +117,7 @@ public class Lift extends SubsystemBase {
     // TODO - Not sure we need this any more?
     config.absoluteEncoder.inverted(LiftConstants.encoderInverted);
     // config.encoder.inverted(LiftConstants.encoderInverted);
+    config.encoder.positionConversionFactor(LiftConstants.gearRatio);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -130,7 +131,19 @@ public class Lift extends SubsystemBase {
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
-    encoder.setPosition(motor.getAbsoluteEncoder().getPosition() * LiftConstants.gearRatio);
+    {
+      double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
+      double absEncoderPosScaled = absEncoderPos * LiftConstants.gearRatio;
+
+      encoder.setPosition(absEncoderPosScaled);
+
+      double relEncoderPos = encoder.getPosition();
+      StringBuilder buf = new StringBuilder();
+      buf.append("absEncoder = ").append(absEncoderPos);
+      buf.append(", scaled = ").append(absEncoderPosScaled);
+      buf.append(", relEncoder = ").append(relEncoderPos);
+      System.out.println("Lift: " + buf.toString());
+    }
 
     // Startup in Manual
     currentMode = Mode.MANUAL;
@@ -144,7 +157,7 @@ public class Lift extends SubsystemBase {
   }
 
   private double getPosition() {
-    return encoder.getPosition() / LiftConstants.gearRatio;
+    return encoder.getPosition();
   }
 
   /**
@@ -200,12 +213,12 @@ public class Lift extends SubsystemBase {
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
-      // FIXME - Enable PID target setting when ready
       setTarget(currentTarget);
       // setSpeed(0);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
+    Logger.recordOutput("Lift/isPID", (currentMode == Mode.PID));
     Logger.recordOutput("Lift/CurrentTask", currentTask.getName());
     Logger.recordOutput("Lift/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Lift/Target", currentTarget);
