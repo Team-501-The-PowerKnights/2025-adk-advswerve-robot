@@ -17,7 +17,7 @@
  */
 package frc.robot.subsystems.lift;
 
-import static frc.robot.util.SparkUtil.tryUntilOk;
+import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -29,8 +29,11 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
 public class Lift extends SubsystemBase {
@@ -44,15 +47,15 @@ public class Lift extends SubsystemBase {
 
   /** Enumeration of set positions */
   public enum Task {
-    // Special case of previously manual setting
-    JOYSTICK("Joystick", 0.0),
-    START("Start", LiftConstants.minHeight),
-    HOME("Home", LiftConstants.minHeight),
+    REEF_4("Reef_4", 700.0),
+    REEF_3("Reef_3", 650.0),
+    REEF_2("Reef_2", 500.0),
+    REEF_1("Reef_1", 341.0),
     COLLECT("Collect", 0.5),
-    REEF_1("Reef_1", 0.25),
-    REEF_2("Reef_2", 0.5),
-    REEF_3("Reef_3", 1.0),
-    REEF_4("Reef_4", 1.5);
+    HOME("Home", LiftConstants.minHeight),
+    START("Start", LiftConstants.minHeight),
+    // Special case of previously manual setting
+    JOYSTICK("Joystick", 0.0);
 
     private final String name;
     private double target;
@@ -93,7 +96,13 @@ public class Lift extends SubsystemBase {
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
+  private boolean origSparkStickyFault;
+
+  @SuppressWarnings("resource")
   public Lift() {
+    origSparkStickyFault = SparkUtil501.sparkStickyFault;
+    // TODO - Log error on entry
+
     // Create controller
     motor = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
     encoder = motor.getEncoder();
@@ -108,10 +117,9 @@ public class Lift extends SubsystemBase {
         .voltageCompensation(12.0)
         .softLimit
         .forwardSoftLimitEnabled(false)
-        .reverseSoftLimitEnabled(false);
-    // .softLimit
-    // .forwardSoftLimit(LiftConstants.maxHeight)
-    // .forwardSoftLimitEnabled(true);
+        .reverseSoftLimitEnabled(false)
+        .forwardSoftLimit(LiftConstants.maxHeight)
+        .forwardSoftLimitEnabled(true);
     // .reverseSoftLimit(LiftConstants.minHeight)
     // .reverseSoftLimitEnabled(true);
     // TODO - Not sure we need this any more?
@@ -123,7 +131,7 @@ public class Lift extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd);
     // .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut);
-    tryUntilOk(
+    SparkUtil501.tryUntilOk(
         motor,
         5,
         () ->
@@ -131,11 +139,12 @@ public class Lift extends SubsystemBase {
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
+    double absEncoderPosScaled;
     {
       double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
-      double absEncoderPosScaled = absEncoderPos * LiftConstants.gearRatio;
+      absEncoderPosScaled = absEncoderPos * LiftConstants.gearRatio;
 
-      encoder.setPosition(absEncoderPosScaled);
+      SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
       double relEncoderPos = encoder.getPosition();
       StringBuilder buf = new StringBuilder();
@@ -145,15 +154,18 @@ public class Lift extends SubsystemBase {
       System.out.println("Lift: " + buf.toString());
     }
 
-    // Startup in Manual
-    currentMode = Mode.MANUAL;
-    // FIXME - Initialize in PID when it works
-    // currentMode = Mode.PID;
+    // Startup in PID at current location
+    currentMode = Mode.PID;
     // Startup at Joystick
-    Task.JOYSTICK.setTarget(getPosition());
+    Task.JOYSTICK.setTarget(absEncoderPosScaled);
     setTask(Task.JOYSTICK);
     // Startup w/ no (manual) speed control
     currentSpeed = 0.0;
+
+    // Log this subsystem's status and return global
+    Logger.recordOutput("Lift/isREVLibError", !sparkStickyFault); // green=OK
+    sparkStickyFault = origSparkStickyFault | sparkStickyFault;
+    new Alert("REVLib problems in Lift construction", AlertType.kError).set(true);
   }
 
   private double getPosition() {
