@@ -17,6 +17,7 @@
  */
 package frc.robot.subsystems.lift;
 
+import static frc.robot.util.SparkUtil501.sparkStickyError;
 import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.RelativeEncoder;
@@ -98,6 +99,7 @@ public class Lift extends SubsystemBase {
 
   private boolean origSparkStickyFault;
 
+  /** Constructs a new version of the subsystem. */
   @SuppressWarnings("resource")
   public Lift() {
     origSparkStickyFault = SparkUtil501.sparkStickyFault;
@@ -164,10 +166,23 @@ public class Lift extends SubsystemBase {
 
     // Log this subsystem's status and return global
     Logger.recordOutput("Lift/isREVLibError", !sparkStickyFault); // green=OK
-    sparkStickyFault = origSparkStickyFault | sparkStickyFault;
-    new Alert("REVLib problems in Lift construction", AlertType.kError).set(true);
+    if (sparkStickyFault) {
+      new Alert(
+              "REVLib problems in Lift construction (error = " + sparkStickyError + ")",
+              AlertType.kError)
+          .set(true);
+    } else {
+      new Alert("Successful REVLib Lift construction", AlertType.kInfo).set(true);
+    }
+    sparkStickyFault |= origSparkStickyFault;
   }
 
+  /**
+   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
+   * class to get the value.
+   *
+   * @return current encoder position
+   */
   private double getPosition() {
     return encoder.getPosition();
   }
@@ -212,10 +227,20 @@ public class Lift extends SubsystemBase {
     }
   }
 
+  /**
+   * Sets the controller to use a 'manual' speed entry.
+   *
+   * @param speed
+   */
   private void setSpeed(double speed) {
     controller.setReference(speed, ControlType.kDutyCycle);
   }
 
+  /**
+   * Sets the controller to use a PID-based position reference.
+   *
+   * @param position
+   */
   private void setTarget(double position) {
     controller.setReference(position, ControlType.kPosition);
   }
