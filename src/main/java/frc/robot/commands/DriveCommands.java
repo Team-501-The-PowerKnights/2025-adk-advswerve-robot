@@ -22,7 +22,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
@@ -275,18 +274,18 @@ public class DriveCommands {
                           (state.gyroDelta * DriveConstants.driveBaseRadius) / wheelDelta;
 
                       NumberFormat formatter = new DecimalFormat("#0.000");
-                      System.out.println(
-                          "********** Wheel Radius Characterization Results **********");
-                      System.out.println(
-                          "\tWheel Delta: " + formatter.format(wheelDelta) + " radians");
-                      System.out.println(
-                          "\tGyro Delta: " + formatter.format(state.gyroDelta) + " radians");
-                      System.out.println(
-                          "\tWheel Radius: "
-                              + formatter.format(wheelRadius)
-                              + " meters, "
-                              + formatter.format(Units.metersToInches(wheelRadius))
-                              + " inches");
+                      // System.out.println(
+                      //     "********** Wheel Radius Characterization Results **********");
+                      // System.out.println(
+                      //     "\tWheel Delta: " + formatter.format(wheelDelta) + " radians");
+                      // System.out.println(
+                      //     "\tGyro Delta: " + formatter.format(state.gyroDelta) + " radians");
+                      // System.out.println(
+                      //     "\tWheel Radius: "
+                      //         + formatter.format(wheelRadius)
+                      //         + " meters, "
+                      //         + formatter.format(Units.metersToInches(wheelRadius))
+                      //         + " inches");
                     })));
   }
 
