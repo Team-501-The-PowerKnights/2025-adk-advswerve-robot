@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the constants for the <code>Intake</code> subsystem.
+ * This package contains the constants for the <code>Arm</code> subsystem.
  *
  * <p>More detail ...
  *
@@ -21,20 +21,25 @@ class ArmConstants {
 
   static final int armCanId = 34;
 
-  static final boolean armInverted = true;
-  static final int armMotorCurrentLimit = 20;
+  static final boolean motorInverted = true;
+  /** */
+  static final int motorCurrentLimit = 20;
+
+  // TODO - Do we need this?
+  static final double motorKv = 473.0;
+
   /** Is the encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;
 
   /** Default speed to use for motion */
   static final double defaultSpeed = 0.70;
 
-  static final double motorGearRatio = 125.0;
-  static final double armLowerGear = 30.0; // DOUBLE VERIFY
-  static final double armUpperGear = 48.0;
-  static final double gearRatio = (armUpperGear / armLowerGear) * motorGearRatio;
-
-  static final double motorKv = 473.0;
+  // static final double motorGearRatio = 125.0;
+  // static final double armLowerGear = 30.0; // DOUBLE VERIFY
+  // static final double armUpperGear = 48.0;
+  // static final double gearRatio = (armUpperGear / armLowerGear) * motorGearRatio;
+  /** */
+  static final double gearRatio = 5 * 5;
 
   /** Joystick deadzone to use for manual control of subsystem */
   static final double joystickDeadZone = 0.05;
@@ -45,4 +50,8 @@ class ArmConstants {
   static final double pidKd = 0.0;
   static final double pidMaxNegOut = -0.5;
   static final double pidMaxPosOut = 0.5;
+
+  //
+  static final double minHeight = 0; // Should this be higher?
+  static final double maxHeight = 0;
 }

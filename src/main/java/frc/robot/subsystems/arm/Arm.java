@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the implementation of the <code>Intake</code> subsystem.
+ * This package contains the implementation of the <code>Arm</code> subsystem.
  *
  * <p>More detail ...
  *
@@ -18,7 +18,8 @@
  */
 package frc.robot.subsystems.arm;
 
-import static frc.robot.util.SparkUtil.tryUntilOk;
+import static frc.robot.util.SparkUtil501.sparkStickyError;
+import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -30,8 +31,11 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
@@ -44,15 +48,15 @@ public class Arm extends SubsystemBase {
   }
 
   public enum Task {
+    REEF_4("Reef_4", 0.0),
+    REEF_3("Reef_3", 0.0),
+    REEF_2("Reef_2", 0.0),
+    REEF_1("Reef_1", 0.0),
+    COLLECT("Collect", 0.0),
+    HOME("Home", ArmConstants.minHeight),
+    START("Start", ArmConstants.minHeight),
     // Special case of previously manual setting
-    JOYSTICK("Joystick", 0.0),
-    START("Start", 0.0),
-    HOME("Home", 0.0),
-    COLLECT("Collect", 0.5),
-    REEF_1("Reef_1", 0.5),
-    REEF_2("Reef_2", 1.0),
-    REEF_3("Reef_3", 1.5),
-    REEF_4("Reef_4", 2.5);
+    JOYSTICK("Joystick", 0.0);
 
     private final String name;
     private double target;
@@ -93,28 +97,41 @@ public class Arm extends SubsystemBase {
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
+  /** Constructs a new instance of the subsystem. */
+  @SuppressWarnings("resource")
   public Arm() {
+    boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
+    // TODO - Log error on entry
+
     // Create controller
     motor = new SparkMax(ArmConstants.armCanId, MotorType.kBrushless);
     encoder = motor.getEncoder();
     controller = motor.getClosedLoopController();
 
-    // Factory reset (but don't burn to flash)
+    // Factory reset and burn new config to flash
     SparkMaxConfig config = new SparkMaxConfig();
     config
-        .inverted(ArmConstants.armInverted)
+        .inverted(ArmConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ArmConstants.armMotorCurrentLimit)
-        .voltageCompensation(12.0);
+        .smartCurrentLimit(ArmConstants.motorCurrentLimit)
+        .voltageCompensation(12.0)
+        .softLimit
+        .forwardSoftLimitEnabled(false)
+        .reverseSoftLimitEnabled(false);
+    // .forwardSoftLimit(ArmConstants.maxHeight)
+    // .forwardSoftLimitEnabled(true);
+    // .reverseSoftLimit(ArmConstants.minHeight)
+    // .reverseSoftLimitEnabled(true);
     // TODO - Not sure we need this any more?
     config.absoluteEncoder.inverted(ArmConstants.encoderInverted);
     // config.encoder.inverted(ArmConstants.encoderInverted);
+    config.encoder.positionConversionFactor(ArmConstants.gearRatio);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(ArmConstants.pidKp, ArmConstants.pidKi, ArmConstants.pidKd)
-        .outputRange(ArmConstants.pidMaxNegOut, ArmConstants.pidMaxPosOut);
-    tryUntilOk(
+        .pid(ArmConstants.pidKp, ArmConstants.pidKi, ArmConstants.pidKd);
+    //        .outputRange(ArmConstants.pidMaxNegOut, ArmConstants.pidMaxPosOut);
+    SparkUtil501.tryUntilOk(
         motor,
         5,
         () ->
@@ -122,7 +139,20 @@ public class Arm extends SubsystemBase {
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
-    encoder.setPosition(motor.getAbsoluteEncoder().getPosition() * ArmConstants.gearRatio);
+    double absEncoderPosScaled;
+    {
+      double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
+      absEncoderPosScaled = absEncoderPos * ArmConstants.gearRatio;
+
+      SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
+
+      double relEncoderPos = encoder.getPosition();
+      StringBuilder buf = new StringBuilder();
+      buf.append("absEncoder = ").append(absEncoderPos);
+      buf.append(", scaled = ").append(absEncoderPosScaled);
+      buf.append(", relEncoder = ").append(relEncoderPos);
+      System.out.println("Lift: " + buf.toString());
+    }
 
     // Startup in Manual
     currentMode = Mode.MANUAL;
@@ -133,8 +163,26 @@ public class Arm extends SubsystemBase {
     setTask(Task.JOYSTICK);
     // Startup w/ no (manual) speed control
     currentSpeed = 0.0;
+
+    // Log this subsystem's status and return global
+    Logger.recordOutput("Arm/isREVLibError", !sparkStickyFault); // green=OK
+    if (sparkStickyFault) {
+      new Alert(
+              "REVLib problems in Arm construction (error = " + sparkStickyError + ")",
+              AlertType.kError)
+          .set(true);
+    } else {
+      new Alert("Successful REVLib Arm construction", AlertType.kInfo).set(true);
+    }
+    sparkStickyFault |= origSparkStickyFault;
   }
 
+  /**
+   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
+   * class to get the value.
+   *
+   * @return current encoder position
+   */
   private double getPosition() {
     return encoder.getPosition() / ArmConstants.gearRatio;
   }
@@ -179,10 +227,20 @@ public class Arm extends SubsystemBase {
     }
   }
 
+  /**
+   * Sets the controller to use a 'manual' speed entry.
+   *
+   * @param speed
+   */
   private void setSpeed(double speed) {
     controller.setReference(speed, ControlType.kDutyCycle);
   }
 
+  /**
+   * Sets the controller to use a PID-based position reference.
+   *
+   * @param position
+   */
   private void setTarget(double position) {
     controller.setReference(position, ControlType.kPosition);
   }
@@ -198,9 +256,11 @@ public class Arm extends SubsystemBase {
     }
 
     Logger.recordOutput("Arm/CurrentMode", currentMode.name());
+    Logger.recordOutput("Arm/isPID", (currentMode == Mode.PID));
     Logger.recordOutput("Arm/CurrentTask", currentTask.getName());
     Logger.recordOutput("Arm/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Arm/Target", currentTarget);
     Logger.recordOutput("Arm/Position", getPosition());
+    Logger.recordOutput("Arm/Output", motor.getAppliedOutput());
   }
 }

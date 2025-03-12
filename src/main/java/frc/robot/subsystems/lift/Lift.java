@@ -97,12 +97,10 @@ public class Lift extends SubsystemBase {
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
-  private boolean origSparkStickyFault;
-
-  /** Constructs a new version of the subsystem. */
+  /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
   public Lift() {
-    origSparkStickyFault = SparkUtil501.sparkStickyFault;
+    boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
     // TODO - Log error on entry
 
     // Create controller
@@ -110,7 +108,7 @@ public class Lift extends SubsystemBase {
     encoder = motor.getEncoder();
     controller = motor.getClosedLoopController();
 
-    // Factory reset (but don't burn to flash)
+    // Factory reset and burn new config to flash
     SparkMaxConfig config = new SparkMaxConfig();
     config
         .inverted(LiftConstants.motorInverted)
