@@ -34,19 +34,19 @@ class LiftConstants {
   static final double defaultSpeed = 0.70;
 
   /** */
-  static final double gearRatio = 4 * 4 * 5;
+  static final double gearRatio = 4 * 4;
 
   /** Joystick deadzone to use for manual control of subsystem */
   static final double joystickDeadZone = 0.05;
 
   /* PID control loop constants */
-  static final double pidKp = 0.6;
+  static final double pidKp = 0.1;
   static final double pidKi = 0.0;
   static final double pidKd = 0.0;
   static final double pidMaxNegOut = -0.5;
   static final double pidMaxPosOut = 0.7;
 
   //
-  static final double minHeight = 0.15; // Should this be higher?
-  static final double maxHeight = 2.00; // 5.35;
+  static final double minHeight = 2.750; // Should this be higher?
+  static final double maxHeight = 700.0;
 }

@@ -17,7 +17,8 @@
  */
 package frc.robot.subsystems.lift;
 
-import static frc.robot.util.SparkUtil.tryUntilOk;
+import static frc.robot.util.SparkUtil501.sparkStickyError;
+import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -29,8 +30,11 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
 public class Lift extends SubsystemBase {
@@ -44,15 +48,15 @@ public class Lift extends SubsystemBase {
 
   /** Enumeration of set positions */
   public enum Task {
-    // Special case of previously manual setting
-    JOYSTICK("Joystick", 0.0),
-    START("Start", LiftConstants.minHeight),
-    HOME("Home", LiftConstants.minHeight),
+    REEF_4("Reef_4", 700.0),
+    REEF_3("Reef_3", 650.0),
+    REEF_2("Reef_2", 500.0),
+    REEF_1("Reef_1", 341.0),
     COLLECT("Collect", 0.5),
-    REEF_1("Reef_1", 0.5),
-    REEF_2("Reef_2", 1.0),
-    REEF_3("Reef_3", 1.5),
-    REEF_4("Reef_4", 2.0);
+    HOME("Home", LiftConstants.minHeight),
+    START("Start", LiftConstants.minHeight),
+    // Special case of previously manual setting
+    JOYSTICK("Joystick", 0.0);
 
     private final String name;
     private double target;
@@ -93,7 +97,14 @@ public class Lift extends SubsystemBase {
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
+  private boolean origSparkStickyFault;
+
+  /** Constructs a new version of the subsystem. */
+  @SuppressWarnings("resource")
   public Lift() {
+    origSparkStickyFault = SparkUtil501.sparkStickyFault;
+    // TODO - Log error on entry
+
     // Create controller
     motor = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
     encoder = motor.getEncoder();
@@ -108,21 +119,21 @@ public class Lift extends SubsystemBase {
         .voltageCompensation(12.0)
         .softLimit
         .forwardSoftLimitEnabled(false)
-        .reverseSoftLimitEnabled(false);
-    // .softLimit
-    // .forwardSoftLimit(LiftConstants.maxHeight)
-    // .forwardSoftLimitEnabled(true);
+        .reverseSoftLimitEnabled(false)
+        .forwardSoftLimit(LiftConstants.maxHeight)
+        .forwardSoftLimitEnabled(true);
     // .reverseSoftLimit(LiftConstants.minHeight)
     // .reverseSoftLimitEnabled(true);
     // TODO - Not sure we need this any more?
     config.absoluteEncoder.inverted(LiftConstants.encoderInverted);
     // config.encoder.inverted(LiftConstants.encoderInverted);
+    config.encoder.positionConversionFactor(LiftConstants.gearRatio);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd)
-        .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut);
-    tryUntilOk(
+        .pid(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd);
+    // .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut);
+    SparkUtil501.tryUntilOk(
         motor,
         5,
         () ->
@@ -130,21 +141,50 @@ public class Lift extends SubsystemBase {
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
-    encoder.setPosition(motor.getAbsoluteEncoder().getPosition() * LiftConstants.gearRatio);
+    double absEncoderPosScaled;
+    {
+      double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
+      absEncoderPosScaled = absEncoderPos * LiftConstants.gearRatio;
 
-    // Startup in Manual
-    currentMode = Mode.MANUAL;
-    // FIXME - Initialize in PID when it works
-    // currentMode = Mode.PID;
+      SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
+
+      double relEncoderPos = encoder.getPosition();
+      StringBuilder buf = new StringBuilder();
+      buf.append("absEncoder = ").append(absEncoderPos);
+      buf.append(", scaled = ").append(absEncoderPosScaled);
+      buf.append(", relEncoder = ").append(relEncoderPos);
+      System.out.println("Lift: " + buf.toString());
+    }
+
+    // Startup in PID at current location
+    currentMode = Mode.PID;
     // Startup at Joystick
-    Task.JOYSTICK.setTarget(getPosition());
+    Task.JOYSTICK.setTarget(absEncoderPosScaled);
     setTask(Task.JOYSTICK);
     // Startup w/ no (manual) speed control
     currentSpeed = 0.0;
+
+    // Log this subsystem's status and return global
+    Logger.recordOutput("Lift/isREVLibError", !sparkStickyFault); // green=OK
+    if (sparkStickyFault) {
+      new Alert(
+              "REVLib problems in Lift construction (error = " + sparkStickyError + ")",
+              AlertType.kError)
+          .set(true);
+    } else {
+      new Alert("Successful REVLib Lift construction", AlertType.kInfo).set(true);
+    }
+    sparkStickyFault |= origSparkStickyFault;
   }
 
+  /**
+   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
+   * class to get the value.
+   *
+   * @return current encoder position
+   */
   private double getPosition() {
-    return encoder.getPosition() / LiftConstants.gearRatio;
+    return encoder.getPosition();
   }
 
   /**
@@ -187,10 +227,20 @@ public class Lift extends SubsystemBase {
     }
   }
 
+  /**
+   * Sets the controller to use a 'manual' speed entry.
+   *
+   * @param speed
+   */
   private void setSpeed(double speed) {
     controller.setReference(speed, ControlType.kDutyCycle);
   }
 
+  /**
+   * Sets the controller to use a PID-based position reference.
+   *
+   * @param position
+   */
   private void setTarget(double position) {
     controller.setReference(position, ControlType.kPosition);
   }
@@ -200,15 +250,16 @@ public class Lift extends SubsystemBase {
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
-      // FIXME - Enable PID target setting when ready
-      // setTarget(currentTarget);
-      setSpeed(0);
+      setTarget(currentTarget);
+      // setSpeed(0);
     }
 
     Logger.recordOutput("Lift/CurrentMode", currentMode.name());
+    Logger.recordOutput("Lift/isPID", (currentMode == Mode.PID));
     Logger.recordOutput("Lift/CurrentTask", currentTask.getName());
     Logger.recordOutput("Lift/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Lift/Target", currentTarget);
     Logger.recordOutput("Lift/Position", getPosition());
+    Logger.recordOutput("Lift/Output", motor.getAppliedOutput());
   }
 }

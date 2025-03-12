@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
+
   public enum Mode {
     /** Operating based on PID set point. (Default) */
     PID,
