@@ -42,6 +42,8 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.lift.Lift;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import frc.robot.subsystems.gripper.Gripper;
+import frc.robot.commands.GripperCommands;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -56,6 +58,7 @@ public class RobotContainer {
   private final Intake intake;
   private final Lift lift;
   private final Arm arm;
+  private final Gripper gripper;
 
   // Controllers
   private final CommandXboxController driverPad = new CommandXboxController(0);
@@ -114,6 +117,7 @@ public class RobotContainer {
     intake = Constants.useIntake ? new Intake() : null;
     lift = Constants.useLift ? new Lift() : null;
     arm = Constants.useArm ? new Arm() : null;
+    gripper = Constants.useGripper ? new Gripper() : null;
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -217,6 +221,14 @@ public class RobotContainer {
       operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
       operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
       operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
+    }
+
+    /*
+     * Gripper is controlled by Operator
+     */
+    if (Constants.useGripper) {
+      // Deafault command, manual control via triggers
+    gripper.setDefaultCommand(GripperCommands.joystickGrip(gripper, () -> operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis()));
     }
   }
 
