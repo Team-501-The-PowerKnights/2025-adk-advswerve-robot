@@ -12,7 +12,7 @@
  * <p>More detail ...
  *
  * @since 2025.0.0
- * @author first.stu
+ * @author first.Brian Buzzell
  * @version 2025.0.0
  */
-package frc.robot.subsystems.lift;
+package frc.robot.subsystems.gripper;

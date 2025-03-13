@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.GripperCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
@@ -38,12 +39,11 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
+import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.lift.Lift;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import frc.robot.subsystems.gripper.Gripper;
-import frc.robot.commands.GripperCommands;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -228,7 +228,10 @@ public class RobotContainer {
      */
     if (Constants.useGripper) {
       // Deafault command, manual control via triggers
-    gripper.setDefaultCommand(GripperCommands.joystickGrip(gripper, () -> operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis()));
+      gripper.setDefaultCommand(
+          GripperCommands.joystickGrip(
+              gripper,
+              () -> (operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis()) * 0.40));
     }
   }
 
