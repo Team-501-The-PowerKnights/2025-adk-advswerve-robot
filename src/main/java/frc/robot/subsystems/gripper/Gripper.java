@@ -9,39 +9,13 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Gripper extends SubsystemBase {
 
-  public enum Task {
-    IDLE("Idle", 0.0),
-    GRIP("Grip", GripperConstants.gripSpeed),
-    RELEASE("Release", GripperConstants.releaseSpeed);
-
-    private final String taskName;
-    private final double speed;
-
-    Task(String taskName, double speed) {
-      this.taskName = taskName;
-      this.speed = speed;
-    }
-
-    public String getTaskName() {
-      return taskName;
-    }
-
-    public double getSpeed() {
-      return this.speed;
-    }
-  }
-
   // Hardware objects
   private final SparkFlex motor;
-
-  // Current Gripper task
-  private Task currentTask;
 
   private double currentSpeed;
 
@@ -60,17 +34,6 @@ public class Gripper extends SubsystemBase {
         () ->
             motor.configure(
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-
-    // Startup in Idle
-    currentTask = Task.IDLE;
-  }
-
-  public Command setTask(Task task) {
-
-    return this.runOnce(
-        () -> {
-          currentTask = task;
-        });
   }
 
   private void setSpeed(double speed) {
@@ -93,8 +56,6 @@ public class Gripper extends SubsystemBase {
   public void periodic() {
     // Update current task
     setSpeed(currentSpeed);
-
-    Logger.recordOutput("Gripper/CurrentTask", currentTask.getTaskName());
     Logger.recordOutput("Gripper/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Gripper/Output", motor.get());
   }

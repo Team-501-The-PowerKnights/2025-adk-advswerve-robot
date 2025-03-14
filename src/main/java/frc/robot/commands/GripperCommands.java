@@ -38,13 +38,4 @@ public class GripperCommands {
         },
         gripper);
   }
-
-  public static Command setTask(Gripper gripper, Gripper.Task task) {
-    return Commands.runOnce(
-        () -> {
-          System.out.println("Calling gripper setTask");
-          gripper.setTask(task);
-        },
-        gripper);
-  }
 }
