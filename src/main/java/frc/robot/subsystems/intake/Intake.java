@@ -26,13 +26,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SparkUtil501;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -86,8 +84,11 @@ public class Intake extends SubsystemBase {
     SparkUtil501.tryUntilOk(
         intakeLeftSpark,
         5,
-        () -> intakeLeftSpark.configure(
-            intakeLeftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+        () ->
+            intakeLeftSpark.configure(
+                intakeLeftConfig,
+                ResetMode.kNoResetSafeParameters,
+                PersistMode.kNoPersistParameters));
 
     SparkMaxConfig intakeRightConfig = new SparkMaxConfig();
     intakeRightConfig
@@ -99,8 +100,11 @@ public class Intake extends SubsystemBase {
     SparkUtil501.tryUntilOk(
         intakeRightSpark,
         5,
-        () -> intakeRightSpark.configure(
-            intakeRightConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+        () ->
+            intakeRightSpark.configure(
+                intakeRightConfig,
+                ResetMode.kNoResetSafeParameters,
+                PersistMode.kNoPersistParameters));
 
     // Startup in Idle
     currentTask = Task.IDLE;
@@ -109,14 +113,13 @@ public class Intake extends SubsystemBase {
     Logger.recordOutput("Intake/isREVLibError", !sparkStickyFault); // green=OK
     if (sparkStickyFault) {
       new Alert(
-          "REVLib problems in Intake construction (error = " + sparkStickyError + ")",
-          AlertType.kError)
+              "REVLib problems in Intake construction (error = " + sparkStickyError + ")",
+              AlertType.kError)
           .set(true);
     } else {
       new Alert("Successful REVLib Intake construction", AlertType.kInfo).set(true);
     }
     sparkStickyFault |= origSparkStickyFault;
-
   }
 
   public Command setTask(Task task) {

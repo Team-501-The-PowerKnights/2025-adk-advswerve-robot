@@ -19,12 +19,9 @@ package frc.robot.subsystems.intake2;
 
 class Intake2Constants {
 
-
   //
-
 
   static final double gearRatio = 4 * 4;
   /** Is the encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;
-  
 }

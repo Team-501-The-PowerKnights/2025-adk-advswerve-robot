@@ -200,14 +200,11 @@ public class RobotContainer {
       driverPad.rightTrigger().onFalse(intake.setTask(Intake.Task.IDLE));
       if (driverPad.getHID().getPOV() >= 0 && driverPad.getHID().getPOV() < 90) {
         intakeLift.setLiftTask(IntakeLift.LiftTask.RECALL);
-      }
-      else if (driverPad.getHID().getPOV() > 270 && driverPad.getHID().getPOV() < 360) {
+      } else if (driverPad.getHID().getPOV() > 270 && driverPad.getHID().getPOV() < 360) {
         intakeLift.setLiftTask(IntakeLift.LiftTask.RECALL);
-      }
-      else if(driverPad.getHID().getPOV() > 90 && driverPad.getHID().getPOV() < 270) {
+      } else if (driverPad.getHID().getPOV() > 90 && driverPad.getHID().getPOV() < 270) {
         intakeLift.setLiftTask(IntakeLift.LiftTask.DEPLOY);
-      }
-      else if (driverPad.getHID().getPOV() == -1) {
+      } else if (driverPad.getHID().getPOV() == -1) {
         intakeLift.setLiftTask(IntakeLift.LiftTask.IDLE);
       }
 

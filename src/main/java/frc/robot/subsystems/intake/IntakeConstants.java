@@ -19,24 +19,24 @@ package frc.robot.subsystems.intake;
 
 class IntakeConstants {
 
-  static final int intakeCanId = 30;//Deprecated
-  
+  static final int intakeCanId = 30; // Deprecated
+
   static final int intakeLeftCanId = 36;
   static final int intakeRightCanId = 37;
 
   static final boolean intakeLeftInverted = true;
   static final boolean iintakeRightInverted = true;
-  static final boolean intakeInverted = true;//Deprecated
+  static final boolean intakeInverted = true; // Deprecated
 
   // Intake is +, eject is -
   static final double intakeSpeed = 0.30;
   static final double ejectSpeed = -0.30;
-  
+
   static final double gearRatio = 4 * 4;
   static final int motorCurrentLimit = 20;
 }
 
-class IntakeLiftConstants{
+class IntakeLiftConstants {
 
   static final int intakeLiftLeftCanId = 38;
   static final int intakeLiftRightCanId = 39;
@@ -50,7 +50,6 @@ class IntakeLiftConstants{
   static final double minHeight = 2.750; // Should this be higher?
   static final double maxHeight = 700.0;
 
-
   /* PID control loop constants */
   static final double pidKp = 0.1;
   static final double pidKi = 0.0;
@@ -61,5 +60,6 @@ class IntakeLiftConstants{
   static final double gearRatio = 4 * 4;
   /** Is the encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;
+
   static final int motorCurrentLimit = 20;
 }
