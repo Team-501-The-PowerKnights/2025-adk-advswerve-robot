@@ -22,9 +22,11 @@ import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -58,8 +60,8 @@ public class Intake extends SubsystemBase {
   }
 
   // Hardware objects
-  private final SparkMax intakeLeftSpark;
-  private final SparkMax intakeRightSpark;
+  private final SparkFlex intakeFlex;
+  private final SparkMax hopperMax;
 
   private boolean origSparkStickyFault;
 
@@ -71,40 +73,36 @@ public class Intake extends SubsystemBase {
   public Intake() {
     origSparkStickyFault = SparkUtil501.sparkStickyFault;
     // Create controller
-    intakeLeftSpark = new SparkMax(IntakeConstants.intakeLeftCanId, MotorType.kBrushless);
-    intakeRightSpark = new SparkMax(IntakeConstants.intakeRightCanId, MotorType.kBrushless);
+    intakeFlex = new SparkFlex(IntakeConstants.intakeCanId, MotorType.kBrushless);
+    hopperMax = new SparkMax(IntakeConstants.hopperCanId, MotorType.kBrushless);
 
     // Factory reset (but don't burn to flash)
-    SparkMaxConfig intakeLeftConfig = new SparkMaxConfig();
-    intakeLeftConfig
-        .inverted(IntakeConstants.intakeLeftInverted)
+    SparkFlexConfig intakeConfig = new SparkFlexConfig();
+    intakeConfig
+        .inverted(IntakeConstants.intakeInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(IntakeConstants.motorCurrentLimit)
         .voltageCompensation(12.0);
     SparkUtil501.tryUntilOk(
-        intakeLeftSpark,
+        intakeFlex,
         5,
         () ->
-            intakeLeftSpark.configure(
-                intakeLeftConfig,
-                ResetMode.kNoResetSafeParameters,
-                PersistMode.kNoPersistParameters));
+            intakeFlex.configure(
+                intakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
 
-    SparkMaxConfig intakeRightConfig = new SparkMaxConfig();
-    intakeRightConfig
-        .inverted(IntakeConstants.iintakeRightInverted)
+    SparkMaxConfig hopperConfig = new SparkMaxConfig();
+    hopperConfig
+        .inverted(IntakeConstants.hopperInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(IntakeConstants.motorCurrentLimit)
         .voltageCompensation(12.0)
-        .follow(IntakeConstants.intakeLeftCanId);
+        .follow(IntakeConstants.intakeCanId);
     SparkUtil501.tryUntilOk(
-        intakeRightSpark,
+        hopperMax,
         5,
         () ->
-            intakeRightSpark.configure(
-                intakeRightConfig,
-                ResetMode.kNoResetSafeParameters,
-                PersistMode.kNoPersistParameters));
+            hopperMax.configure(
+                hopperConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
 
     // Startup in Idle
     currentTask = Task.IDLE;
@@ -130,7 +128,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void setSpeed(double speed) {
-    intakeLeftSpark.set(speed);
+    intakeFlex.set(speed);
   }
 
   public void periodic() {
@@ -138,7 +136,7 @@ public class Intake extends SubsystemBase {
     setSpeed(currentTask.getSpeed());
 
     Logger.recordOutput("Intake/CurrentTask", currentTask.getTaskName());
-    Logger.recordOutput("IntakeLeft/Output", intakeLeftSpark.get());
-    Logger.recordOutput("IntakeRight/Output", intakeRightSpark.get());
+    Logger.recordOutput("intake/Output", intakeFlex.get());
+    Logger.recordOutput("hopper/Output", hopperMax.get());
   }
 }

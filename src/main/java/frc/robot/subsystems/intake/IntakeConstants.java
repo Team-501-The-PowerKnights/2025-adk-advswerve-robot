@@ -19,20 +19,19 @@ package frc.robot.subsystems.intake;
 
 class IntakeConstants {
 
-  static final int intakeCanId = 30; // Deprecated
+  // static final int intakeCanId = 30; // Deprecated
 
-  static final int intakeLeftCanId = 36;
-  static final int intakeRightCanId = 37;
+  static final int intakeCanId = 36;
+  static final int hopperCanId = 37;
 
-  static final boolean intakeLeftInverted = true;
-  static final boolean iintakeRightInverted = true;
-  static final boolean intakeInverted = true; // Deprecated
+  static final boolean intakeInverted = true;
+  static final boolean hopperInverted = true;
+  //  static final boolean intakeInverted = true; // Deprecated
 
   // Intake is +, eject is -
   static final double intakeSpeed = 0.30;
   static final double ejectSpeed = -0.30;
 
-  static final double gearRatio = 4 * 4;
   static final int motorCurrentLimit = 20;
 }
 
