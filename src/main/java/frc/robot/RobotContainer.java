@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.GripperCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
@@ -38,6 +39,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
+import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.lift.Lift;
 import org.littletonrobotics.junction.Logger;
@@ -56,6 +58,7 @@ public class RobotContainer {
   private final Intake intake;
   private final Lift lift;
   private final Arm arm;
+  private final Gripper gripper;
 
   // Controllers
   private final CommandXboxController driverPad = new CommandXboxController(0);
@@ -114,6 +117,7 @@ public class RobotContainer {
     intake = Constants.useIntake ? new Intake() : null;
     lift = Constants.useLift ? new Lift() : null;
     arm = Constants.useArm ? new Arm() : null;
+    gripper = Constants.useGripper ? new Gripper() : null;
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -217,6 +221,17 @@ public class RobotContainer {
       operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
       operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
       operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
+    }
+
+    /*
+     * Gripper is controlled by Operator
+     */
+    if (Constants.useGripper) {
+      // Deafault command, manual control via triggers
+      gripper.setDefaultCommand(
+          GripperCommands.joystickGrip(
+              gripper,
+              () -> (operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis()) * 0.40));
     }
   }
 
