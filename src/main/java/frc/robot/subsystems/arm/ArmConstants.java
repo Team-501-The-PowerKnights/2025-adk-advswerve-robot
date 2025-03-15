@@ -37,7 +37,7 @@ class ArmConstants {
 
   /** Gear ratio for encoder calibration */
   // Motor gearbox(es) contribution
-  static final double motorGearRatio = 5 * 5;
+  static final double motorGearRatio = 5 * 5 * 4;
   // Lower gear in chain
   static final double lowerGearRatio = 32.0;
   // Upper gear in chain
