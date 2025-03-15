@@ -38,18 +38,18 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
 
   public enum Task {
-    IDLE("Idle", 0.0),
-    INTAKE("Intake", IntakeConstants.intakeSpeed),
-    EJECT("Eject", IntakeConstants.ejectSpeed);
+    IDLE("Idle", 0.0, 0.0),
+    INTAKE("Intake", IntakeConstants.intakeInSpeed, IntakeConstants.hopperInSpeed),
+    EJECT("Eject", IntakeConstants.intakeOutSpeed, IntakeConstants.hopperOutSpeed);
 
     private final String taskName;
     private final double intakeSpeed;
     private final double hopperSpeed;
 
-    Task(String taskName, double intakeSpeed) {
+    Task(String taskName, double intakeSpeed, double hopperSpeed) {
       this.taskName = taskName;
       this.intakeSpeed = intakeSpeed;
-      this.hopperSpeed = intakeSpeed * 0.35;
+      this.hopperSpeed = hopperSpeed;
     }
 
     public String getTaskName() {
