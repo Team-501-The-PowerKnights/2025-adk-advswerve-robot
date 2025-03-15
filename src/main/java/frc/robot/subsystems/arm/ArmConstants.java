@@ -26,6 +26,8 @@ class ArmConstants {
   static final boolean motorInverted = true;
   /** */
   static final int motorCurrentLimit = 20;
+  /** */
+  static final double motorVoltageComp = 12.0;
 
   /** Is the encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;

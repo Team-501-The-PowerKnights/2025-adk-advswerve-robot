@@ -179,16 +179,6 @@ public class Lift extends SubsystemBase {
   }
 
   /**
-   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
-   * class to get the value.
-   *
-   * @return current encoder position
-   */
-  private double getPosition() {
-    return encoder.getPosition();
-  }
-
-  /**
    * Accepts a <code>Task</code> which defines a set point target to use for PID control of the
    * position.
    *
@@ -226,6 +216,16 @@ public class Lift extends SubsystemBase {
         currentMode = Mode.MANUAL;
       }
     }
+  }
+
+  /**
+   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
+   * class to get the value.
+   *
+   * @return current encoder position
+   */
+  private double getPosition() {
+    return encoder.getPosition();
   }
 
   /**

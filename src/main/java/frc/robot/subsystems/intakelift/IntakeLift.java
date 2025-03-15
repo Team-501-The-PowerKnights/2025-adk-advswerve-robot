@@ -77,12 +77,13 @@ public class IntakeLift extends SubsystemBase {
   private final SparkClosedLoopController controller;
   private final SparkMax rightMotor;
 
-  private boolean origSparkStickyFault;
+  // Persistent initialization stuff (so can be logged)
+  StringBuilder encoderInitBuf;
 
   /** Creates a new IntakeLift. */
   @SuppressWarnings("resource")
   public IntakeLift() {
-    origSparkStickyFault = SparkUtil501.sparkStickyFault;
+    boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
     leftMotor = new SparkMax(IntakeLiftConstants.leftCanId, MotorType.kBrushless);
     encoder = leftMotor.getEncoder();
@@ -138,12 +139,11 @@ public class IntakeLift extends SubsystemBase {
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
       double relEncoderPos = encoder.getPosition();
-      StringBuilder buf = new StringBuilder();
-      buf.append("absEncoder = ").append(absEncoderPos);
-      buf.append(", scaled = ").append(absEncoderPosScaled);
-      buf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("IntakeLift: " + buf.toString());
-      Logger.recordOutput("IntakeLift/EncoderConfig", buf.toString());
+      encoderInitBuf = new StringBuilder();
+      encoderInitBuf.append("absEncoder = ").append(absEncoderPos);
+      encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
+      encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
+      System.out.println("IntakeLift: " + encoderInitBuf.toString());
     }
 
     // Startup in PID at current location
@@ -194,5 +194,6 @@ public class IntakeLift extends SubsystemBase {
     Logger.recordOutput("IntakeLift/Position", getPosition());
     Logger.recordOutput("IntakeLift/LeftOutput", leftMotor.getAppliedOutput());
     Logger.recordOutput("IntakeLift/RightOutput", rightMotor.getAppliedOutput());
+    Logger.recordOutput("IntakeLift/EncoderConfig", encoderInitBuf.toString());
   }
 }

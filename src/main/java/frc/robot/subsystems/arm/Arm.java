@@ -117,7 +117,7 @@ public class Arm extends SubsystemBase {
         .inverted(ArmConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(ArmConstants.motorCurrentLimit)
-        .voltageCompensation(12.0)
+        .voltageCompensation(ArmConstants.motorVoltageComp)
         .softLimit
         .forwardSoftLimitEnabled(false)
         .reverseSoftLimitEnabled(false);
@@ -155,7 +155,6 @@ public class Arm extends SubsystemBase {
       encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
       encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
       System.out.println("Arm: " + encoderInitBuf.toString());
-      Logger.recordOutput("Arm/EncoderConfig", encoderInitBuf.toString());
     }
 
     // Startup in Manual
@@ -179,16 +178,6 @@ public class Arm extends SubsystemBase {
       new Alert("Successful REVLib Arm construction", AlertType.kInfo).set(true);
     }
     sparkStickyFault |= origSparkStickyFault;
-  }
-
-  /**
-   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
-   * class to get the value.
-   *
-   * @return current encoder position
-   */
-  private double getPosition() {
-    return encoder.getPosition() / ArmConstants.gearRatio;
   }
 
   /**
@@ -229,6 +218,16 @@ public class Arm extends SubsystemBase {
         currentMode = Mode.MANUAL;
       }
     }
+  }
+
+  /**
+   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
+   * class to get the value.
+   *
+   * @return current encoder position
+   */
+  private double getPosition() {
+    return encoder.getPosition();
   }
 
   /**
