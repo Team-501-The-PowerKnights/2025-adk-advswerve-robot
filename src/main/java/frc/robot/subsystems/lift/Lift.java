@@ -48,11 +48,11 @@ public class Lift extends SubsystemBase {
 
   /** Enumeration of set positions */
   public enum Task {
-    REEF_4("Reef_4", 700.0),
-    REEF_3("Reef_3", 617.0),
-    REEF_2("Reef_2", 467.0),
-    REEF_1("Reef_1", 275.0),
-    COLLECT("Collect", 15.0),
+    REEF_4("Reef_4", 19000.0), // fake
+    REEF_3("Reef_3", 17300.0),
+    REEF_2("Reef_2", 13100.0),
+    REEF_1("Reef_1", 8510.0),
+    COLLECT("Collect", 5.5),
     HOME("Home", LiftConstants.minHeight),
     START("Start", LiftConstants.minHeight),
     // Special case of previously manual setting
@@ -97,12 +97,13 @@ public class Lift extends SubsystemBase {
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
-  private boolean origSparkStickyFault;
+  // Persistent initialization stuff (so can be logged)
+  StringBuilder encoderInitBuf;
 
-  /** Constructs a new version of the subsystem. */
+  /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
   public Lift() {
-    origSparkStickyFault = SparkUtil501.sparkStickyFault;
+    boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
     // TODO - Log error on entry
 
     // Create controller
@@ -110,13 +111,13 @@ public class Lift extends SubsystemBase {
     encoder = motor.getEncoder();
     controller = motor.getClosedLoopController();
 
-    // Factory reset (and burn to flash)
+    // Factory reset and burn new config to flash
     SparkMaxConfig config = new SparkMaxConfig();
     config
         .inverted(LiftConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(LiftConstants.motorCurrentLimit)
-        .voltageCompensation(12.0)
+        .voltageCompensation(LiftConstants.motorVoltageComp)
         .softLimit
         .forwardSoftLimitEnabled(false)
         .reverseSoftLimitEnabled(false)
@@ -149,12 +150,11 @@ public class Lift extends SubsystemBase {
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
       double relEncoderPos = encoder.getPosition();
-      StringBuilder buf = new StringBuilder();
-      buf.append("absEncoder = ").append(absEncoderPos);
-      buf.append(", scaled = ").append(absEncoderPosScaled);
-      buf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("Lift: " + buf.toString());
-      Logger.recordOutput("Lift/EncoderConfig", buf.toString());
+      encoderInitBuf = new StringBuilder();
+      encoderInitBuf.append("absEncoder = ").append(absEncoderPos);
+      encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
+      encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
+      System.out.println("Lift: " + encoderInitBuf.toString());
     }
 
     // Startup in PID at current location
@@ -176,16 +176,6 @@ public class Lift extends SubsystemBase {
       new Alert("Successful REVLib Lift construction", AlertType.kInfo).set(true);
     }
     sparkStickyFault |= origSparkStickyFault;
-  }
-
-  /**
-   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
-   * class to get the value.
-   *
-   * @return current encoder position
-   */
-  private double getPosition() {
-    return encoder.getPosition();
   }
 
   /**
@@ -229,6 +219,16 @@ public class Lift extends SubsystemBase {
   }
 
   /**
+   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
+   * class to get the value.
+   *
+   * @return current encoder position
+   */
+  private double getPosition() {
+    return encoder.getPosition();
+  }
+
+  /**
    * Sets the controller to use a 'manual' speed entry.
    *
    * @param speed
@@ -262,5 +262,6 @@ public class Lift extends SubsystemBase {
     Logger.recordOutput("Lift/Target", currentTarget);
     Logger.recordOutput("Lift/Position", getPosition());
     Logger.recordOutput("Lift/Output", motor.getAppliedOutput());
+    Logger.recordOutput("Lift/EncoderConfig", encoderInitBuf.toString());
   }
 }

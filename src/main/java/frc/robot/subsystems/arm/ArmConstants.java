@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the constants for the <code>Intake</code> subsystem.
+ * This package contains the constants for the <code>Arm</code> subsystem.
  *
  * <p>More detail ...
  *
@@ -19,30 +19,47 @@ package frc.robot.subsystems.arm;
 
 class ArmConstants {
 
+  /** CAN ID of the speed controller */
   static final int armCanId = 34;
 
-  static final boolean armInverted = true;
-  static final int armMotorCurrentLimit = 20;
+  /** Is the motor inverted? (should be positive going up) */
+  static final boolean motorInverted = true;
+  /** */
+  static final int motorCurrentLimit = 20;
+  /** */
+  static final double motorVoltageComp = 12.0;
+
   /** Is the encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;
 
   /** Default speed to use for motion */
   static final double defaultSpeed = 0.70;
 
-  static final double motorGearRatio = 125.0;
-  static final double armLowerGear = 30.0; // DOUBLE VERIFY
-  static final double armUpperGear = 48.0;
-  static final double gearRatio = (armUpperGear / armLowerGear) * motorGearRatio;
-
-  static final double motorKv = 473.0;
+  /** Gear ratio for encoder calibration */
+  // Motor gearbox(es) contribution
+  static final double motorGearRatio = 5 * 5 * 4;
+  // Lower gear in chain
+  static final double lowerGearRatio = 32.0;
+  // Upper gear in chain
+  static final double upperGearRatio = 48.0;
+  // Calculated value
+  static final double gearRatio = (upperGearRatio / lowerGearRatio) * motorGearRatio;
 
   /** Joystick deadzone to use for manual control of subsystem */
   static final double joystickDeadZone = 0.05;
 
-  /* PID control loop constants */
+  /** PID control loop constants */
+  //
   static final double pidKp = 0.0;
+  //
   static final double pidKi = 0.0;
+  //
   static final double pidKd = 0.0;
+  //
   static final double pidMaxNegOut = -0.5;
   static final double pidMaxPosOut = 0.5;
+
+  //
+  static final double minHeight = 0;
+  static final double maxHeight = 0;
 }

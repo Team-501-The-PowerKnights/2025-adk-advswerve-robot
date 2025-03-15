@@ -25,7 +25,9 @@ class LiftConstants {
   /** Is the motor inverted? (should be positive going up) */
   static final boolean motorInverted = false;
   /** */
-  static final int motorCurrentLimit = 20;
+  static final int motorCurrentLimit = 40;
+  /** */
+  static final double motorVoltageComp = 12.0;
 
   /** Is the encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;
@@ -34,19 +36,23 @@ class LiftConstants {
   static final double defaultSpeed = 0.70;
 
   /** */
-  static final double gearRatio = 4 * 4;
+  static final double gearRatio = 4 * 4 * 5;
 
   /** Joystick deadzone to use for manual control of subsystem */
   static final double joystickDeadZone = 0.05;
 
-  /* PID control loop constants */
+  /** PID control loop constants */
   static final double pidKp = 0.1;
+  //
   static final double pidKi = 0.0;
+  //
   static final double pidKd = 0.0;
+  //
   static final double pidMaxNegOut = -0.5;
+  //
   static final double pidMaxPosOut = 0.7;
 
   //
-  static final double minHeight = 15.0; // Should this be higher?
-  static final double maxHeight = 1500.0;
+  static final double minHeight = 5.5; // Should this be higher?
+  static final double maxHeight = 41000.0;
 }
