@@ -154,6 +154,7 @@ public class Lift extends SubsystemBase {
       buf.append(", scaled = ").append(absEncoderPosScaled);
       buf.append(", relEncoder = ").append(relEncoderPos);
       System.out.println("Lift: " + buf.toString());
+      Logger.recordOutput("Lift/EncoderConfig", buf.toString());
     }
 
     // Startup in PID at current location
