@@ -66,7 +66,8 @@ public class Intake extends SubsystemBase {
   }
 
   // Hardware objects
-  private final SparkFlex intakeMotor;
+  private final SparkFlex intakeMotorLeft;
+  private final SparkFlex intakeMotorRight;
   private final SparkMax hopperMotor;
 
   private boolean origSparkStickyFault;
@@ -79,8 +80,9 @@ public class Intake extends SubsystemBase {
   @SuppressWarnings("resource")
   public Intake() {
     origSparkStickyFault = SparkUtil501.sparkStickyFault;
-    // Create controller
-    intakeMotor = new SparkFlex(IntakeConstants.intakeCanId, MotorType.kBrushless);
+    // Create controllers
+    intakeMotorLeft = new SparkFlex(IntakeConstants.intakeLeftCanId, MotorType.kBrushless);
+    intakeMotorRight = new SparkFlex(IntakeConstants.intakeRightCanId, MotorType.kBrushless);
     hopperMotor = new SparkMax(IntakeConstants.hopperCanId, MotorType.kBrushless);
 
     // Factory reset (and burn to flash)
@@ -89,12 +91,20 @@ public class Intake extends SubsystemBase {
         .inverted(IntakeConstants.intakeMotorInverted)
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(IntakeConstants.intakeMotorCurrentLimit)
-        .voltageCompensation(12.0);
+        .voltageCompensation(IntakeConstants.intakeMotorVoltageComp);
     SparkUtil501.tryUntilOk(
-        intakeMotor,
+        intakeMotorLeft,
         5,
         () ->
-            intakeMotor.configure(
+            intakeMotorLeft.configure(
+                intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+
+    intakeConfig.follow(IntakeConstants.intakeLeftCanId, true);
+    SparkUtil501.tryUntilOk(
+        intakeMotorRight,
+        5,
+        () ->
+            intakeMotorRight.configure(
                 intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     SparkMaxConfig hopperConfig = new SparkMaxConfig();
@@ -102,7 +112,7 @@ public class Intake extends SubsystemBase {
         .inverted(IntakeConstants.hopperMotorInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(IntakeConstants.hopperMotorCurrentLimit)
-        .voltageCompensation(12.0);
+        .voltageCompensation(IntakeConstants.hopperMotorVoltageComp);
     SparkUtil501.tryUntilOk(
         hopperMotor,
         5,
@@ -135,17 +145,18 @@ public class Intake extends SubsystemBase {
   }
 
   private void setSpeed(double instakeSpeed, double hopperSpeed) {
-    intakeMotor.set(instakeSpeed);
+    intakeMotorLeft.set(instakeSpeed);
     hopperMotor.set(hopperSpeed);
   }
 
   public void periodic() {
     // Update current task
-    setSpeed(currentTask.getIntakeSpeed(), currentTask.getHopperSpeed());
+    setSpeed(currentTask.getIntakeSpeed(), currentTask.getIntakeSpeed());
 
     Logger.recordOutput("Intake/CurrentTask", currentTask.getTaskName());
     Logger.recordOutput("Intake/CurrentSpeed", currentTask.getIntakeSpeed());
-    Logger.recordOutput("Intake/IntakeOutput", intakeMotor.get());
+    Logger.recordOutput("Intake/IntakeLeftOutput", intakeMotorLeft.get());
+    Logger.recordOutput("Intake/IntakeRightOutput", intakeMotorRight.get());
     Logger.recordOutput("Intake/HopperOutput", hopperMotor.get());
   }
 }
