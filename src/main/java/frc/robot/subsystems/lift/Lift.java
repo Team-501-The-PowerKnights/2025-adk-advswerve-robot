@@ -48,11 +48,11 @@ public class Lift extends SubsystemBase {
 
   /** Enumeration of set positions */
   public enum Task {
-    REEF_4("Reef_4", 700.0),
-    REEF_3("Reef_3", 683.0),
-    REEF_2("Reef_2", 518.0),
-    REEF_1("Reef_1", 340.0),
-    COLLECT("Collect", 15.0),
+    REEF_4("Reef_4", 19000.0), // fake
+    REEF_3("Reef_3", 17300.0),
+    REEF_2("Reef_2", 13100.0),
+    REEF_1("Reef_1", 8510.0),
+    COLLECT("Collect", 5.5),
     HOME("Home", LiftConstants.minHeight),
     START("Start", LiftConstants.minHeight),
     // Special case of previously manual setting
