@@ -1,6 +1,8 @@
 package frc.robot.subsystems.gripper;
 
 import static frc.robot.util.SparkUtil.tryUntilOk;
+import static frc.robot.util.SparkUtil501.sparkStickyError;
+import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -8,10 +10,15 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
+/** Constructs a new instance of the subsystem. */
+@SuppressWarnings("resource")
 public class Gripper extends SubsystemBase {
 
   // Hardware objects
@@ -20,6 +27,9 @@ public class Gripper extends SubsystemBase {
   private double currentSpeed;
 
   public Gripper() {
+    boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
+    // TODO - Log error on entry
+
     // Create controller
     motor = new SparkMax(GripperConstants.gripperCanId, MotorType.kBrushless);
     // Factory reset (but don't burn to flash)
@@ -34,6 +44,18 @@ public class Gripper extends SubsystemBase {
         () ->
             motor.configure(
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+
+    // Log this subsystem's status and return global
+    Logger.recordOutput("Gripper/isREVLibError", !sparkStickyFault); // green=OK
+    if (sparkStickyFault) {
+      new Alert(
+              "REVLib problems in Gripper construction (error = " + sparkStickyError + ")",
+              AlertType.kError)
+          .set(true);
+    } else {
+      new Alert("Successful REVLib Gripper construction", AlertType.kInfo).set(true);
+    }
+    sparkStickyFault |= origSparkStickyFault;
   }
 
   private void setSpeed(double speed) {
