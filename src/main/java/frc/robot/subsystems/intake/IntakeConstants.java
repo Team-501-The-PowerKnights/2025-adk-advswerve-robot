@@ -41,6 +41,6 @@ class IntakeConstants {
   static final double hopperMotorVoltageComp = 12.0;
 
   // Intake is +, eject is -
-  static final double intakeSpeed = 0.10; // 0.90
-  static final double ejectSpeed = -0.10; // -0.90
+  static final double intakeSpeed = 0.30;
+  static final double ejectSpeed = -0.30;
 }

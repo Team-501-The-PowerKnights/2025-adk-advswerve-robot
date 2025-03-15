@@ -49,7 +49,7 @@ public class Intake extends SubsystemBase {
     Task(String taskName, double intakeSpeed) {
       this.taskName = taskName;
       this.intakeSpeed = intakeSpeed;
-      this.hopperSpeed = intakeSpeed * 1.0;
+      this.hopperSpeed = intakeSpeed * 0.35;
     }
 
     public String getTaskName() {
