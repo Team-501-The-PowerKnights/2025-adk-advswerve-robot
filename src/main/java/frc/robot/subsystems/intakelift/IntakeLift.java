@@ -15,7 +15,7 @@
  * @author first.stu, first.BDF
  * @version 2025.0.0
  */
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.intakelift;
 
 import static frc.robot.util.SparkUtil501.sparkStickyError;
 import static frc.robot.util.SparkUtil501.sparkStickyFault;
@@ -52,7 +52,7 @@ public class IntakeLift extends SubsystemBase {
       this.target = target;
     }
 
-    public String getTaskName() {
+    public String getName() {
       return taskName;
     }
 
@@ -61,13 +61,13 @@ public class IntakeLift extends SubsystemBase {
     }
   }
 
-  private LiftTask currentLiftTask;
-  private double currentLiftTarget;
+  private LiftTask currentTask;
+  private double currentTarget;
 
-  private final SparkMax intakeLiftLeftSpark;
-  private final RelativeEncoder intakeLiftEncoder;
-  private final SparkClosedLoopController intakeLiftController;
-  private final SparkMax intakeLiftRightSpark;
+  private final SparkMax leftMotor;
+  private final RelativeEncoder encoder;
+  private final SparkClosedLoopController controller;
+  private final SparkMax rightMotor;
 
   private boolean origSparkStickyFault;
 
@@ -76,12 +76,10 @@ public class IntakeLift extends SubsystemBase {
   public IntakeLift() {
     origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
-    intakeLiftLeftSpark =
-        new SparkMax(IntakeLiftConstants.intakeLiftLeftCanId, MotorType.kBrushless);
-    intakeLiftEncoder = intakeLiftLeftSpark.getEncoder();
-    intakeLiftController = intakeLiftLeftSpark.getClosedLoopController();
-    intakeLiftRightSpark =
-        new SparkMax(IntakeLiftConstants.intakeLiftRightCanId, MotorType.kBrushless);
+    leftMotor = new SparkMax(IntakeLiftConstants.intakeLiftLeftCanId, MotorType.kBrushless);
+    encoder = leftMotor.getEncoder();
+    controller = leftMotor.getClosedLoopController();
+    rightMotor = new SparkMax(IntakeLiftConstants.intakeLiftRightCanId, MotorType.kBrushless);
 
     SparkMaxConfig intakeLiftLeftConfig = new SparkMaxConfig();
     intakeLiftLeftConfig
@@ -101,10 +99,10 @@ public class IntakeLift extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
     SparkUtil501.tryUntilOk(
-        intakeLiftLeftSpark,
+        leftMotor,
         5,
         () ->
-            intakeLiftLeftSpark.configure(
+            leftMotor.configure(
                 intakeLiftLeftConfig,
                 ResetMode.kNoResetSafeParameters,
                 PersistMode.kNoPersistParameters));
@@ -116,23 +114,22 @@ public class IntakeLift extends SubsystemBase {
         .voltageCompensation(12.0)
         .follow(IntakeLiftConstants.intakeLiftLeftCanId);
     SparkUtil501.tryUntilOk(
-        intakeLiftRightSpark,
+        rightMotor,
         5,
         () ->
-            intakeLiftRightSpark.configure(
+            rightMotor.configure(
                 intakeLiftRightConfig,
                 ResetMode.kNoResetSafeParameters,
                 PersistMode.kNoPersistParameters));
 
     double absEncoderPosScaled;
     {
-      double absEncoderPos = intakeLiftLeftSpark.getAbsoluteEncoder().getPosition();
+      double absEncoderPos = leftMotor.getAbsoluteEncoder().getPosition();
       absEncoderPosScaled = absEncoderPos * IntakeLiftConstants.gearRatio;
 
-      SparkUtil501.tryUntilOk(
-          intakeLiftEncoder, 5, () -> intakeLiftEncoder.setPosition(absEncoderPosScaled));
+      SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
-      double relEncoderPos = intakeLiftEncoder.getPosition();
+      double relEncoderPos = encoder.getPosition();
       StringBuilder buf = new StringBuilder();
       buf.append("absEncoder = ").append(absEncoderPos);
       buf.append(", scaled = ").append(absEncoderPosScaled);
@@ -143,8 +140,8 @@ public class IntakeLift extends SubsystemBase {
     // Startup in PID at current location
     // Startup at Joystick
     LiftTask.JOYSTICK.target = absEncoderPosScaled;
-    currentLiftTask = LiftTask.JOYSTICK;
-    setLiftTask(LiftTask.JOYSTICK);
+    currentTask = LiftTask.JOYSTICK;
+    setTask(LiftTask.JOYSTICK);
 
     // Log this subsystem's status and return global
     Logger.recordOutput("IntakeLift/isREVLibError", !sparkStickyFault); // green=OK
@@ -159,27 +156,36 @@ public class IntakeLift extends SubsystemBase {
     sparkStickyFault |= origSparkStickyFault;
   }
 
-  public void setLiftTask(LiftTask task) {
-    currentLiftTask = task;
-    currentLiftTarget = task.getTarget();
+  /**
+   * Gets the current <code>encoder</code> position. This method should be used everywhere in this
+   * class to get the value.
+   *
+   * @return current encoder position
+   */
+  private double getPosition() {
+    return encoder.getPosition();
   }
 
-  private void setLiftSpeed(double speed) {
-    intakeLiftController.setReference(speed, ControlType.kDutyCycle);
+  public void setTask(LiftTask task) {
+    currentTask = task;
+    currentTarget = task.getTarget();
   }
 
-  private void setLiftTarget(double target) {
-    intakeLiftController.setReference(target, ControlType.kPosition);
+  private void setTarget(double target) {
+    controller.setReference(target, ControlType.kPosition);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     // DO NOT ENABLE UNTIL
-    // setLiftTarget(currentLiftTarget);
+    // setTarget(currentLiftTarget);
 
-    Logger.recordOutput("Intake/CurrentLiftTask", currentLiftTask.getTaskName());
-    Logger.recordOutput("IntakeLiftLeft/Output", intakeLiftLeftSpark.get());
-    Logger.recordOutput("IntakeLiftRight/Output", intakeLiftRightSpark.get());
+    Logger.recordOutput("IntakeLift/CurrentTask", currentTask.getName());
+    Logger.recordOutput("IntakeLift/Target", currentTarget);
+    Logger.recordOutput("IntakeLift/Position", getPosition());
+    Logger.recordOutput("IntakeLift/CurrentLiftTask", currentTask.getName());
+    Logger.recordOutput("IntakeLift/LeftOutput", leftMotor.getAppliedOutput());
+    Logger.recordOutput("IntakeLift/RightOutput", rightMotor.getAppliedOutput());
   }
 }

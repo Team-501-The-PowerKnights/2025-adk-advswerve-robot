@@ -7,21 +7,12 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the constants for the <code>Intake</code> subsystem.
+ * This package contains the implementation of the <code>IntakeLift</code> subsystem.
  *
  * <p>More detail ...
  *
  * @since 2025.0.0
- * @author first.stu, first.BDF
+ * @author first.stu
  * @version 2025.0.0
  */
-package frc.robot.subsystems.intake2;
-
-class Intake2Constants {
-
-  //
-
-  static final double gearRatio = 4 * 4;
-  /** Is the encoder inverted? (should be positive going up) */
-  static final boolean encoderInverted = false;
-}
+package frc.robot.subsystems.intakelift;
