@@ -172,6 +172,7 @@ public class IntakeLift extends SubsystemBase {
   }
 
   public void setTask(LiftTask task) {
+    System.out.println("IntakeLift::setTask to " + task.getName());
     currentTask = task;
     currentTarget = task.getTarget();
   }

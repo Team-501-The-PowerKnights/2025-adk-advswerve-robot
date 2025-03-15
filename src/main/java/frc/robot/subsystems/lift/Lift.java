@@ -51,7 +51,7 @@ public class Lift extends SubsystemBase {
     REEF_4("Reef_4", 700.0),
     REEF_3("Reef_3", 650.0),
     REEF_2("Reef_2", 500.0),
-    REEF_1("Reef_1", 341.0),
+    REEF_1("Reef_1", 218.0),
     COLLECT("Collect", 0.5),
     HOME("Home", LiftConstants.minHeight),
     START("Start", LiftConstants.minHeight),

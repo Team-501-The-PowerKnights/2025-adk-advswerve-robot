@@ -4,8 +4,8 @@ import static frc.robot.util.SparkUtil.tryUntilOk;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,13 +15,13 @@ import org.littletonrobotics.junction.Logger;
 public class Gripper extends SubsystemBase {
 
   // Hardware objects
-  private final SparkFlex motor;
+  private final SparkMax motor;
 
   private double currentSpeed;
 
   public Gripper() {
     // Create controller
-    motor = new SparkFlex(GripperConstants.gripperCanId, MotorType.kBrushless);
+    motor = new SparkMax(GripperConstants.gripperCanId, MotorType.kBrushless);
     // Factory reset (but don't burn to flash)
     SparkMaxConfig config = new SparkMaxConfig();
     config

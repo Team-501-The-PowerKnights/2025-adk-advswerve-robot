@@ -208,11 +208,16 @@ public class RobotContainer {
     /** Intake Lift is controlled by Driver */
     if (Constants.useIntakeLift) {
       if (driverPad.getHID().getPOV() >= 0 && driverPad.getHID().getPOV() < 90) {
+        System.out.println("OI set task to RECALL on " + driverPad.getHID().getPOV());
         intakeLift.setTask(IntakeLift.LiftTask.RECALL);
       } else if (driverPad.getHID().getPOV() > 270 && driverPad.getHID().getPOV() < 360) {
+        System.out.println("OI set task to RECALL on " + driverPad.getHID().getPOV());
         intakeLift.setTask(IntakeLift.LiftTask.RECALL);
       } else if (driverPad.getHID().getPOV() > 90 && driverPad.getHID().getPOV() < 270) {
+        System.out.println("OI set task to DEPLOY  on " + driverPad.getHID().getPOV());
         intakeLift.setTask(IntakeLift.LiftTask.DEPLOY);
+      } else {
+        System.out.println("OI fell through task setting logic on " + driverPad.getHID().getPOV());
       }
     }
 
