@@ -38,8 +38,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class IntakeLift extends SubsystemBase {
 
+  /** Enumeration of set positions */
   public enum LiftTask {
-    IDLE("Idle", 0.0),
     DEPLOY("Deploy", IntakeLiftConstants.minHeight),
     RECALL("Recall", IntakeLiftConstants.maxHeight),
     JOYSTICK("Joystick", 0.0);
@@ -59,6 +59,14 @@ public class IntakeLift extends SubsystemBase {
     public double getTarget() {
       return this.target;
     }
+
+    public void setTarget(double target) {
+      if (this.getName().equals("Joystick")) {
+        this.target = target;
+      } else {
+        // TODO - Add a logged error here
+      }
+    }
   }
 
   private LiftTask currentTask;
@@ -76,25 +84,26 @@ public class IntakeLift extends SubsystemBase {
   public IntakeLift() {
     origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
-    leftMotor = new SparkMax(IntakeLiftConstants.intakeLiftLeftCanId, MotorType.kBrushless);
+    leftMotor = new SparkMax(IntakeLiftConstants.leftCanId, MotorType.kBrushless);
     encoder = leftMotor.getEncoder();
     controller = leftMotor.getClosedLoopController();
-    rightMotor = new SparkMax(IntakeLiftConstants.intakeLiftRightCanId, MotorType.kBrushless);
+    rightMotor = new SparkMax(IntakeLiftConstants.rightCanId, MotorType.kBrushless);
 
-    SparkMaxConfig intakeLiftLeftConfig = new SparkMaxConfig();
-    intakeLiftLeftConfig
-        .inverted(IntakeLiftConstants.intakeLiftLeftInverted)
+    SparkMaxConfig leftConfig = new SparkMaxConfig();
+    leftConfig
+        .inverted(IntakeLiftConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
-        .voltageCompensation(12.0)
+        .smartCurrentLimit(IntakeLiftConstants.motorCurrentLimit)
+        .voltageCompensation(IntakeLiftConstants.motorVoltageComp)
         .softLimit
         .forwardSoftLimitEnabled(false)
         .reverseSoftLimitEnabled(false)
         .forwardSoftLimit(IntakeLiftConstants.maxHeight)
         .forwardSoftLimitEnabled(true);
-    intakeLiftLeftConfig.absoluteEncoder.inverted(IntakeLiftConstants.encoderInverted);
+    leftConfig.absoluteEncoder.inverted(IntakeLiftConstants.encoderInverted);
     // config.encoder.inverted(LiftConstants.encoderInverted);
-    intakeLiftLeftConfig.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
-    intakeLiftLeftConfig
+    leftConfig.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
+    leftConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
@@ -103,25 +112,22 @@ public class IntakeLift extends SubsystemBase {
         5,
         () ->
             leftMotor.configure(
-                intakeLiftLeftConfig,
-                ResetMode.kNoResetSafeParameters,
-                PersistMode.kNoPersistParameters));
+                leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
-    SparkMaxConfig intakeLiftRightConfig = new SparkMaxConfig();
-    intakeLiftRightConfig
-        .inverted(IntakeLiftConstants.intakeLiftRightInverted)
+    SparkMaxConfig rightConfig = new SparkMaxConfig();
+    rightConfig
         .idleMode(IdleMode.kBrake)
-        .voltageCompensation(12.0)
-        .follow(IntakeLiftConstants.intakeLiftLeftCanId);
+        .smartCurrentLimit(IntakeLiftConstants.motorCurrentLimit)
+        .voltageCompensation(IntakeLiftConstants.motorVoltageComp)
+        .follow(IntakeLiftConstants.leftCanId, true);
     SparkUtil501.tryUntilOk(
         rightMotor,
         5,
         () ->
             rightMotor.configure(
-                intakeLiftRightConfig,
-                ResetMode.kNoResetSafeParameters,
-                PersistMode.kNoPersistParameters));
+                rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
+    // Initialize encoder based on absolute
     double absEncoderPosScaled;
     {
       double absEncoderPos = leftMotor.getAbsoluteEncoder().getPosition();
@@ -134,13 +140,12 @@ public class IntakeLift extends SubsystemBase {
       buf.append("absEncoder = ").append(absEncoderPos);
       buf.append(", scaled = ").append(absEncoderPosScaled);
       buf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("Lift: " + buf.toString());
+      System.out.println("IntakeLift: " + buf.toString());
     }
 
     // Startup in PID at current location
     // Startup at Joystick
     LiftTask.JOYSTICK.target = absEncoderPosScaled;
-    currentTask = LiftTask.JOYSTICK;
     setTask(LiftTask.JOYSTICK);
 
     // Log this subsystem's status and return global
@@ -178,13 +183,11 @@ public class IntakeLift extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // DO NOT ENABLE UNTIL
-    // setTarget(currentLiftTarget);
+    setTarget(currentTarget);
 
     Logger.recordOutput("IntakeLift/CurrentTask", currentTask.getName());
     Logger.recordOutput("IntakeLift/Target", currentTarget);
     Logger.recordOutput("IntakeLift/Position", getPosition());
-    Logger.recordOutput("IntakeLift/CurrentLiftTask", currentTask.getName());
     Logger.recordOutput("IntakeLift/LeftOutput", leftMotor.getAppliedOutput());
     Logger.recordOutput("IntakeLift/RightOutput", rightMotor.getAppliedOutput());
   }

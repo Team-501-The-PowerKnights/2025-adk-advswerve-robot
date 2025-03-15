@@ -15,9 +15,11 @@
 |   (M2) Turn    | Rev Spark Flex  | NEO Brushless 550 | 21     | Left Rear   | 12     |
 |   (M3) Drive   | Rev Spark Max   | NEO Brushless     | 14     | Right Rear  | 19     |
 |   (M3) Turn    | Rev Spark Flex  | NEO Brushless 550 | 21     | Right Rear  | 18     |
-| Intake Left    | Rev Spark Flex  | NEO Brushless     | 36     | --          | --     |
-| Intake Right   | Rev Spark Flex  | NEO Brushless     | 40     | --          | 15     |
+| Intake Left    | Rev Spark Flex  | NEO Brushless     | 36     | Left        | --     |
+| Intake Right   | Rev Spark Flex  | NEO Brushless     | 40     | Right (F)   | 15     |
 | Hopper         | Rev Spark Max   | NEO Brushless     | 37     | --          | --     |
+| Intake Lift Left 38 Encoder
+| Intake Lift Right 39 Max (F)
 |                |                 |                   |        |             | 14
 | Lift           | Rev Spark Max   | NEO Brushless     | 33     | --          | 17     |
 | Arm            | Rev Spark Max   | NEO Brushless     | 34     | --          |  0     |

@@ -19,17 +19,23 @@ package frc.robot.subsystems.intakelift;
 
 public class IntakeLiftConstants {
 
-  static final int intakeLiftLeftCanId = 38;
-  static final int intakeLiftRightCanId = 39;
+  /** CAN ID of the left lift speed controller */
+  static final int leftCanId = 38;
+  /** CAN ID of the right lift speed controller */
+  static final int rightCanId = 39;
 
-  static final boolean intakeLiftLeftInverted = true;
-  static final boolean intakeLiftRightInverted = true;
+  /** Is the motor inverted? (should be positive going up) */
+  static final boolean motorInverted = true;
+  /** */
+  static final int motorCurrentLimit = 40;
+  /** */
+  static final double motorVoltageComp = 12.0;
 
   static final double intakeDeploy = 0.25;
   static final double intakeRecall = 0.0;
 
-  static final double minHeight = 2.750; // Should this be higher?
-  static final double maxHeight = 700.0;
+  static final double minHeight = -0.5; // Should this be higher?
+  static final double maxHeight = -82.0;
 
   /* PID control loop constants */
   static final double pidKp = 0.1;
@@ -38,9 +44,8 @@ public class IntakeLiftConstants {
   static final double pidMaxNegOut = -0.5;
   static final double pidMaxPosOut = 0.7;
 
-  static final double gearRatio = 4 * 4;
-  /** Is the encoder inverted? (should be positive going up) */
-  static final boolean encoderInverted = false;
+  static final double gearRatio = 4 * 5;
 
-  static final int motorCurrentLimit = 20;
+  /** Is the absolute encoder inverted? (should be positive going up) */
+  static final boolean encoderInverted = false;
 }

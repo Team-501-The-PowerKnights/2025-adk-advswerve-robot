@@ -118,7 +118,7 @@ public class RobotContainer {
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
 
     intake = Constants.useIntake ? new Intake() : null;
-    intakeLift = Constants.useIntake ? new IntakeLift() : null;
+    intakeLift = Constants.useIntakeLift ? new IntakeLift() : null;
     lift = Constants.useLift ? new Lift() : null;
     arm = Constants.useArm ? new Arm() : null;
     gripper = Constants.useGripper ? new Gripper() : null;
@@ -213,8 +213,6 @@ public class RobotContainer {
         intakeLift.setTask(IntakeLift.LiftTask.RECALL);
       } else if (driverPad.getHID().getPOV() > 90 && driverPad.getHID().getPOV() < 270) {
         intakeLift.setTask(IntakeLift.LiftTask.DEPLOY);
-      } else if (driverPad.getHID().getPOV() == -1) {
-        intakeLift.setTask(IntakeLift.LiftTask.IDLE);
       }
     }
 
