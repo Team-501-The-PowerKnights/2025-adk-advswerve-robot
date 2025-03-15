@@ -19,19 +19,22 @@ package frc.robot.subsystems.intake;
 
 class IntakeConstants {
 
-  // static final int intakeCanId = 30; // Deprecated
-
+  /** CAN ID of the intake speed controller */
   static final int intakeCanId = 36;
+  /** CAN ID of the hopper speed controller */
   static final int hopperCanId = 37;
 
-  static final boolean intakeInverted = false;
-  static final boolean hopperInverted = false;
-  //  static final boolean intakeInverted = true; // Deprecated
+  /** Is the motor inverted? (should be positive pulling in) */
+  static final boolean intakeMotorInverted = false;
+  /** */
+  static final int intakeMotorCurrentLimit = 40;
+
+  /** Is the motor inverted? (should be positive pulling in) */
+  static final boolean hopperMotorInverted = false;
+  /** */
+  static final int hopperMotorCurrentLimit = 40;
 
   // Intake is +, eject is -
-  static final double intakeSpeed = 0.60;
-  static final double ejectSpeed = -0.70;
-
-  static final int intakeMotorCurrentLimit = 40;
-  static final int hopperMotorCurrentLimit = 40;
+  static final double intakeSpeed = 0.90;
+  static final double ejectSpeed = -0.90;
 }

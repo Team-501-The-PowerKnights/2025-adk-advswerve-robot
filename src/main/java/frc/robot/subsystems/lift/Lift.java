@@ -110,7 +110,7 @@ public class Lift extends SubsystemBase {
     encoder = motor.getEncoder();
     controller = motor.getClosedLoopController();
 
-    // Factory reset (but don't burn to flash)
+    // Factory reset (and burn to flash)
     SparkMaxConfig config = new SparkMaxConfig();
     config
         .inverted(LiftConstants.motorInverted)
