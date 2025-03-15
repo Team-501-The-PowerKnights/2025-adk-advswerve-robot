@@ -139,7 +139,7 @@ public class Intake extends SubsystemBase {
   public Command setTask(Task task) {
     return this.runOnce(
         () -> {
-          System.out.println("setTask to " + task.getTaskName());
+          // System.out.println("Intake::setTask to " + task.getTaskName());
           currentTask = task;
         });
   }
