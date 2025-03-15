@@ -11,10 +11,10 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "1,4": {
+          "0,9": {
             "size": [
-              5,
-              2
+              9,
+              5
             ],
             "content": {
               "_type": "Alerts",
@@ -24,20 +24,7 @@
               "_showGlyph": false
             }
           },
-          "9,0": {
-            "size": [
-              6,
-              2
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/SysId Choices",
-              "_title": "/SmartDashboard/SysId Choices",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "19,5": {
+          "22,7": {
             "size": [
               4,
               2
@@ -50,7 +37,7 @@
               "_showGlyph": false
             }
           },
-          "19,7": {
+          "22,9": {
             "size": [
               4,
               2
@@ -63,7 +50,7 @@
               "_showGlyph": false
             }
           },
-          "16,0": {
+          "29,12": {
             "size": [
               5,
               2
@@ -76,7 +63,7 @@
               "_showGlyph": false
             }
           },
-          "14,5": {
+          "14,7": {
             "size": [
               4,
               2
@@ -89,35 +76,9 @@
               "_showGlyph": false
             }
           },
-          "14,7": {
+          "33,3": {
             "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Output",
-              "_title": "/AdvantageKit/RealOutputs/Arm/Output",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "34,3": {
-            "size": [
-              5,
-              2
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/Auto Chooser",
-              "_title": "/SmartDashboard/Auto Chooser",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "34,0": {
-            "size": [
-              5,
+              6,
               2
             ],
             "content": {
@@ -128,7 +89,7 @@
               "_showGlyph": false
             }
           },
-          "9,3": {
+          "10,5": {
             "size": [
               4,
               2
@@ -141,7 +102,7 @@
               "_showGlyph": false
             }
           },
-          "9,5": {
+          "10,7": {
             "size": [
               4,
               2
@@ -154,15 +115,250 @@
               "_showGlyph": false
             }
           },
-          "9,7": {
+          "14,9": {
             "size": [
               4,
               2
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Output",
-              "_title": "AdvantageKit/RealOutputs/Lift/Output",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Position",
+              "_title": "AdvantageKit/RealOutputs/Arm/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,9": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Position",
+              "_title": "AdvantageKit/RealOutputs/Lift/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,0": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/limelight_Interface",
+              "_title": "limelight_Interface",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,2": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/limelight_Stream",
+              "_title": "limelight_Stream",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,4": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/limelight_PipelineName",
+              "_title": "limelight_PipelineName",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/CurrentMode",
+              "_title": "AdvantageKit/RealOutputs/Arm/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,0": {
+            "size": [
+              6,
+              2
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Choices",
+              "_title": "Auto Choices",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Lift/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "34,12": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "4,0": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Alerts",
+              "_source0": "network_table:///SmartDashboard/PathPlanner",
+              "_title": "PathPlanner",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "26,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Gripper/useGripper",
+              "_title": "AdvantageKit/RealOutputs/Gripper/useGripper",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "22,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/useIntake",
+              "_title": "AdvantageKit/RealOutputs/Intake/useIntake",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "10,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/useLift",
+              "_title": "AdvantageKit/RealOutputs/Lift/useLift",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "14,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/useArm",
+              "_title": "AdvantageKit/RealOutputs/Arm/useArm",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "18,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "18,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "18,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "18,9": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Position",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/Position",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -227,26 +423,13 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Output",
-              "_title": "AdvantageKit/RealOutputs/Lift/Output",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "10,7": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
               "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Position",
               "_title": "AdvantageKit/RealOutputs/Lift/Position",
               "_glyph": 148,
               "_showGlyph": false
             }
           },
-          "10,9": {
+          "10,7": {
             "size": [
               4,
               2
@@ -296,6 +479,64 @@
               "_title": "AdvantageKit/RealOutputs/Lift/CurrentSpeed",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "15,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/Output",
+              "_title": "AdvantageKit/RealOutputs/Lift/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,1": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/useLift",
+              "_title": "AdvantageKit/RealOutputs/Lift/useLift",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,7": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/isPID",
+              "_title": "AdvantageKit/RealOutputs/Lift/isPID",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "3,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Lift/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
@@ -358,19 +599,6 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Output",
-              "_title": "AdvantageKit/RealOutputs/Arm/Output",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "10,7": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
               "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Position",
               "_title": "AdvantageKit/RealOutputs/Arm/Position",
               "_glyph": 148,
@@ -390,7 +618,7 @@
               "_showGlyph": false
             }
           },
-          "10,9": {
+          "10,7": {
             "size": [
               4,
               2
@@ -414,6 +642,21 @@
               "_title": "/AdvantageKit/RealOutputs/Arm/CurrentSpeed",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "6,1": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/useArm",
+              "_title": "AdvantageKit/RealOutputs/Arm/useArm",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
@@ -455,12 +698,81 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "10,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/CurrentTask",
+              "_title": "/AdvantageKit/RealOutputs/Intake/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "16,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/HopperOutput",
+              "_title": "/AdvantageKit/RealOutputs/Intake/HopperOutput",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/isREVLibError",
+              "_title": "/AdvantageKit/RealOutputs/Intake/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "16,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/IntakeOutput",
+              "_title": "/AdvantageKit/RealOutputs/Intake/IntakeOutput",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,1": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/useIntake",
+              "_title": "/AdvantageKit/RealOutputs/Intake/useIntake",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
           }
         }
       }
     },
     {
-      "title": "Climber",
+      "title": "Gripper",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
       "widgetPane": {
@@ -495,15 +807,191 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "10,4": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Gripper/useGripper",
+              "_title": "/AdvantageKit/RealOutputs/Gripper/useGripper",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "14,5": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Gripper/Output",
+              "_title": "/AdvantageKit/RealOutputs/Gripper/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Gripper/CurrentSpeed",
+              "_title": "/AdvantageKit/RealOutputs/Gripper/CurrentSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Intake Lift",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "33,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,1": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "3,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
+              "_title": "/AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "10,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
+              "_title": "/AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Position",
+              "_title": "/AdvantageKit/RealOutputs/IntakeLift/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Target",
+              "_title": "/AdvantageKit/RealOutputs/IntakeLift/Target",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "15,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/LeftOutput",
+              "_title": "/AdvantageKit/RealOutputs/IntakeLift/LeftOutput",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "19,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/RightOutput",
+              "_title": "/AdvantageKit/RealOutputs/IntakeLift/RightOutput",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
     }
   ],
   "windowGeometry": {
-    "x": 0.0,
-    "y": 0.0,
+    "x": -7.0,
+    "y": 2.0,
     "width": 1920.0,
-    "height": 810.0
+    "height": 843.0
   }
 }
