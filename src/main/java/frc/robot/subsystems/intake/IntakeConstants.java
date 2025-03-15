@@ -29,7 +29,7 @@ class IntakeConstants {
   /** Is the motor inverted? (should be positive pulling in) */
   static final boolean intakeMotorInverted = false;
   /** */
-  static final int intakeMotorCurrentLimit = 40;
+  static final int intakeMotorCurrentLimit = 30;
   /** */
   static final double intakeMotorVoltageComp = 12.0;
 
@@ -41,8 +41,8 @@ class IntakeConstants {
   static final double hopperMotorVoltageComp = 12.0;
 
   // In (ingest) is +, out (eject) is -
-  static final double intakeInSpeed = 0.30;
+  static final double intakeInSpeed = 0.40;
   static final double hopperInSpeed = 0.30;
-  static final double intakeOutSpeed = -0.30;
+  static final double intakeOutSpeed = -0.40;
   static final double hopperOutSpeed = -0.30;
 }
