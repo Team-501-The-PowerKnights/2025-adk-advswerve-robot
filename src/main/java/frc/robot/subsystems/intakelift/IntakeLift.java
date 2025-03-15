@@ -39,7 +39,7 @@ import org.littletonrobotics.junction.Logger;
 public class IntakeLift extends SubsystemBase {
 
   /** Enumeration of set positions */
-  public enum LiftTask {
+  public enum Task {
     DEPLOY("Deploy", IntakeLiftConstants.minHeight),
     RECALL("Recall", IntakeLiftConstants.maxHeight),
     JOYSTICK("Joystick", 0.0);
@@ -47,7 +47,7 @@ public class IntakeLift extends SubsystemBase {
     private final String taskName;
     private double target;
 
-    LiftTask(String taskName, double target) {
+    Task(String taskName, double target) {
       this.taskName = taskName;
       this.target = target;
     }
@@ -69,7 +69,7 @@ public class IntakeLift extends SubsystemBase {
     }
   }
 
-  private LiftTask currentTask;
+  private Task currentTask;
   private double currentTarget;
 
   private final SparkMax leftMotor;
@@ -141,12 +141,13 @@ public class IntakeLift extends SubsystemBase {
       buf.append(", scaled = ").append(absEncoderPosScaled);
       buf.append(", relEncoder = ").append(relEncoderPos);
       System.out.println("IntakeLift: " + buf.toString());
+      Logger.recordOutput("IntakeLift/EncoderConfig", buf.toString());
     }
 
     // Startup in PID at current location
     // Startup at Joystick
-    LiftTask.JOYSTICK.target = absEncoderPosScaled;
-    setTask(LiftTask.JOYSTICK);
+    Task.JOYSTICK.target = absEncoderPosScaled;
+    setTask(Task.JOYSTICK);
 
     // Log this subsystem's status and return global
     Logger.recordOutput("IntakeLift/isREVLibError", !sparkStickyFault); // green=OK
@@ -171,7 +172,7 @@ public class IntakeLift extends SubsystemBase {
     return encoder.getPosition();
   }
 
-  public void setTask(LiftTask task) {
+  public void setTask(Task task) {
     System.out.println("IntakeLift::setTask to " + task.getName());
     currentTask = task;
     currentTarget = task.getTarget();

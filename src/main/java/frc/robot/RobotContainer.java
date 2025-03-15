@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
+import frc.robot.commands.IntakeLiftCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
@@ -207,18 +208,8 @@ public class RobotContainer {
 
     /** Intake Lift is controlled by Driver */
     if (Constants.useIntakeLift) {
-      if (driverPad.getHID().getPOV() >= 0 && driverPad.getHID().getPOV() < 90) {
-        System.out.println("OI set task to RECALL on " + driverPad.getHID().getPOV());
-        intakeLift.setTask(IntakeLift.LiftTask.RECALL);
-      } else if (driverPad.getHID().getPOV() > 270 && driverPad.getHID().getPOV() < 360) {
-        System.out.println("OI set task to RECALL on " + driverPad.getHID().getPOV());
-        intakeLift.setTask(IntakeLift.LiftTask.RECALL);
-      } else if (driverPad.getHID().getPOV() > 90 && driverPad.getHID().getPOV() < 270) {
-        System.out.println("OI set task to DEPLOY  on " + driverPad.getHID().getPOV());
-        intakeLift.setTask(IntakeLift.LiftTask.DEPLOY);
-      } else {
-        System.out.println("OI fell through task setting logic on " + driverPad.getHID().getPOV());
-      }
+      driverPad.povUp().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
+      driverPad.povDown().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
     }
 
     /*
