@@ -49,10 +49,10 @@ public class Lift extends SubsystemBase {
   /** Enumeration of set positions */
   public enum Task {
     REEF_4("Reef_4", 700.0),
-    REEF_3("Reef_3", 650.0),
-    REEF_2("Reef_2", 500.0),
-    REEF_1("Reef_1", 341.0),
-    COLLECT("Collect", 0.5),
+    REEF_3("Reef_3", 617.0),
+    REEF_2("Reef_2", 467.0),
+    REEF_1("Reef_1", 275.0),
+    COLLECT("Collect", 15.0),
     HOME("Home", LiftConstants.minHeight),
     START("Start", LiftConstants.minHeight),
     // Special case of previously manual setting
@@ -110,7 +110,7 @@ public class Lift extends SubsystemBase {
     encoder = motor.getEncoder();
     controller = motor.getClosedLoopController();
 
-    // Factory reset (but don't burn to flash)
+    // Factory reset (and burn to flash)
     SparkMaxConfig config = new SparkMaxConfig();
     config
         .inverted(LiftConstants.motorInverted)
@@ -154,6 +154,7 @@ public class Lift extends SubsystemBase {
       buf.append(", scaled = ").append(absEncoderPosScaled);
       buf.append(", relEncoder = ").append(relEncoderPos);
       System.out.println("Lift: " + buf.toString());
+      Logger.recordOutput("Lift/EncoderConfig", buf.toString());
     }
 
     // Startup in PID at current location

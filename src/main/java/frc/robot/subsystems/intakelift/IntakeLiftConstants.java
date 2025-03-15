@@ -7,37 +7,35 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This class contains the constants for the <code>Lift</code> subsystem.
+ * This package contains the constants for the <code>Intake</code> subsystem.
  *
  * <p>More detail ...
  *
  * @since 2025.0.0
- * @author first.stu
+ * @author first.brian
  * @version 2025.0.0
  */
-package frc.robot.subsystems.lift;
+package frc.robot.subsystems.intakelift;
 
-class LiftConstants {
+public class IntakeLiftConstants {
 
-  /** CAN ID of the speed controller */
-  static final int canId = 33;
+  /** CAN ID of the left lift speed controller */
+  static final int leftCanId = 38;
+  /** CAN ID of the right lift speed controller */
+  static final int rightCanId = 39;
 
   /** Is the motor inverted? (should be positive going up) */
-  static final boolean motorInverted = false;
+  static final boolean motorInverted = true;
   /** */
-  static final int motorCurrentLimit = 20;
-
-  /** Is the encoder inverted? (should be positive going up) */
-  static final boolean encoderInverted = false;
-
-  /** Default speed to use for motion */
-  static final double defaultSpeed = 0.70;
-
+  static final int motorCurrentLimit = 40;
   /** */
-  static final double gearRatio = 4 * 4;
+  static final double motorVoltageComp = 12.0;
 
-  /** Joystick deadzone to use for manual control of subsystem */
-  static final double joystickDeadZone = 0.05;
+  static final double intakeDeploy = 0.25;
+  static final double intakeRecall = 0.0;
+
+  static final double minHeight = -0.5; // Should this be higher?
+  static final double maxHeight = -82.0;
 
   /* PID control loop constants */
   static final double pidKp = 0.1;
@@ -46,7 +44,8 @@ class LiftConstants {
   static final double pidMaxNegOut = -0.5;
   static final double pidMaxPosOut = 0.7;
 
-  //
-  static final double minHeight = 15.0; // Should this be higher?
-  static final double maxHeight = 1500.0;
+  static final double gearRatio = 4 * 5;
+
+  /** Is the absolute encoder inverted? (should be positive going up) */
+  static final boolean encoderInverted = false;
 }
