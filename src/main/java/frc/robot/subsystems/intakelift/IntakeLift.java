@@ -89,6 +89,7 @@ public class IntakeLift extends SubsystemBase {
     controller = leftMotor.getClosedLoopController();
     rightMotor = new SparkMax(IntakeLiftConstants.rightCanId, MotorType.kBrushless);
 
+    // Factory reset and burn new config to flash
     SparkMaxConfig leftConfig = new SparkMaxConfig();
     leftConfig
         .inverted(IntakeLiftConstants.motorInverted)
@@ -114,6 +115,7 @@ public class IntakeLift extends SubsystemBase {
             leftMotor.configure(
                 leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
+    // Factory reset and burn new config to flash
     SparkMaxConfig rightConfig = new SparkMaxConfig();
     rightConfig
         .idleMode(IdleMode.kBrake)

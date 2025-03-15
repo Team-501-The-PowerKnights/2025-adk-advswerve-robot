@@ -97,6 +97,9 @@ public class Arm extends SubsystemBase {
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
+  // Persistent initialization stuff (so can be logged)
+  StringBuilder encoderInitBuf;
+
   /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
   public Arm() {
@@ -147,11 +150,12 @@ public class Arm extends SubsystemBase {
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
       double relEncoderPos = encoder.getPosition();
-      StringBuilder buf = new StringBuilder();
-      buf.append("absEncoder = ").append(absEncoderPos);
-      buf.append(", scaled = ").append(absEncoderPosScaled);
-      buf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("Lift: " + buf.toString());
+      encoderInitBuf = new StringBuilder();
+      encoderInitBuf.append("absEncoder = ").append(absEncoderPos);
+      encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
+      encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
+      System.out.println("Arm: " + encoderInitBuf.toString());
+      Logger.recordOutput("Arm/EncoderConfig", encoderInitBuf.toString());
     }
 
     // Startup in Manual
@@ -262,5 +266,6 @@ public class Arm extends SubsystemBase {
     Logger.recordOutput("Arm/Target", currentTarget);
     Logger.recordOutput("Arm/Position", getPosition());
     Logger.recordOutput("Arm/Output", motor.getAppliedOutput());
+    Logger.recordOutput("Arm/EncoderConfig", encoderInitBuf.toString());
   }
 }

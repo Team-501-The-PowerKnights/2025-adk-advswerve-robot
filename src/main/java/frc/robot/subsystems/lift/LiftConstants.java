@@ -25,7 +25,9 @@ class LiftConstants {
   /** Is the motor inverted? (should be positive going up) */
   static final boolean motorInverted = false;
   /** */
-  static final int motorCurrentLimit = 20;
+  static final int motorCurrentLimit = 40;
+  /** */
+  static final double motorVoltageComp = 12.0;
 
   /** Is the encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;
@@ -52,5 +54,5 @@ class LiftConstants {
 
   //
   static final double minHeight = 15.0; // Should this be higher?
-  static final double maxHeight = 1500.0;
+  static final double maxHeight = 1350.0;
 }
