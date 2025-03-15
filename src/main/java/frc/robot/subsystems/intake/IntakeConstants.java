@@ -29,8 +29,9 @@ class IntakeConstants {
   //  static final boolean intakeInverted = true; // Deprecated
 
   // Intake is +, eject is -
-  static final double intakeSpeed = 0.70;
+  static final double intakeSpeed = 0.60;
   static final double ejectSpeed = -0.70;
 
-  static final int motorCurrentLimit = 20;
+  static final int intakeMotorCurrentLimit = 40;
+  static final int hopperMotorCurrentLimit = 40;
 }

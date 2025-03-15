@@ -60,8 +60,8 @@ public class Intake extends SubsystemBase {
   }
 
   // Hardware objects
-  private final SparkFlex intakeFlex;
-  private final SparkMax hopperMax;
+  private final SparkFlex intakeMotor;
+  private final SparkMax hopperMotor;
 
   private boolean origSparkStickyFault;
 
@@ -74,35 +74,34 @@ public class Intake extends SubsystemBase {
   public Intake() {
     origSparkStickyFault = SparkUtil501.sparkStickyFault;
     // Create controller
-    intakeFlex = new SparkFlex(IntakeConstants.intakeCanId, MotorType.kBrushless);
-    hopperMax = new SparkMax(IntakeConstants.hopperCanId, MotorType.kBrushless);
+    intakeMotor = new SparkFlex(IntakeConstants.intakeCanId, MotorType.kBrushless);
+    hopperMotor = new SparkMax(IntakeConstants.hopperCanId, MotorType.kBrushless);
 
     // Factory reset (but don't burn to flash)
     SparkFlexConfig intakeConfig = new SparkFlexConfig();
     intakeConfig
         .inverted(IntakeConstants.intakeInverted)
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(IntakeConstants.motorCurrentLimit)
+        .idleMode(IdleMode.kCoast)
+        .smartCurrentLimit(IntakeConstants.intakeMotorCurrentLimit)
         .voltageCompensation(12.0);
     SparkUtil501.tryUntilOk(
-        intakeFlex,
+        intakeMotor,
         5,
         () ->
-            intakeFlex.configure(
+            intakeMotor.configure(
                 intakeConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
 
     SparkMaxConfig hopperConfig = new SparkMaxConfig();
     hopperConfig
         .inverted(IntakeConstants.hopperInverted)
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(IntakeConstants.motorCurrentLimit)
-        .voltageCompensation(12.0)
-        .follow(IntakeConstants.intakeCanId);
+        .smartCurrentLimit(IntakeConstants.hopperMotorCurrentLimit)
+        .voltageCompensation(12.0);
     SparkUtil501.tryUntilOk(
-        hopperMax,
+        hopperMotor,
         5,
         () ->
-            hopperMax.configure(
+            hopperMotor.configure(
                 hopperConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
 
     // Startup in Idle
@@ -124,12 +123,14 @@ public class Intake extends SubsystemBase {
   public Command setTask(Task task) {
     return this.runOnce(
         () -> {
+          System.out.println("setTask to " + task.getTaskName());
           currentTask = task;
         });
   }
 
   private void setSpeed(double speed) {
-    intakeFlex.set(speed);
+    intakeMotor.set(speed);
+    hopperMotor.set(speed * 1.30);
   }
 
   public void periodic() {
@@ -137,7 +138,8 @@ public class Intake extends SubsystemBase {
     setSpeed(currentTask.getSpeed());
 
     Logger.recordOutput("Intake/CurrentTask", currentTask.getTaskName());
-    Logger.recordOutput("Intake/IntakeOutput", intakeFlex.get());
-    Logger.recordOutput("Intake/HopperOutput", hopperMax.get());
+    Logger.recordOutput("Intake/CurrentSpeed", currentTask.getSpeed());
+    Logger.recordOutput("Intake/IntakeOutput", intakeMotor.get());
+    Logger.recordOutput("Intake/HopperOutput", hopperMotor.get());
   }
 }
