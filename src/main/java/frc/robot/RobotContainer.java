@@ -41,7 +41,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeLift;
+import frc.robot.subsystems.intakelift.IntakeLift;
 import frc.robot.subsystems.lift.Lift;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -112,6 +112,7 @@ public class RobotContainer {
     }
 
     Logger.recordOutput("Intake/useIntake", Constants.useIntake);
+    Logger.recordOutput("IntakeLift/useIntakeLift", Constants.useIntakeLift);
     Logger.recordOutput("Lift/useLift", Constants.useLift);
     Logger.recordOutput("Arm/useArm", Constants.useArm);
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
@@ -202,20 +203,19 @@ public class RobotContainer {
       driverPad.leftTrigger().onFalse(intake.setTask(Intake.Task.IDLE));
       driverPad.rightTrigger().onTrue(intake.setTask(Intake.Task.EJECT));
       driverPad.rightTrigger().onFalse(intake.setTask(Intake.Task.IDLE));
-      if (driverPad.getHID().getPOV() >= 0 && driverPad.getHID().getPOV() < 90) {
-        intakeLift.setLiftTask(IntakeLift.LiftTask.RECALL);
-      } else if (driverPad.getHID().getPOV() > 270 && driverPad.getHID().getPOV() < 360) {
-        intakeLift.setLiftTask(IntakeLift.LiftTask.RECALL);
-      } else if (driverPad.getHID().getPOV() > 90 && driverPad.getHID().getPOV() < 270) {
-        intakeLift.setLiftTask(IntakeLift.LiftTask.DEPLOY);
-      } else if (driverPad.getHID().getPOV() == -1) {
-        intakeLift.setLiftTask(IntakeLift.LiftTask.IDLE);
-      }
+    }
 
-      // driverPad.leftBumper().onTrue(intake.setTask(Intake.Task.INTAKE));
-      // driverPad.leftBumper().onFalse(intake.setTask(Intake.Task.IDLE));
-      // driverPad.rightBumper().onTrue(intake.setTask(Intake.Task.EJECT));
-      // driverPad.rightBumper().onFalse(intake.setTask(Intake.Task.IDLE));
+    /** Intake Lift is controlled by Driver */
+    if (Constants.useIntakeLift) {
+      if (driverPad.getHID().getPOV() >= 0 && driverPad.getHID().getPOV() < 90) {
+        intakeLift.setTask(IntakeLift.LiftTask.RECALL);
+      } else if (driverPad.getHID().getPOV() > 270 && driverPad.getHID().getPOV() < 360) {
+        intakeLift.setTask(IntakeLift.LiftTask.RECALL);
+      } else if (driverPad.getHID().getPOV() > 90 && driverPad.getHID().getPOV() < 270) {
+        intakeLift.setTask(IntakeLift.LiftTask.DEPLOY);
+      } else if (driverPad.getHID().getPOV() == -1) {
+        intakeLift.setTask(IntakeLift.LiftTask.IDLE);
+      }
     }
 
     /*

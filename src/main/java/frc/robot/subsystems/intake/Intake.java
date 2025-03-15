@@ -70,6 +70,7 @@ public class Intake extends SubsystemBase {
 
   // TODO - Fix the initialization of Spark to match Arm & Lift
   // TODO - Fix to use the control loop kDutyCycle?
+  @SuppressWarnings("resource")
   public Intake() {
     origSparkStickyFault = SparkUtil501.sparkStickyFault;
     // Create controller
@@ -136,7 +137,7 @@ public class Intake extends SubsystemBase {
     setSpeed(currentTask.getSpeed());
 
     Logger.recordOutput("Intake/CurrentTask", currentTask.getTaskName());
-    Logger.recordOutput("intake/Output", intakeFlex.get());
-    Logger.recordOutput("hopper/Output", hopperMax.get());
+    Logger.recordOutput("Intake/IntakeOutput", intakeFlex.get());
+    Logger.recordOutput("Intake/HopperOutput", hopperMax.get());
   }
 }
