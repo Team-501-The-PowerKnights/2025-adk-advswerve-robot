@@ -212,23 +212,37 @@ public class RobotContainer {
       // driverPad.povUp().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
       // driverPad.povDown().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
 
-      DoubleSupplier intakeLiftUp =
+      DoubleSupplier intakeLiftStop =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return 0.20;
+              return 0.0;
             }
             ;
           };
-      DoubleSupplier intakeLiftDown =
+
+      DoubleSupplier intakeLiftUp =
           new DoubleSupplier() {
             public double getAsDouble() {
               return -0.20;
             }
             ;
           };
+      DoubleSupplier intakeLiftDown =
+          new DoubleSupplier() {
+            public double getAsDouble() {
+              return 0.20;
+            }
+            ;
+          };
 
-      driverPad.povUp().whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftUp));
-      driverPad.povDown().whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftDown));
+      driverPad
+          .povUp()
+          .whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftUp))
+          .onFalse(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftStop));
+      driverPad
+          .povDown()
+          .whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftDown))
+          .onFalse(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftStop));
     }
 
     /*

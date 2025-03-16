@@ -21,13 +21,11 @@ import static frc.robot.util.SparkUtil501.sparkStickyError;
 import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.Alert;
@@ -119,10 +117,10 @@ public class IntakeLift extends SubsystemBase {
     leftConfig.absoluteEncoder.inverted(IntakeLiftConstants.encoderInverted);
     // config.encoder.inverted(LiftConstants.encoderInverted);
     leftConfig.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
-    leftConfig
-        .closedLoop
-        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
+    // leftConfig
+    //     .closedLoop
+    //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+    //     .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
     SparkUtil501.tryUntilOk(
         leftMotor,
         5,
@@ -135,8 +133,8 @@ public class IntakeLift extends SubsystemBase {
     rightConfig
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(IntakeLiftConstants.motorCurrentLimit)
-        .voltageCompensation(IntakeLiftConstants.motorVoltageComp)
-        .follow(IntakeLiftConstants.leftCanId, false);
+        .voltageCompensation(IntakeLiftConstants.motorVoltageComp);
+    // .follow(IntakeLiftConstants.leftCanId, false);
     SparkUtil501.tryUntilOk(
         rightMotor,
         5,
@@ -184,7 +182,6 @@ public class IntakeLift extends SubsystemBase {
   }
 
   public void setTask(Task task) {
-    System.out.println("IntakeLift::setTask to " + task.getName());
     currentTask = task;
     currentTarget = task.getTarget();
   }
@@ -200,6 +197,7 @@ public class IntakeLift extends SubsystemBase {
       return;
     }
 
+    // This comes in as fraction of DoubleSupplier (0.2 -> 0.111111)
     currentSpeed = speed;
 
     if (speed == 0) {
@@ -234,11 +232,13 @@ public class IntakeLift extends SubsystemBase {
    * @param speed
    */
   private void setSpeed(double speed) {
-    controller.setReference(speed, ControlType.kDutyCycle);
+    // controller.setReference(speed, ControlType.kDutyCycle);
+    leftMotor.set(speed);
+    rightMotor.set(speed);
   }
 
   private void setTarget(double target) {
-    controller.setReference(target, ControlType.kPosition);
+    // controller.setReference(target, ControlType.kPosition);
   }
 
   @Override
