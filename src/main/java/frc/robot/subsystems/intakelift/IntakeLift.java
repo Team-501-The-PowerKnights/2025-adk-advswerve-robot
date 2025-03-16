@@ -32,11 +32,19 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
 public class IntakeLift extends SubsystemBase {
+
+  public enum Mode {
+    /** Operating based on PID set point. (Default) */
+    PID,
+    /** Operating with input from joysticks. */
+    MANUAL
+  }
 
   /** Enumeration of set positions */
   public enum Task {
@@ -69,7 +77,13 @@ public class IntakeLift extends SubsystemBase {
     }
   }
 
+  // Current mode
+  private Mode currentMode;
+  // Current task
   private Task currentTask;
+  //
+  private double currentSpeed;
+  //
   private double currentTarget;
 
   private final SparkMax leftMotor;
@@ -122,7 +136,7 @@ public class IntakeLift extends SubsystemBase {
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(IntakeLiftConstants.motorCurrentLimit)
         .voltageCompensation(IntakeLiftConstants.motorVoltageComp)
-        .follow(IntakeLiftConstants.leftCanId, true);
+        .follow(IntakeLiftConstants.leftCanId, false);
     SparkUtil501.tryUntilOk(
         rightMotor,
         5,
@@ -146,10 +160,15 @@ public class IntakeLift extends SubsystemBase {
       System.out.println("IntakeLift: " + encoderInitBuf.toString());
     }
 
-    // Startup in PID at current location
+    // Startup in Manual
+    currentMode = Mode.MANUAL;
+    // FIXME - Initialize in PID when it works
+    // currentMode = Mode.PID;
     // Startup at Joystick
-    Task.JOYSTICK.target = absEncoderPosScaled;
+    Task.JOYSTICK.setTarget(absEncoderPosScaled);
     setTask(Task.JOYSTICK);
+    // Startup w/ no (manual) speed control
+    currentSpeed = 0.0;
 
     // Log this subsystem's status and return global
     Logger.recordOutput("IntakeLift/isREVLibError", !sparkStickyFault); // green=OK
@@ -164,6 +183,41 @@ public class IntakeLift extends SubsystemBase {
     sparkStickyFault |= origSparkStickyFault;
   }
 
+  public void setTask(Task task) {
+    System.out.println("IntakeLift::setTask to " + task.getName());
+    currentTask = task;
+    currentTarget = task.getTarget();
+  }
+
+  /**
+   * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
+   * of the position. Positive values lift and negative values lower.
+   *
+   * @param speed - The speed to set. Value should be between -1.0 and +1.0.
+   */
+  public void acceptTeleopInput(double speed) {
+    if (!DriverStation.isTeleopEnabled()) {
+      return;
+    }
+
+    currentSpeed = speed;
+
+    if (speed == 0) {
+      // In dead zone (so either revert to PID or ignore if currently PID)
+      if (currentMode == Mode.MANUAL) {
+        // Use current position for hold point
+        Task.JOYSTICK.setTarget(getPosition());
+        setTask(Task.JOYSTICK);
+        currentMode = Mode.PID;
+      }
+    } else {
+      // Valid teleop inputs (so either switch to MANUAL or just update speed)
+      if (currentMode == Mode.PID) {
+        currentMode = Mode.MANUAL;
+      }
+    }
+  }
+
   /**
    * Gets the current <code>encoder</code> position. This method should be used everywhere in this
    * class to get the value.
@@ -174,10 +228,13 @@ public class IntakeLift extends SubsystemBase {
     return encoder.getPosition();
   }
 
-  public void setTask(Task task) {
-    System.out.println("IntakeLift::setTask to " + task.getName());
-    currentTask = task;
-    currentTarget = task.getTarget();
+  /**
+   * Sets the controller to use a 'manual' speed entry.
+   *
+   * @param speed
+   */
+  private void setSpeed(double speed) {
+    controller.setReference(speed, ControlType.kDutyCycle);
   }
 
   private void setTarget(double target) {
@@ -187,9 +244,18 @@ public class IntakeLift extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    setTarget(currentTarget);
+    if (currentMode == Mode.MANUAL) {
+      setSpeed(currentSpeed);
+    } else {
+      // FIXME - Enable PID target setting when ready
+      // setTarget(currentTarget);
+      setSpeed(0);
+    }
 
+    Logger.recordOutput("IntakeLift/CurrentMode", currentMode.name());
+    Logger.recordOutput("IntakeLift/isPID", (currentMode == Mode.PID));
     Logger.recordOutput("IntakeLift/CurrentTask", currentTask.getName());
+    Logger.recordOutput("IntakeLift/CurrentSpeed", currentSpeed);
     Logger.recordOutput("IntakeLift/Target", currentTarget);
     Logger.recordOutput("IntakeLift/Position", getPosition());
     Logger.recordOutput("IntakeLift/LeftOutput", leftMotor.getAppliedOutput());

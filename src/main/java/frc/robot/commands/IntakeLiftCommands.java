@@ -18,14 +18,27 @@
  */
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.intakelift.IntakeLift;
+import java.util.function.DoubleSupplier;
 
 public class IntakeLiftCommands {
+  /** Deadband for joystick inputs */
+  private static final double DEADBAND = 0.1;
 
   /** Private constructor so can't be instantiated externally */
   private IntakeLiftCommands() {}
+
+  public static Command joystickLift(IntakeLift intakeLift, DoubleSupplier speedSupplier) {
+    return Commands.run(
+        () -> {
+          double speed = MathUtil.applyDeadband(speedSupplier.getAsDouble(), DEADBAND);
+          intakeLift.acceptTeleopInput(speed);
+        },
+        intakeLift);
+  }
 
   public static Command setTask(IntakeLift intakeLift, IntakeLift.Task task) {
     return Commands.runOnce(

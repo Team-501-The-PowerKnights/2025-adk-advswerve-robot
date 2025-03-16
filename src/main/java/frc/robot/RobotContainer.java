@@ -44,6 +44,7 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intakelift.IntakeLift;
 import frc.robot.subsystems.lift.Lift;
+import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -208,15 +209,33 @@ public class RobotContainer {
 
     /** Intake Lift is controlled by Driver */
     if (Constants.useIntakeLift) {
-      driverPad.povUp().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
-      driverPad.povDown().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
+      // driverPad.povUp().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
+      // driverPad.povDown().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
+
+      DoubleSupplier intakeLiftUp =
+          new DoubleSupplier() {
+            public double getAsDouble() {
+              return 0.20;
+            }
+            ;
+          };
+      DoubleSupplier intakeLiftDown =
+          new DoubleSupplier() {
+            public double getAsDouble() {
+              return -0.20;
+            }
+            ;
+          };
+
+      driverPad.povUp().whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftUp));
+      driverPad.povDown().whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftDown));
     }
 
     /*
      * Arm is controlled by Operator
      */
     if (Constants.useArm) {
-      arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.60));
+      arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.40));
       operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
       operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
       operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
@@ -228,7 +247,7 @@ public class RobotContainer {
      */
     if (Constants.useLift) {
       // Default command, manual control via joystick
-      lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.40));
+      lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.70));
       operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
       operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
       operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
