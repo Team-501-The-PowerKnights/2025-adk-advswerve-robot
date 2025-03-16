@@ -92,15 +92,15 @@ public class IntakeLift extends SubsystemBase {
   // Persistent initialization stuff (so can be logged)
   StringBuilder encoderInitBuf;
 
-  /** Creates a new IntakeLift. */
+  /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
   public IntakeLift() {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
+    // Create left controller
     leftMotor = new SparkMax(IntakeLiftConstants.leftCanId, MotorType.kBrushless);
     encoder = leftMotor.getEncoder();
     controller = leftMotor.getClosedLoopController();
-    rightMotor = new SparkMax(IntakeLiftConstants.rightCanId, MotorType.kBrushless);
 
     // Factory reset and burn new config to flash
     SparkMaxConfig leftConfig = new SparkMaxConfig();
@@ -121,12 +121,16 @@ public class IntakeLift extends SubsystemBase {
     //     .closedLoop
     //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
     //     .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
+    //     .outputRange(IntakeLiftConstant.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut);
     SparkUtil501.tryUntilOk(
         leftMotor,
         5,
         () ->
             leftMotor.configure(
                 leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+
+    // Create right controller (as follower)
+    rightMotor = new SparkMax(IntakeLiftConstants.rightCanId, MotorType.kBrushless);
 
     // Factory reset and burn new config to flash
     SparkMaxConfig rightConfig = new SparkMaxConfig();
@@ -158,9 +162,9 @@ public class IntakeLift extends SubsystemBase {
       System.out.println("IntakeLift: " + encoderInitBuf.toString());
     }
 
-    // Startup in Manual
-    currentMode = Mode.MANUAL;
+    // Startup in PID at current location
     // FIXME - Initialize in PID when it works
+    currentMode = Mode.MANUAL; // Startup in Manual
     // currentMode = Mode.PID;
     // Startup at Joystick
     Task.JOYSTICK.setTarget(absEncoderPosScaled);
@@ -181,6 +185,12 @@ public class IntakeLift extends SubsystemBase {
     sparkStickyFault |= origSparkStickyFault;
   }
 
+  /**
+   * Accepts a <code>Task</code> which defines a set point target to use for PID control of the
+   * position.
+   *
+   * @param task - The task to set.
+   */
   public void setTask(Task task) {
     currentTask = task;
     currentTarget = task.getTarget();
@@ -238,6 +248,7 @@ public class IntakeLift extends SubsystemBase {
   }
 
   private void setTarget(double target) {
+    // FIXME - Enable PID target setting when ready
     // controller.setReference(target, ControlType.kPosition);
   }
 
