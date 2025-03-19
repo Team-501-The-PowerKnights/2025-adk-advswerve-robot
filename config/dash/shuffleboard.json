@@ -772,116 +772,7 @@
         }
       }
     },
-    {
-      "title": "Intake",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 32.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {
-          "33,0": {
-            "size": [
-              5,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
-              "_title": "AdvantageKit/RealMetadata/BuildDate",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "33,2": {
-            "size": [
-              5,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
-              "_title": "AdvantageKit/RealMetadata/GitBranch",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "10,3": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/CurrentTask",
-              "_title": "/AdvantageKit/RealOutputs/Intake/CurrentTask",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "16,7": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/HopperOutput",
-              "_title": "/AdvantageKit/RealOutputs/Intake/HopperOutput",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "3,3": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/isREVLibError",
-              "_title": "/AdvantageKit/RealOutputs/Intake/isREVLibError",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "16,5": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/IntakeOutput",
-              "_title": "/AdvantageKit/RealOutputs/Intake/IntakeOutput",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "3,1": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/useIntake",
-              "_title": "/AdvantageKit/RealOutputs/Intake/useIntake",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          }
-        }
-      }
-    },
-    {
+	{
       "title": "Gripper",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
@@ -962,7 +853,7 @@
         }
       }
     },
-    {
+	{
       "title": "Intake Lift",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
@@ -1142,6 +1033,115 @@
               "_type": "Boolean Box",
               "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isPID",
               "_title": "AdvantageKit/RealOutputs/IntakeLift/isPID",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          }
+        }
+      }
+    },
+	{
+      "title": "Intake",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "33,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/CurrentTask",
+              "_title": "/AdvantageKit/RealOutputs/Intake/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "16,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/HopperOutput",
+              "_title": "/AdvantageKit/RealOutputs/Intake/HopperOutput",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/isREVLibError",
+              "_title": "/AdvantageKit/RealOutputs/Intake/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "16,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/IntakeOutput",
+              "_title": "/AdvantageKit/RealOutputs/Intake/IntakeOutput",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,1": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/useIntake",
+              "_title": "/AdvantageKit/RealOutputs/Intake/useIntake",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
