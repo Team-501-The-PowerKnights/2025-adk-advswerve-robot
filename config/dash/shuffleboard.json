@@ -362,6 +362,60 @@
               "_glyph": 148,
               "_showGlyph": false
             }
+          },
+          "33,7": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/PowerDistribution/Voltage",
+              "_title": "/AdvantageKit/PowerDistribution/Voltage",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "36,7": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/PowerDistribution/TotalCurrent",
+              "_title": "/AdvantageKit/PowerDistribution/TotalCurrent",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Arm/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "18,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -538,6 +592,19 @@
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
             }
+          },
+          "7,12": {
+            "size": [
+              16,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/EncoderConfig",
+              "_title": "/AdvantageKit/RealOutputs/Lift/EncoderConfig",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -644,7 +711,7 @@
               "_showGlyph": false
             }
           },
-          "6,1": {
+          "3,1": {
             "size": [
               3,
               2
@@ -657,6 +724,62 @@
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,12": {
+            "size": [
+              16,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/EncoderConfig",
+              "_title": "/AdvantageKit/RealOutputs/Arm/EncoderConfig",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Arm/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,7": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/isPID",
+              "_title": "AdvantageKit/RealOutputs/Arm/isPID",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "15,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Output",
+              "_title": "AdvantageKit/RealOutputs/Arm/Output",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }
@@ -982,6 +1105,60 @@
               "_title": "/AdvantageKit/RealOutputs/IntakeLift/RightOutput",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "7,12": {
+            "size": [
+              16,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/EncoderConfig",
+              "_title": "/AdvantageKit/RealOutputs/IntakeLift/EncoderConfig",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "15,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentSpeed",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "7,7": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isPID",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/isPID",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
