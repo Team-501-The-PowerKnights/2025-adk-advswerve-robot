@@ -14,12 +14,13 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
 /** Constructs a new instance of the subsystem. */
 @SuppressWarnings("resource")
-public class Gripper extends SubsystemBase {
+public class Gripper extends SubsystemBase implements ISubsystem {
 
   // Hardware objects
   private final SparkMax motor;

@@ -33,6 +33,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
 import frc.robot.commands.IntakeLiftCommands;
 import frc.robot.commands.LiftCommands;
+import frc.robot.subsystems.ISubsystem;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -44,6 +45,8 @@ import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intakelift.IntakeLift;
 import frc.robot.subsystems.lift.Lift;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -58,15 +61,17 @@ public class RobotContainer {
 
   // Subsystems
   private final Drive drive;
-  private final Intake intake;
-  private final IntakeLift intakeLift;
   private final Lift lift;
   private final Arm arm;
   private final Gripper gripper;
+  private final IntakeLift intakeLift;
+  private final Intake intake;
+  /** */
+  public final List<ISubsystem> subsystems;
 
   // Controllers
-  private final CommandXboxController driverPad = new CommandXboxController(0);
-  private final CommandXboxController operPad = new CommandXboxController(1);
+  private final CommandXboxController driverPad;
+  private final CommandXboxController operPad;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -113,17 +118,32 @@ public class RobotContainer {
         break;
     }
 
-    Logger.recordOutput("Intake/useIntake", Constants.useIntake);
-    Logger.recordOutput("IntakeLift/useIntakeLift", Constants.useIntakeLift);
+    subsystems = new ArrayList<ISubsystem>();
     Logger.recordOutput("Lift/useLift", Constants.useLift);
+    if (Constants.useLift) {
+      lift = new Lift();
+      subsystems.add(lift);
+    }
     Logger.recordOutput("Arm/useArm", Constants.useArm);
+    if (Constants.useArm) {
+      arm = new Arm();
+      subsystems.add(arm);
+    }
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
-
-    intake = Constants.useIntake ? new Intake() : null;
-    intakeLift = Constants.useIntakeLift ? new IntakeLift() : null;
-    lift = Constants.useLift ? new Lift() : null;
-    arm = Constants.useArm ? new Arm() : null;
-    gripper = Constants.useGripper ? new Gripper() : null;
+    if (Constants.useGripper) {
+      gripper = new Gripper();
+      subsystems.add(gripper);
+    }
+    Logger.recordOutput("IntakeLift/useIntakeLift", Constants.useIntakeLift);
+    if (Constants.useIntakeLift) {
+      intakeLift = new IntakeLift();
+      subsystems.add(intakeLift);
+    }
+    Logger.recordOutput("Intake/useIntake", Constants.useIntake);
+    if (Constants.useIntake) {
+      intake = new Intake();
+      subsystems.add(intake);
+    }
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -151,6 +171,8 @@ public class RobotContainer {
           "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     }
 
+    driverPad = new CommandXboxController(0);
+    operPad = new CommandXboxController(1);
     // Configure the button bindings
     configureButtonBindings();
 

@@ -34,10 +34,11 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
-public class Lift extends SubsystemBase {
+public class Lift extends SubsystemBase implements ISubsystem {
 
   public enum Mode {
     /** Operating based on PID set point. (Default) */
@@ -158,12 +159,7 @@ public class Lift extends SubsystemBase {
     }
 
     // Startup in PID at current location
-    currentMode = Mode.PID;
-    // Startup at Joystick
-    Task.JOYSTICK.setTarget(absEncoderPosScaled);
-    setTask(Task.JOYSTICK);
-    // Startup w/ no (manual) speed control
-    currentSpeed = 0.0;
+    holdAtPositionWithPID(absEncoderPosScaled);
 
     // Log this subsystem's status and return global
     Logger.recordOutput("Lift/isREVLibError", !sparkStickyFault); // green=OK
@@ -176,6 +172,27 @@ public class Lift extends SubsystemBase {
       new Alert("Successful REVLib Lift construction", AlertType.kInfo).set(true);
     }
     sparkStickyFault |= origSparkStickyFault;
+  }
+
+  /**
+   * Sets the subsystem to use the current position with PID control.
+   *
+   * @param position - Encoder position to use
+   */
+  private void holdAtPositionWithPID(double position) {
+    // Using PID at current location
+    currentMode = Mode.PID;
+    // Use task of Joystick
+    Task.JOYSTICK.setTarget(position);
+    setTask(Task.JOYSTICK);
+    // no (manual) speed control
+    currentSpeed = 0.0;
+  }
+
+  @Override
+  public void teleopInit() {
+    // Set the PID target to be the current position so it doesn't move
+    holdAtPositionWithPID(getPosition());
   }
 
   /**
