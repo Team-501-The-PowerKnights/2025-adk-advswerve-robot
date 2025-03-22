@@ -222,8 +222,7 @@ public class RobotContainer {
       // Default command, manual control via triggers
       gripper.setDefaultCommand(
           GripperCommands.joystickGrip(
-              gripper,
-              () -> (operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis()) * 0.40));
+              gripper, () -> (operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis())));
     }
 
     /*

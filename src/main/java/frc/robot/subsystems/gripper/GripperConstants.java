@@ -8,5 +8,5 @@ public class GripperConstants {
 
   // Grip is +, release is -
   static final double gripSpeed = 0.30;
-  static final double releaseSpeed = -0.30;
+  static final double releaseSpeed = -0.70;
 }
