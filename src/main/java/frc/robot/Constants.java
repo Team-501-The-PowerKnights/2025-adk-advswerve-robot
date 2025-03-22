@@ -42,6 +42,6 @@ public final class Constants {
 
   public static final boolean useLift = true;
   public static final boolean useArm = true;
-  public static final boolean useGripper = false;
+  public static final boolean useGripper = true;
   public static final boolean useClimber = true;
 }

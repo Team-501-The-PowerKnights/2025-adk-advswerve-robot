@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the implementation of the <code>Lift</code> subsystem.
+ * This package contains the implementation of the <code>Climber</code> subsystem.
  *
  * <p>More detail ...
  *

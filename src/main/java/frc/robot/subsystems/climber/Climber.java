@@ -49,12 +49,14 @@ public class Climber extends SubsystemBase {
 
     // Create controller
     motor = new SparkMax(ClimberConstants.climberCanId, MotorType.kBrushless);
-    // Factory reset (but don't burn to flash)
+
+    // Factory reset (and burn to flash)
     SparkMaxConfig config = new SparkMaxConfig();
     config
-        .inverted(ClimberConstants.climberInverted)
+        .inverted(ClimberConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
-        .voltageCompensation(12.0);
+        .smartCurrentLimit(ClimberConstants.motorCurrentLimit)
+        .voltageCompensation(ClimberConstants.motorVoltageComp);
     tryUntilOk(
         motor,
         5,
@@ -75,10 +77,6 @@ public class Climber extends SubsystemBase {
     sparkStickyFault |= origSparkStickyFault;
   }
 
-  private void setSpeed(double speed) {
-    motor.set(speed);
-  }
-
   /**
    * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
    * of the position. Positive values lift and negative values lower.
@@ -92,9 +90,14 @@ public class Climber extends SubsystemBase {
     currentSpeed = speed;
   }
 
+  private void setSpeed(double speed) {
+    motor.set(speed);
+  }
+
   public void periodic() {
     // Update current task
     setSpeed(currentSpeed);
+
     Logger.recordOutput("Climber/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Climber/Output", motor.get());
   }

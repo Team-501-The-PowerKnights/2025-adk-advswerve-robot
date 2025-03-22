@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This class contains the implementation of the <code>Lift</code> subsystem.
+ * This class contains the implementation of the <code>Climber</code> subsystem.
  *
  * <p>More detail ...
  *
