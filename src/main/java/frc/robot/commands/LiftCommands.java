@@ -30,7 +30,7 @@ public class LiftCommands {
   /** Private constructor so can't be instantiated externally */
   private LiftCommands() {}
 
-  public static Command joystickLift(Lift lift, DoubleSupplier speedSupplier) {
+  public static Command manual(Lift lift, DoubleSupplier speedSupplier) {
     return Commands.run(
         () -> {
           double speed = MathUtil.applyDeadband(speedSupplier.getAsDouble(), DEADBAND);

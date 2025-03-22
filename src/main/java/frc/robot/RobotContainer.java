@@ -198,7 +198,7 @@ public class RobotContainer {
      */
     if (Constants.useLift) {
       // Default command, manual control via joystick
-      lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.70));
+      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.70));
       operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
       operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
       operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
@@ -208,7 +208,7 @@ public class RobotContainer {
      * Arm is controlled by Operator
      */
     if (Constants.useArm) {
-      arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.40));
+      arm.setDefaultCommand(ArmCommands.manual(arm, () -> -operPad.getRightY() * 0.40));
       // operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
       // operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
       // operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
@@ -221,7 +221,7 @@ public class RobotContainer {
     if (Constants.useGripper) {
       // Default command, manual control via triggers
       gripper.setDefaultCommand(
-          GripperCommands.joystickGrip(
+          GripperCommands.manual(
               gripper, () -> (operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis())));
     }
 
@@ -254,16 +254,16 @@ public class RobotContainer {
             ;
           };
 
-      climber.setDefaultCommand(ClimberCommands.joystickClimb(climber, climberStop));
+      // climber.setDefaultCommand(ClimberCommands.joystickClimb(climber, climberStop));
 
       operPad
           .povUp()
-          .whileTrue(ClimberCommands.joystickClimb(climber, climberUp))
-          .onFalse(ClimberCommands.joystickClimb(climber, climberStop));
+          .whileTrue(ClimberCommands.manual(climber, climberUp))
+          .onFalse(ClimberCommands.manual(climber, climberStop));
       operPad
           .povDown()
-          .whileTrue(ClimberCommands.joystickClimb(climber, climberDown))
-          .onFalse(ClimberCommands.joystickClimb(climber, climberStop));
+          .whileTrue(ClimberCommands.manual(climber, climberDown))
+          .onFalse(ClimberCommands.manual(climber, climberStop));
     }
   }
 

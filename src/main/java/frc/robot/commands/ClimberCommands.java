@@ -30,7 +30,7 @@ public class ClimberCommands {
   /** Private constructor so can't be instantiated externally */
   private ClimberCommands() {}
 
-  public static Command joystickClimb(Climber climber, DoubleSupplier speedSupplier) {
+  public static Command manual(Climber climber, DoubleSupplier speedSupplier) {
     return Commands.run(
         () -> {
           double speed = MathUtil.applyDeadband(speedSupplier.getAsDouble(), DEADBAND);
