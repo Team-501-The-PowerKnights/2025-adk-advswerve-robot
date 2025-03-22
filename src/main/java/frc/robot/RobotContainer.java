@@ -242,23 +242,26 @@ public class RobotContainer {
       DoubleSupplier climberUp =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return -0.20;
+              return 0.50;
             }
             ;
           };
       DoubleSupplier climberDown =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return 0.20;
+              return -0.50;
             }
             ;
           };
 
-      driverPad
+      // FIXME - Make default command be stopped
+      // climber.setDefaultCommand(ClimberCommands.joystickClimb(climber, climberStop));
+
+      operPad
           .povUp()
           .whileTrue(ClimberCommands.joystickClimb(climber, climberUp))
           .onFalse(ClimberCommands.joystickClimb(climber, climberStop));
-      driverPad
+      operPad
           .povDown()
           .whileTrue(ClimberCommands.joystickClimb(climber, climberDown))
           .onFalse(ClimberCommands.joystickClimb(climber, climberStop));

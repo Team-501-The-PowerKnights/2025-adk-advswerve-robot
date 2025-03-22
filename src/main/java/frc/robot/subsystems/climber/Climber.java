@@ -23,6 +23,7 @@ import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -38,10 +39,12 @@ import org.littletonrobotics.junction.Logger;
 @SuppressWarnings("resource")
 public class Climber extends SubsystemBase {
 
+  //
+  private double currentSpeed;
+
   // Hardware objects
   private final SparkMax motor;
-
-  private double currentSpeed;
+  private final SparkLimitSwitch limitSwitch;
 
   public Climber() {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
@@ -49,6 +52,7 @@ public class Climber extends SubsystemBase {
 
     // Create controller
     motor = new SparkMax(ClimberConstants.climberCanId, MotorType.kBrushless);
+    limitSwitch = motor.getReverseLimitSwitch();
 
     // Factory reset (and burn to flash)
     SparkMaxConfig config = new SparkMaxConfig();
@@ -100,5 +104,6 @@ public class Climber extends SubsystemBase {
 
     Logger.recordOutput("Climber/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Climber/Output", motor.get());
+    Logger.recordOutput("Climber/LimitSwitch", limitSwitch.isPressed());
   }
 }

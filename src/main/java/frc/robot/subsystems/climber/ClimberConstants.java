@@ -30,9 +30,9 @@ public class ClimberConstants {
   static final double motorVoltageComp = 12.0;
 
   // Climb is +, Descend is -
-  static final double climbSpeed = 0.50;
-  static final double descendSpeed = -0.50;
+  // static final double climbSpeed = 0.50;
+  // static final double descendSpeed = -0.50;
 
   /** */
-  static final double gearRatio = 5 * 5 * 5 * 4;
+  // static final double gearRatio = 5 * 5 * 5 * 4;
 }
