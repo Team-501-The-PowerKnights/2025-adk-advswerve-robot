@@ -44,7 +44,10 @@ public class Climber extends SubsystemBase {
 
   // Hardware objects
   private final SparkMax motor;
-  private final SparkLimitSwitch limitSwitch;
+  // For latching - when pushing up out of robot
+  private final SparkLimitSwitch latchLimitSwitch;
+  // For climbing - when pulling down into robot
+  private final SparkLimitSwitch climbLimitSwitch;
 
   public Climber() {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
@@ -52,7 +55,8 @@ public class Climber extends SubsystemBase {
 
     // Create controller
     motor = new SparkMax(ClimberConstants.climberCanId, MotorType.kBrushless);
-    limitSwitch = motor.getReverseLimitSwitch();
+    latchLimitSwitch = motor.getForwardLimitSwitch();
+    climbLimitSwitch = motor.getReverseLimitSwitch();
 
     // Factory reset (and burn to flash)
     SparkMaxConfig config = new SparkMaxConfig();
@@ -104,6 +108,7 @@ public class Climber extends SubsystemBase {
 
     Logger.recordOutput("Climber/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Climber/Output", motor.get());
-    Logger.recordOutput("Climber/LimitSwitch", limitSwitch.isPressed());
+    Logger.recordOutput("Climber/LatchLimitSwitch", latchLimitSwitch.isPressed());
+    Logger.recordOutput("Climber/ClimbLimitSwitch", climbLimitSwitch.isPressed());
   }
 }

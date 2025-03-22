@@ -242,20 +242,19 @@ public class RobotContainer {
       DoubleSupplier climberUp =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return 0.50;
+              return 1.0;
             }
             ;
           };
       DoubleSupplier climberDown =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return -0.50;
+              return -1.0;
             }
             ;
           };
 
-      // FIXME - Make default command be stopped
-      // climber.setDefaultCommand(ClimberCommands.joystickClimb(climber, climberStop));
+      climber.setDefaultCommand(ClimberCommands.joystickClimb(climber, climberStop));
 
       operPad
           .povUp()
