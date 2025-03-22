@@ -47,6 +47,8 @@ import frc.robot.subsystems.lift.Lift;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.commands.ClimberCommands;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -63,6 +65,7 @@ public class RobotContainer {
   private final Lift lift;
   private final Arm arm;
   private final Gripper gripper;
+  private final Climber climber;
 
   // Controllers
   private final CommandXboxController driverPad = new CommandXboxController(0);
@@ -124,6 +127,7 @@ public class RobotContainer {
     lift = Constants.useLift ? new Lift() : null;
     arm = Constants.useArm ? new Arm() : null;
     gripper = Constants.useGripper ? new Gripper() : null;
+    climber = Constants.useClimber ? new Climber() : null;
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -235,14 +239,14 @@ public class RobotContainer {
             ;
           };
 
-      driverPad
-          .povUp()
-          .whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftUp))
-          .onFalse(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftStop));
-      driverPad
-          .povDown()
-          .whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftDown))
-          .onFalse(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftStop));
+      // driverPad
+      //     .povUp()
+      //     .whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftUp))
+      //     .onFalse(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftStop));
+      // driverPad
+      //     .povDown()
+      //     .whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftDown))
+      //     .onFalse(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftStop));
     }
 
     /*
@@ -250,10 +254,10 @@ public class RobotContainer {
      */
     if (Constants.useArm) {
       arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.40));
-      operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
-      operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
-      operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
-      operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
+      // operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
+      // operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
+      // operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
+      // operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
     }
 
     /*
@@ -271,11 +275,52 @@ public class RobotContainer {
      * Gripper is controlled by Operator
      */
     if (Constants.useGripper) {
-      // Deafault command, manual control via triggers
+      // Default command, manual control via triggers
       gripper.setDefaultCommand(
           GripperCommands.joystickGrip(
               gripper,
               () -> (operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis()) * 0.40));
+    }
+
+    /*
+     * Climber is controlled by Operator
+     */
+    if (Constants.useClimber) {
+      //Default command, mannual control via dpad/pov
+
+      DoubleSupplier climberStop =
+      new DoubleSupplier() {
+        public double getAsDouble() {
+          return 0.0;
+        }
+        ;
+      };
+
+  DoubleSupplier climberUp =
+      new DoubleSupplier() {
+        public double getAsDouble() {
+          return -0.20;
+        }
+        ;
+      };
+  DoubleSupplier climberDown =
+      new DoubleSupplier() {
+        public double getAsDouble() {
+          return 0.20;
+        }
+        ;
+      };
+
+  driverPad
+      .povUp()
+      .whileTrue(ClimberCommands.joystickClimb(climber, climberUp))
+      .onFalse(ClimberCommands.joystickClimb(climber, climberStop));
+  driverPad
+      .povDown()
+      .whileTrue(ClimberCommands.joystickClimb(climber, climberDown))
+      .onFalse(ClimberCommands.joystickClimb(climber, climberStop));
+        
+      
     }
   }
 

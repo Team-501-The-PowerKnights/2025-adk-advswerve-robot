@@ -18,12 +18,13 @@
 | Intake Left      | Rev Spark Flex  | NEO Brushless     | 36     | Left        | 06     |
 | Intake Right     | Rev Spark Flex  | NEO Brushless     | 40     | Right (F)   | 15     |
 | Hopper           | Rev Spark Max   | NEO Brushless     | 37     | --          | --     |
-| IntakeLift Left  | Rev Spark Max   |                   | 38     | Left (E)    |  5     |
+| Climber          | Rev Spark Max   |                   | 38     | Right (E)   |  5     |
 | IntakeLift Right | Rev Spark Max   |                   | 39     | Right (F)   | 16     |
 |                  |                 |                   |        |             | 14     |
 | Lift             | Rev Spark Max   | NEO Brushless     | 33     | --          | 17     |
 | Arm              | Rev Spark Max   | NEO Brushless     | 34     | --          |  0     |
 | Gripper          | Rev Spark Max   | NEO Brushless 550 | 35     | --          |  1     |
+| Climber          |
 
 ## Modules
 
