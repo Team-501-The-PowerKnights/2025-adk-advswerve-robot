@@ -19,12 +19,11 @@ package frc.robot.subsystems.climber;
 
 public class ClimberConstants {
 
-    static final int climberCanId = 38;
-  
-    static final boolean climberInverted = false;
-  
-    // Climb is +, Descend is -
-    static final double climbSpeed = 0.50;
-    static final double descendSpeed = -0.50;
-  }
-  
+  static final int climberCanId = 38;
+
+  static final boolean climberInverted = false;
+
+  // Climb is +, Descend is -
+  static final double climbSpeed = 0.50;
+  static final double descendSpeed = -0.50;
+}

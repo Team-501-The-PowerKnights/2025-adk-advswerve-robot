@@ -29,11 +29,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands;
+import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
-import frc.robot.commands.IntakeLiftCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -47,8 +48,6 @@ import frc.robot.subsystems.lift.Lift;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.commands.ClimberCommands;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -286,41 +285,39 @@ public class RobotContainer {
      * Climber is controlled by Operator
      */
     if (Constants.useClimber) {
-      //Default command, mannual control via dpad/pov
+      // Default command, mannual control via dpad/pov
 
       DoubleSupplier climberStop =
-      new DoubleSupplier() {
-        public double getAsDouble() {
-          return 0.0;
-        }
-        ;
-      };
+          new DoubleSupplier() {
+            public double getAsDouble() {
+              return 0.0;
+            }
+            ;
+          };
 
-  DoubleSupplier climberUp =
-      new DoubleSupplier() {
-        public double getAsDouble() {
-          return -0.20;
-        }
-        ;
-      };
-  DoubleSupplier climberDown =
-      new DoubleSupplier() {
-        public double getAsDouble() {
-          return 0.20;
-        }
-        ;
-      };
+      DoubleSupplier climberUp =
+          new DoubleSupplier() {
+            public double getAsDouble() {
+              return -0.20;
+            }
+            ;
+          };
+      DoubleSupplier climberDown =
+          new DoubleSupplier() {
+            public double getAsDouble() {
+              return 0.20;
+            }
+            ;
+          };
 
-  driverPad
-      .povUp()
-      .whileTrue(ClimberCommands.joystickClimb(climber, climberUp))
-      .onFalse(ClimberCommands.joystickClimb(climber, climberStop));
-  driverPad
-      .povDown()
-      .whileTrue(ClimberCommands.joystickClimb(climber, climberDown))
-      .onFalse(ClimberCommands.joystickClimb(climber, climberStop));
-        
-      
+      driverPad
+          .povUp()
+          .whileTrue(ClimberCommands.joystickClimb(climber, climberUp))
+          .onFalse(ClimberCommands.joystickClimb(climber, climberStop));
+      driverPad
+          .povDown()
+          .whileTrue(ClimberCommands.joystickClimb(climber, climberDown))
+          .onFalse(ClimberCommands.joystickClimb(climber, climberStop));
     }
   }
 

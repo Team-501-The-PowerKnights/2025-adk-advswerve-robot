@@ -15,8 +15,7 @@
  * @author first.Brian Buzzell
  * @version 2025.0.0
  */
-
- package frc.robot.subsystems.climber;
+package frc.robot.subsystems.climber;
 
 import static frc.robot.util.SparkUtil.tryUntilOk;
 import static frc.robot.util.SparkUtil501.sparkStickyError;
@@ -44,7 +43,6 @@ public class Climber extends SubsystemBase {
 
   private double currentSpeed;
 
-
   public Climber() {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
     // TODO - Log error on entry
@@ -64,7 +62,7 @@ public class Climber extends SubsystemBase {
             motor.configure(
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
-                 // Log this subsystem's status and return global
+    // Log this subsystem's status and return global
     Logger.recordOutput("Climber/isREVLibError", !sparkStickyFault); // green=OK
     if (sparkStickyFault) {
       new Alert(
