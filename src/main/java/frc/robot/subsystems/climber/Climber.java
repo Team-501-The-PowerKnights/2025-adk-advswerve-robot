@@ -108,7 +108,7 @@ public class Climber extends SubsystemBase {
 
     Logger.recordOutput("Climber/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Climber/Output", motor.get());
-    Logger.recordOutput("Climber/LatchLimitSwitch", latchLimitSwitch.isPressed());
-    Logger.recordOutput("Climber/ClimbLimitSwitch", climbLimitSwitch.isPressed());
+    Logger.recordOutput("Climber/LatchLimitSwitch", !latchLimitSwitch.isPressed());
+    Logger.recordOutput("Climber/ClimbLimitSwitch", !climbLimitSwitch.isPressed());
   }
 }
