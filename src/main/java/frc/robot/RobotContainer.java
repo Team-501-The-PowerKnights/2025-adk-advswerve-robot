@@ -111,10 +111,15 @@ public class RobotContainer {
         break;
     }
 
+    // FIXME - Make RevLibError reset in subsystem class
     Logger.recordOutput("Lift/useLift", Constants.useLift);
+    Logger.recordOutput("Lift/isREVLibError", false); // green=OK
     Logger.recordOutput("Arm/useArm", Constants.useArm);
+    Logger.recordOutput("Arm/isREVLibError", false); // green=OK
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
+    Logger.recordOutput("Gripper/isREVLibError", false); // green=OK
     Logger.recordOutput("Climber/useClimber", Constants.useClimber);
+    Logger.recordOutput("Climber/isREVLibError", false); // green=OK
 
     lift = Constants.useLift ? new Lift() : null;
     arm = Constants.useArm ? new Arm() : null;
