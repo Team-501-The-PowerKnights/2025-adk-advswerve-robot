@@ -31,7 +31,7 @@ public class IntakeLiftCommands {
   /** Private constructor so can't be instantiated externally */
   private IntakeLiftCommands() {}
 
-  public static Command joystickLift(IntakeLift intakeLift, DoubleSupplier speedSupplier) {
+  public static Command manual(IntakeLift intakeLift, DoubleSupplier speedSupplier) {
     return Commands.run(
         () -> {
           double speed = MathUtil.applyDeadband(speedSupplier.getAsDouble(), DEADBAND);

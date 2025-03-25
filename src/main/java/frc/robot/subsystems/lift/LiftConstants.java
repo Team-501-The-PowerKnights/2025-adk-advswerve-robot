@@ -53,6 +53,6 @@ class LiftConstants {
   static final double pidMaxPosOut = 0.7;
 
   //
-  static final double minHeight = 5.5; // Should this be higher?
-  static final double maxHeight = 41000.0;
+  static final double minHeight = 0.01; // Should this be higher?
+  static final double maxHeight = 34400.0;
 }

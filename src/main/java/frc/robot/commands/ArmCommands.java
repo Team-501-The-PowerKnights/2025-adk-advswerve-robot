@@ -31,7 +31,7 @@ public class ArmCommands {
   /** Private constructor so can't be instantiated externally */
   private ArmCommands() {}
 
-  public static Command joystickLift(Arm arm, DoubleSupplier speedSupplier) {
+  public static Command manual(Arm arm, DoubleSupplier speedSupplier) {
     return Commands.run(
         () -> {
           double speed = MathUtil.applyDeadband(speedSupplier.getAsDouble(), DEADBAND);
@@ -43,7 +43,6 @@ public class ArmCommands {
   public static Command setTask(Arm arm, Arm.Task task) {
     return Commands.runOnce(
         () -> {
-          System.out.println("Calling arm setTask");
           arm.setTask(task);
         },
         arm);

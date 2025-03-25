@@ -29,11 +29,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ArmCommands;
+import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
-import frc.robot.commands.IntakeLiftCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -41,8 +42,6 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.gripper.Gripper;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intakelift.IntakeLift;
 import frc.robot.subsystems.lift.Lift;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -58,11 +57,10 @@ public class RobotContainer {
 
   // Subsystems
   private final Drive drive;
-  private final Intake intake;
-  private final IntakeLift intakeLift;
   private final Lift lift;
   private final Arm arm;
   private final Gripper gripper;
+  private final Climber climber;
 
   // Controllers
   private final CommandXboxController driverPad = new CommandXboxController(0);
@@ -113,17 +111,20 @@ public class RobotContainer {
         break;
     }
 
-    Logger.recordOutput("Intake/useIntake", Constants.useIntake);
-    Logger.recordOutput("IntakeLift/useIntakeLift", Constants.useIntakeLift);
+    // FIXME - Make RevLibError reset in subsystem class
     Logger.recordOutput("Lift/useLift", Constants.useLift);
+    Logger.recordOutput("Lift/isREVLibError", false); // green=OK
     Logger.recordOutput("Arm/useArm", Constants.useArm);
+    Logger.recordOutput("Arm/isREVLibError", false); // green=OK
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
+    Logger.recordOutput("Gripper/isREVLibError", false); // green=OK
+    Logger.recordOutput("Climber/useClimber", Constants.useClimber);
+    Logger.recordOutput("Climber/isREVLibError", false); // green=OK
 
-    intake = Constants.useIntake ? new Intake() : null;
-    intakeLift = Constants.useIntakeLift ? new IntakeLift() : null;
     lift = Constants.useLift ? new Lift() : null;
     arm = Constants.useArm ? new Arm() : null;
     gripper = Constants.useGripper ? new Gripper() : null;
+    climber = Constants.useClimber ? new Climber() : null;
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -198,21 +199,44 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     /*
-     * Intake is controlled by Driver
+     * Lift is controlled by Operator
      */
-    if (Constants.useIntake) {
-      driverPad.leftTrigger().onTrue(intake.setTask(Intake.Task.INTAKE));
-      driverPad.leftTrigger().onFalse(intake.setTask(Intake.Task.IDLE));
-      driverPad.rightTrigger().onTrue(intake.setTask(Intake.Task.EJECT));
-      driverPad.rightTrigger().onFalse(intake.setTask(Intake.Task.IDLE));
+    if (Constants.useLift) {
+      // Default command, manual control via joystick
+      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.70));
+      operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
+      operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
+      operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
     }
 
-    /** Intake Lift is controlled by Driver */
-    if (Constants.useIntakeLift) {
-      // driverPad.povUp().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
-      // driverPad.povDown().onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
+    /*
+     * Arm is controlled by Operator
+     */
+    if (Constants.useArm) {
+      arm.setDefaultCommand(ArmCommands.manual(arm, () -> -operPad.getRightY() * 0.40));
+      // operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
+      // operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
+      // operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
+      // operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
+    }
 
-      DoubleSupplier intakeLiftStop =
+    /*
+     * Gripper is controlled by Operator
+     */
+    if (Constants.useGripper) {
+      // Default command, manual control via triggers
+      gripper.setDefaultCommand(
+          GripperCommands.manual(
+              gripper, () -> (operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis())));
+    }
+
+    /*
+     * Climber is controlled by Operator
+     */
+    if (Constants.useClimber) {
+      // Default command, mannual control via dpad/pov
+
+      DoubleSupplier climberStop =
           new DoubleSupplier() {
             public double getAsDouble() {
               return 0.0;
@@ -220,62 +244,31 @@ public class RobotContainer {
             ;
           };
 
-      DoubleSupplier intakeLiftUp =
+      DoubleSupplier climberUp =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return -0.20;
+              return 1.0;
             }
             ;
           };
-      DoubleSupplier intakeLiftDown =
+      DoubleSupplier climberDown =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return 0.20;
+              return -1.0;
             }
             ;
           };
 
-      driverPad
+      // climber.setDefaultCommand(ClimberCommands.joystickClimb(climber, climberStop));
+
+      operPad
           .povUp()
-          .whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftUp))
-          .onFalse(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftStop));
-      driverPad
+          .whileTrue(ClimberCommands.manual(climber, climberUp))
+          .onFalse(ClimberCommands.manual(climber, climberStop));
+      operPad
           .povDown()
-          .whileTrue(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftDown))
-          .onFalse(IntakeLiftCommands.joystickLift(intakeLift, intakeLiftStop));
-    }
-
-    /*
-     * Arm is controlled by Operator
-     */
-    if (Constants.useArm) {
-      arm.setDefaultCommand(ArmCommands.joystickLift(arm, () -> -operPad.getRightY() * 0.40));
-      operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
-      operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
-      operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
-      operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
-    }
-
-    /*
-     * Lift is controlled by Operator
-     */
-    if (Constants.useLift) {
-      // Default command, manual control via joystick
-      lift.setDefaultCommand(LiftCommands.joystickLift(lift, () -> -operPad.getLeftY() * 0.70));
-      operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
-      operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
-      operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
-    }
-
-    /*
-     * Gripper is controlled by Operator
-     */
-    if (Constants.useGripper) {
-      // Deafault command, manual control via triggers
-      gripper.setDefaultCommand(
-          GripperCommands.joystickGrip(
-              gripper,
-              () -> (operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis()) * 0.40));
+          .whileTrue(ClimberCommands.manual(climber, climberDown))
+          .onFalse(ClimberCommands.manual(climber, climberStop));
     }
   }
 
