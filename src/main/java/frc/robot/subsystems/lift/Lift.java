@@ -123,9 +123,9 @@ public class Lift extends SubsystemBase implements ISubsystem {
         .forwardSoftLimitEnabled(false)
         .reverseSoftLimitEnabled(false)
         .forwardSoftLimit(LiftConstants.maxHeight)
-        .forwardSoftLimitEnabled(true);
-    // .reverseSoftLimit(LiftConstants.minHeight)
-    // .reverseSoftLimitEnabled(true);
+        .forwardSoftLimitEnabled(true)
+        .reverseSoftLimit(LiftConstants.minHeight)
+        .reverseSoftLimitEnabled(true);
     // TODO - Not sure we need this any more?
     config.absoluteEncoder.inverted(LiftConstants.encoderInverted);
     // config.encoder.inverted(LiftConstants.encoderInverted);

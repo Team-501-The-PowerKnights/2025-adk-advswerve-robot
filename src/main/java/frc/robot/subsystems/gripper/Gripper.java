@@ -23,7 +23,7 @@ import org.littletonrobotics.junction.Logger;
 public class Gripper extends SubsystemBase implements ISubsystem {
 
   // Hardware objects
-  private final SparkMax motor;
+  private final SparkMax leftMotor;
 
   private double currentSpeed;
 
@@ -32,18 +32,19 @@ public class Gripper extends SubsystemBase implements ISubsystem {
     // TODO - Log error on entry
 
     // Create controller
-    motor = new SparkMax(GripperConstants.gripperCanId, MotorType.kBrushless);
+    leftMotor = new SparkMax(GripperConstants.gripperCanId, MotorType.kBrushless);
     // Factory reset (but don't burn to flash)
     SparkMaxConfig config = new SparkMaxConfig();
     config
         .inverted(GripperConstants.gripperInverted)
         .idleMode(IdleMode.kBrake)
-        .voltageCompensation(12.0);
+        .smartCurrentLimit(GripperConstants.motorCurrentLimit)
+        .voltageCompensation(GripperConstants.motorVoltageComp);
     tryUntilOk(
-        motor,
+        leftMotor,
         5,
         () ->
-            motor.configure(
+            leftMotor.configure(
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Log this subsystem's status and return global
@@ -60,7 +61,7 @@ public class Gripper extends SubsystemBase implements ISubsystem {
   }
 
   private void setSpeed(double speed) {
-    motor.set(speed);
+    leftMotor.set(speed);
   }
 
   /**
@@ -80,6 +81,6 @@ public class Gripper extends SubsystemBase implements ISubsystem {
     // Update current task
     setSpeed(currentSpeed);
     Logger.recordOutput("Gripper/CurrentSpeed", currentSpeed);
-    Logger.recordOutput("Gripper/Output", motor.get());
+    Logger.recordOutput("Gripper/Output", leftMotor.get());
   }
 }

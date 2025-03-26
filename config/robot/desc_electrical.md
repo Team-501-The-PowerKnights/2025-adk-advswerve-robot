@@ -15,30 +15,35 @@
 |   (M2) Turn      | Rev Spark Flex  | NEO Brushless 550 | 21     | Left Rear   | 12     |
 |   (M3) Drive     | Rev Spark Max   | NEO Brushless     | 14     | Right Rear  | 19     |
 |   (M3) Turn      | Rev Spark Flex  | NEO Brushless 550 | 21     | Right Rear  | 18     |
-| Intake Left      | Rev Spark Flex  | NEO Brushless     | 36     | Left        | 06     |
-| Intake Right     | Rev Spark Flex  | NEO Brushless     | 40     | Right (F)   | 15     |
-| Hopper           | Rev Spark Max   | NEO Brushless     | 37     | --          | --     |
-| IntakeLift Left  | Rev Spark Max   |                   | 38     | Left (E)    |  5     |
-| IntakeLift Right | Rev Spark Max   |                   | 39     | Right (F)   | 16     |
-|                  |                 |                   |        |             | 14     |
 | Lift             | Rev Spark Max   | NEO Brushless     | 33     | --          | 17     |
 | Arm              | Rev Spark Max   | NEO Brushless     | 34     | --          |  0     |
-| Gripper          | Rev Spark Max   | NEO Brushless 550 | 35     | --          |  1     |
+| (L) Gripper      | Rev Spark Max   | NEO Brushless 550 | 35     | Left        |  1     |
+| (R) Gripper      | Rev Spark Max   | NEO Brushless 550 | 36?    | Right       | ??     |
+| Climber          | Rev Spark Max   | NEO Brushless     | 38     | --          | 16?    |
+
+
+
+| Intake Left      | Rev Spark Flex  | NEO Brushless     | 36     | Left        | 06     |
+| Hopper           | Rev Spark Max   | NEO Brushless     | 37     | --          | --     |
+|                  |                 |                   |        |             | 14     |
+| Intake Right     | Rev Spark Flex  | NEO Brushless     | 40     | Right (F)   | 15     |
+| IntakeLift Right | Rev Spark Max   |                   | 39     | Right (F)   | 16     |
+
 
 ## Modules
 
 | Module         | Module Type      | CAN ID | Position    | PDH ID |
 | -------------- | ---------------- | ------ | ----------- | ------ |
 | Power          | Rev Robotics PDB | 1      |             |        |
-| Processor      | NI RoboRIO V2    | 0      |             | 22     |
-| Radio Power    |                  |        |             | 21     |
+| Processor      | NI RoboRIO V2    | 0      |             | 21?    |
+| Radio Power    |                  |        |             | 20?    |
 |                |                  |        |             |        |
 
 ## Sensors
 
 | Subsystem      | Mechanism Type   | Sensor Type        | CAN ID    | PDH ID |
 | -------------- | ---------------- | ------------------ | --------- | ------ |
-| Drive          | Gyro             | Pigeon             | 10        | 23     |
+| Drive          | Gyro             | Pigeon             | 10        | 22?    |
 | Chassis        | Vision           | Limelight          | --        |  7     |
 
 

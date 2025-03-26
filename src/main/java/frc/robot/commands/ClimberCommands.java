@@ -7,12 +7,12 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This class contains the implementation of the <code>Lift</code> subsystem.
+ * This class contains the implementation of the <code>Climber</code> subsystem.
  *
  * <p>More detail ...
  *
  * @since 2025.0.0
- * @author first.stu
+ * @author first.Brian Buzzell
  * @version 2025.0.0
  */
 package frc.robot.commands;
@@ -20,30 +20,22 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.lift.Lift;
+import frc.robot.subsystems.climber.Climber;
 import java.util.function.DoubleSupplier;
 
-public class LiftCommands {
+public class ClimberCommands {
   /** Deadband for joystick inputs */
   private static final double DEADBAND = 0.1;
 
   /** Private constructor so can't be instantiated externally */
-  private LiftCommands() {}
+  private ClimberCommands() {}
 
-  public static Command manual(Lift lift, DoubleSupplier speedSupplier) {
+  public static Command manual(Climber climber, DoubleSupplier speedSupplier) {
     return Commands.run(
         () -> {
           double speed = MathUtil.applyDeadband(speedSupplier.getAsDouble(), DEADBAND);
-          lift.acceptTeleopInput(speed);
+          climber.acceptTeleopInput(speed);
         },
-        lift);
-  }
-
-  public static Command setTask(Lift lift, Lift.Task task) {
-    return Commands.runOnce(
-        () -> {
-          lift.setTask(task);
-        },
-        lift);
+        climber);
   }
 }

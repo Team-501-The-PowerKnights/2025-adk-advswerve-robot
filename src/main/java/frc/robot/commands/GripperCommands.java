@@ -30,7 +30,7 @@ public class GripperCommands {
   /** Private constructor so can't be instantiated externally */
   private GripperCommands() {}
 
-  public static Command joystickGrip(Gripper gripper, DoubleSupplier speedSupplier) {
+  public static Command manual(Gripper gripper, DoubleSupplier speedSupplier) {
     return Commands.run(
         () -> {
           double speed = MathUtil.applyDeadband(speedSupplier.getAsDouble(), DEADBAND);
