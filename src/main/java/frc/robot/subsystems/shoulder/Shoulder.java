@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the implementation of the <code>Arm</code> subsystem.
+ * This package contains the implementation of the <code>Shoulder</code> subsystem.
  *
  * <p>More detail ...
  *
@@ -16,7 +16,7 @@
  * @author2 first.fasano
  * @version 2025.0.0
  */
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.shoulder;
 
 import static frc.robot.util.SparkUtil501.sparkStickyError;
 import static frc.robot.util.SparkUtil501.sparkStickyFault;
@@ -38,7 +38,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
-public class Arm extends SubsystemBase {
+public class Shoulder extends SubsystemBase {
 
   public enum Mode {
     /** Operating based on PID set point. (Default) */
@@ -53,8 +53,8 @@ public class Arm extends SubsystemBase {
     REEF_2("Reef_2", 0.0),
     REEF_1("Reef_1", 0.0),
     COLLECT("Collect", 0.0),
-    HOME("Home", ArmConstants.minHeight),
-    START("Start", ArmConstants.minHeight),
+    HOME("Home", ShoulderConstants.minHeight),
+    START("Start", ShoulderConstants.minHeight),
     // Special case of previously manual setting
     JOYSTICK("Joystick", 0.0);
 
@@ -102,22 +102,22 @@ public class Arm extends SubsystemBase {
 
   /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
-  public Arm() {
+  public Shoulder() {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
     // TODO - Log error on entry
 
     // Create controller
-    motor = new SparkMax(ArmConstants.armCanId, MotorType.kBrushless);
+    motor = new SparkMax(ShoulderConstants.shoulderCanID, MotorType.kBrushless);
     encoder = motor.getEncoder();
     controller = motor.getClosedLoopController();
 
     // Factory reset and burn new config to flash
     SparkMaxConfig config = new SparkMaxConfig();
     config
-        .inverted(ArmConstants.motorInverted)
+        .inverted(ShoulderConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ArmConstants.motorCurrentLimit)
-        .voltageCompensation(ArmConstants.motorVoltageComp)
+        .smartCurrentLimit(ShoulderConstants.motorCurrentLimit)
+        .voltageCompensation(ShoulderConstants.motorVoltageComp)
         .softLimit
         .forwardSoftLimitEnabled(false)
         .reverseSoftLimitEnabled(false);
@@ -126,13 +126,13 @@ public class Arm extends SubsystemBase {
     // .reverseSoftLimit(ArmConstants.minHeight)
     // .reverseSoftLimitEnabled(true);
     // TODO - Not sure we need this any more?
-    config.absoluteEncoder.inverted(ArmConstants.encoderInverted);
+    config.absoluteEncoder.inverted(ShoulderConstants.encoderInverted);
     // config.encoder.inverted(ArmConstants.encoderInverted);
-    config.encoder.positionConversionFactor(ArmConstants.gearRatio);
+    config.encoder.positionConversionFactor(ShoulderConstants.gearRatio);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(ArmConstants.pidKp, ArmConstants.pidKi, ArmConstants.pidKd);
+        .pid(ShoulderConstants.pidKp, ShoulderConstants.pidKi, ShoulderConstants.pidKd);
     //        .outputRange(ArmConstants.pidMaxNegOut, ArmConstants.pidMaxPosOut);
     SparkUtil501.tryUntilOk(
         motor,
@@ -145,7 +145,7 @@ public class Arm extends SubsystemBase {
     double absEncoderPosScaled;
     {
       double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
-      absEncoderPosScaled = absEncoderPos * ArmConstants.gearRatio;
+      absEncoderPosScaled = absEncoderPos * ShoulderConstants.gearRatio;
 
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
@@ -154,7 +154,7 @@ public class Arm extends SubsystemBase {
       encoderInitBuf.append("absEncoder = ").append(absEncoderPos);
       encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
       encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("Arm: " + encoderInitBuf.toString());
+      System.out.println("Shoulder: " + encoderInitBuf.toString());
     }
 
     // Startup in Manual
@@ -168,14 +168,14 @@ public class Arm extends SubsystemBase {
     currentSpeed = 0.0;
 
     // Log this subsystem's status and return global
-    Logger.recordOutput("Arm/isREVLibError", !sparkStickyFault); // green=OK
+    Logger.recordOutput("Shoulder/isREVLibError", !sparkStickyFault); // green=OK
     if (sparkStickyFault) {
       new Alert(
-              "REVLib problems in Arm construction (error = " + sparkStickyError + ")",
+              "REVLib problems in Shoulder construction (error = " + sparkStickyError + ")",
               AlertType.kError)
           .set(true);
     } else {
-      new Alert("Successful REVLib Arm construction", AlertType.kInfo).set(true);
+      new Alert("Successful REVLib Shoulder construction", AlertType.kInfo).set(true);
     }
     sparkStickyFault |= origSparkStickyFault;
   }
@@ -258,13 +258,13 @@ public class Arm extends SubsystemBase {
       setSpeed(0);
     }
 
-    Logger.recordOutput("Arm/CurrentMode", currentMode.name());
-    Logger.recordOutput("Arm/isPID", (currentMode == Mode.PID));
-    Logger.recordOutput("Arm/CurrentTask", currentTask.getName());
-    Logger.recordOutput("Arm/CurrentSpeed", currentSpeed);
-    Logger.recordOutput("Arm/Target", currentTarget);
-    Logger.recordOutput("Arm/Position", getPosition());
-    Logger.recordOutput("Arm/Output", motor.getAppliedOutput());
-    Logger.recordOutput("Arm/EncoderConfig", encoderInitBuf.toString());
+    Logger.recordOutput("Shoulder/CurrentMode", currentMode.name());
+    Logger.recordOutput("Shoulder/isPID", (currentMode == Mode.PID));
+    Logger.recordOutput("Shoulder/CurrentTask", currentTask.getName());
+    Logger.recordOutput("Shoulder/CurrentSpeed", currentSpeed);
+    Logger.recordOutput("Shoulder/Target", currentTarget);
+    Logger.recordOutput("Shoulder/Position", getPosition());
+    Logger.recordOutput("Shoulder/Output", motor.getAppliedOutput());
+    Logger.recordOutput("Shoulder/EncoderConfig", encoderInitBuf.toString());
   }
 }

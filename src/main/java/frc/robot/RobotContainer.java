@@ -28,12 +28,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.ArmCommands;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
 import frc.robot.commands.LiftCommands;
-import frc.robot.subsystems.arm.Arm;
+import frc.robot.commands.ShoulderCommands;
+import frc.robot.subsystems.shoulder.Shoulder;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -58,7 +58,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Lift lift;
-  private final Arm arm;
+  private final Shoulder shoulder;
   private final Gripper gripper;
   private final Climber climber;
 
@@ -114,15 +114,15 @@ public class RobotContainer {
     // FIXME - Make RevLibError reset in subsystem class
     Logger.recordOutput("Lift/useLift", Constants.useLift);
     Logger.recordOutput("Lift/isREVLibError", false); // green=OK
-    Logger.recordOutput("Arm/useArm", Constants.useArm);
-    Logger.recordOutput("Arm/isREVLibError", false); // green=OK
+    Logger.recordOutput("Shoulder/useShoulder", Constants.useShoulder);
+    Logger.recordOutput("Shoulder/isREVLibError", false); // green=OK
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
     Logger.recordOutput("Gripper/isREVLibError", false); // green=OK
     Logger.recordOutput("Climber/useClimber", Constants.useClimber);
     Logger.recordOutput("Climber/isREVLibError", false); // green=OK
 
     lift = Constants.useLift ? new Lift() : null;
-    arm = Constants.useArm ? new Arm() : null;
+    shoulder = Constants.useShoulder ? new Shoulder() : null;
     gripper = Constants.useGripper ? new Gripper() : null;
     climber = Constants.useClimber ? new Climber() : null;
 
@@ -210,14 +210,15 @@ public class RobotContainer {
     }
 
     /*
-     * Arm is controlled by Operator
+     * Shoulder is controlled by Operator
      */
-    if (Constants.useArm) {
-      arm.setDefaultCommand(ArmCommands.manual(arm, () -> -operPad.getRightY() * 0.40));
-      // operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
-      // operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
-      // operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
-      // operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
+    if (Constants.useShoulder) {
+      shoulder.setDefaultCommand(
+          ShoulderCommands.manual(shoulder, () -> -operPad.getRightY() * 0.40));
+      // operPad.povDown().onTrue(ArmCommands.setTask(shoulder, Shoulder.Task.REEF_1));
+      // operPad.povRight().onTrue(ArmCommands.setTask(shoulder, Shoulder.Task.REEF_2));
+      // operPad.povUp().onTrue(ArmCommands.setTask(shoulder, Shoulder.Task.REEF_3));
+      // operPad.povLeft().onTrue(ArmCommands.setTask(shoulder, Shoulder.Task.REEF_4));
     }
 
     /*
