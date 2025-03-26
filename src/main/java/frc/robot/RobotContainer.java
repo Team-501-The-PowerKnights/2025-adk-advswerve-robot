@@ -63,8 +63,7 @@ public class RobotContainer {
   private final Lift lift;
   private final Arm arm;
   private final Gripper gripper;
-  private final IntakeLift intakeLift;
-  private final Intake intake;
+  private final Climber climber;
   /** */
   public final List<ISubsystem> subsystems;
 
@@ -122,26 +121,29 @@ public class RobotContainer {
     if (Constants.useLift) {
       lift = new Lift();
       subsystems.add(lift);
+    } else {
+      lift = null;
     }
     Logger.recordOutput("Arm/useArm", Constants.useArm);
     if (Constants.useArm) {
       arm = new Arm();
       subsystems.add(arm);
+    } else {
+      arm = null;
     }
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
     if (Constants.useGripper) {
       gripper = new Gripper();
       subsystems.add(gripper);
+    } else {
+      gripper = null;
     }
-    Logger.recordOutput("IntakeLift/useIntakeLift", Constants.useIntakeLift);
-    if (Constants.useIntakeLift) {
-      intakeLift = new IntakeLift();
-      subsystems.add(intakeLift);
-    }
-    Logger.recordOutput("Intake/useIntake", Constants.useIntake);
-    if (Constants.useIntake) {
-      intake = new Intake();
-      subsystems.add(intake);
+    Logger.recordOutput("Climber/useClimber", Constants.useClimber);
+    if (Constants.useClimber) {
+      climber = new Climber();
+      subsystems.add(climber);
+    } else {
+      climber = null;
     }
 
     // Set up auto routines
