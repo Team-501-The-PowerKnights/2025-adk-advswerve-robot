@@ -33,6 +33,7 @@ import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
 import frc.robot.commands.LiftCommands;
+import frc.robot.subsystems.ISubsystem;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
@@ -43,6 +44,8 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.lift.Lift;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -61,10 +64,12 @@ public class RobotContainer {
   private final Arm arm;
   private final Gripper gripper;
   private final Climber climber;
+  /** */
+  public final List<ISubsystem> subsystems;
 
   // Controllers
-  private final CommandXboxController driverPad = new CommandXboxController(0);
-  private final CommandXboxController operPad = new CommandXboxController(1);
+  private final CommandXboxController driverPad;
+  private final CommandXboxController operPad;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -111,20 +116,35 @@ public class RobotContainer {
         break;
     }
 
-    // FIXME - Make RevLibError reset in subsystem class
+    subsystems = new ArrayList<ISubsystem>();
     Logger.recordOutput("Lift/useLift", Constants.useLift);
-    Logger.recordOutput("Lift/isREVLibError", false); // green=OK
+    if (Constants.useLift) {
+      lift = new Lift();
+      subsystems.add(lift);
+    } else {
+      lift = null;
+    }
     Logger.recordOutput("Arm/useArm", Constants.useArm);
-    Logger.recordOutput("Arm/isREVLibError", false); // green=OK
+    if (Constants.useArm) {
+      arm = new Arm();
+      subsystems.add(arm);
+    } else {
+      arm = null;
+    }
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
-    Logger.recordOutput("Gripper/isREVLibError", false); // green=OK
+    if (Constants.useGripper) {
+      gripper = new Gripper();
+      subsystems.add(gripper);
+    } else {
+      gripper = null;
+    }
     Logger.recordOutput("Climber/useClimber", Constants.useClimber);
-    Logger.recordOutput("Climber/isREVLibError", false); // green=OK
-
-    lift = Constants.useLift ? new Lift() : null;
-    arm = Constants.useArm ? new Arm() : null;
-    gripper = Constants.useGripper ? new Gripper() : null;
-    climber = Constants.useClimber ? new Climber() : null;
+    if (Constants.useClimber) {
+      climber = new Climber();
+      subsystems.add(climber);
+    } else {
+      climber = null;
+    }
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -152,6 +172,8 @@ public class RobotContainer {
           "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     }
 
+    driverPad = new CommandXboxController(0);
+    operPad = new CommandXboxController(1);
     // Configure the button bindings
     configureButtonBindings();
 
