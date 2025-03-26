@@ -33,6 +33,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.commands.ShoulderCommands;
+import frc.robot.subsystems.ISubsystem;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -123,12 +124,12 @@ public class RobotContainer {
     } else {
       lift = null;
     }
-    Logger.recordOutput("Arm/useArm", Constants.useArm);
-    if (Constants.useArm) {
-      arm = new Arm();
-      subsystems.add(arm);
+    Logger.recordOutput("Arm/useArm", Constants.useShoulder);
+    if (Constants.useShoulder) {
+      shoulder = new Shoulder();
+      subsystems.add(shoulder);
     } else {
-      arm = null;
+      shoulder = null;
     }
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
     if (Constants.useGripper) {
