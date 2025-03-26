@@ -39,7 +39,7 @@ import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
-public class Shoulder extends SubsystemBase {
+public class Shoulder extends SubsystemBase implements ISubsystem {
 
   public enum Mode {
     /** Operating based on PID set point. (Default) */
