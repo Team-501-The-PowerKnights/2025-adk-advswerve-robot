@@ -32,10 +32,11 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase implements ISubsystem {
 
   public enum Task {
     IDLE("Idle", 0.0, 0.0),

@@ -17,7 +17,6 @@
  */
 package frc.robot.subsystems.climber;
 
-import static frc.robot.util.SparkUtil.tryUntilOk;
 import static frc.robot.util.SparkUtil501.sparkStickyError;
 import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
@@ -32,12 +31,13 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
 /** Constructs a new instance of the subsystem. */
 @SuppressWarnings("resource")
-public class Climber extends SubsystemBase {
+public class Climber extends SubsystemBase implements ISubsystem {
 
   //
   private double currentSpeed;
@@ -65,7 +65,7 @@ public class Climber extends SubsystemBase {
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(ClimberConstants.motorCurrentLimit)
         .voltageCompensation(ClimberConstants.motorVoltageComp);
-    tryUntilOk(
+    SparkUtil501.tryUntilOk(
         motor,
         5,
         () ->
