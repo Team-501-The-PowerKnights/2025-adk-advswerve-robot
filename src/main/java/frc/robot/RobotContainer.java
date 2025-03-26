@@ -215,10 +215,10 @@ public class RobotContainer {
     if (Constants.useShoulder) {
       shoulder.setDefaultCommand(
           ShoulderCommands.manual(shoulder, () -> -operPad.getRightY() * 0.40));
-      // operPad.povDown().onTrue(ArmCommands.setTask(shoulder, Shoulder.Task.REEF_1));
-      // operPad.povRight().onTrue(ArmCommands.setTask(shoulder, Shoulder.Task.REEF_2));
-      // operPad.povUp().onTrue(ArmCommands.setTask(shoulder, Shoulder.Task.REEF_3));
-      // operPad.povLeft().onTrue(ArmCommands.setTask(shoulder, Shoulder.Task.REEF_4));
+      // operPad.povDown().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_1));
+      // operPad.povRight().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_2));
+      // operPad.povUp().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_3));
+      // operPad.povLeft().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_4));
     }
 
     /*

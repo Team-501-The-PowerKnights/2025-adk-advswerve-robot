@@ -121,19 +121,19 @@ public class Shoulder extends SubsystemBase {
         .softLimit
         .forwardSoftLimitEnabled(false)
         .reverseSoftLimitEnabled(false);
-    // .forwardSoftLimit(ArmConstants.maxHeight)
+    // .forwardSoftLimit(ShoulderConstants.maxHeight)
     // .forwardSoftLimitEnabled(true);
-    // .reverseSoftLimit(ArmConstants.minHeight)
+    // .reverseSoftLimit(ShoulderConstants.minHeight)
     // .reverseSoftLimitEnabled(true);
     // TODO - Not sure we need this any more?
     config.absoluteEncoder.inverted(ShoulderConstants.encoderInverted);
-    // config.encoder.inverted(ArmConstants.encoderInverted);
+    // config.encoder.inverted(ShoulderConstants.encoderInverted);
     config.encoder.positionConversionFactor(ShoulderConstants.gearRatio);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         .pid(ShoulderConstants.pidKp, ShoulderConstants.pidKi, ShoulderConstants.pidKd);
-    //        .outputRange(ArmConstants.pidMaxNegOut, ArmConstants.pidMaxPosOut);
+    //        .outputRange(ShoulderConstants.pidMaxNegOut, ShoulderConstants.pidMaxPosOut);
     SparkUtil501.tryUntilOk(
         motor,
         5,
