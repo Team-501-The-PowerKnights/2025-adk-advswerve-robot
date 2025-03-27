@@ -43,9 +43,9 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.lift.Lift;
+import frc.robot.subsystems.shoulder.Shoulder;
 import java.util.ArrayList;
 import java.util.List;
-import frc.robot.subsystems.shoulder.Shoulder;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -226,9 +226,9 @@ public class RobotContainer {
     if (Constants.useLift) {
       // Default command, manual control via joystick
       lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.70));
-      operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
-      operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
-      operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
+      // operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
+      // operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
+      // operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
     }
 
     /*

@@ -49,15 +49,16 @@ public class Lift extends SubsystemBase implements ISubsystem {
 
   /** Enumeration of set positions */
   public enum Task {
-    REEF_4("Reef_4", 19000.0), // fake
-    REEF_3("Reef_3", 17300.0),
-    REEF_2("Reef_2", 13100.0),
-    REEF_1("Reef_1", 8510.0),
-    COLLECT("Collect", 5.5),
+    NET("Net_Pose", 0.0),
+    REEF_HI("Reef_Hi_Pose", 0.0),
+    REEF_LO("Reef_Lo_Pose", 0.0),
+    GROUND("Ground_Pose", 0.0),
+    // Position for 'homing' during match
     HOME("Home", LiftConstants.minHeight),
+    // Position for starting match
     START("Start", LiftConstants.minHeight),
-    // Special case of previously manual setting
-    JOYSTICK("Joystick", 0.0);
+    // Special case of current position when enabled
+    HOLD("Hold", 0.0);
 
     private final String name;
     private double target;
@@ -76,7 +77,7 @@ public class Lift extends SubsystemBase implements ISubsystem {
     }
 
     public void setTarget(double target) {
-      if (this.getName().equals("Joystick")) {
+      if (this.getName().equals("Hold")) {
         this.target = target;
       } else {
         // TODO - Add a logged error here
@@ -84,13 +85,13 @@ public class Lift extends SubsystemBase implements ISubsystem {
     }
   }
 
-  // Current Intake mode
+  // Current mode
   private Mode currentMode;
-  // Current Intake task
+  // Current task
   private Task currentTask;
-  //
+  // If manual mode - then the current setting
   private double currentSpeed;
-  //
+  // If PID mode - then the current setting
   private double currentTarget;
 
   // Hardware objects
@@ -99,13 +100,12 @@ public class Lift extends SubsystemBase implements ISubsystem {
   private final SparkClosedLoopController controller;
 
   // Persistent initialization stuff (so can be logged)
-  StringBuilder encoderInitBuf;
+  private StringBuilder encoderInitBuf;
 
   /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
   public Lift() {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
-    // TODO - Log error on entry
 
     // Create controller
     motor = new SparkMax(LiftConstants.canId, MotorType.kBrushless);
@@ -120,21 +120,18 @@ public class Lift extends SubsystemBase implements ISubsystem {
         .smartCurrentLimit(LiftConstants.motorCurrentLimit)
         .voltageCompensation(LiftConstants.motorVoltageComp)
         .softLimit
-        .forwardSoftLimitEnabled(false)
-        .reverseSoftLimitEnabled(false)
-        .forwardSoftLimit(LiftConstants.maxHeight)
         .forwardSoftLimitEnabled(true)
-        .reverseSoftLimit(LiftConstants.minHeight)
-        .reverseSoftLimitEnabled(true);
-    // TODO - Not sure we need this any more?
+        .forwardSoftLimit(LiftConstants.maxHeight)
+        .reverseSoftLimitEnabled(true)
+        .reverseSoftLimit(LiftConstants.minHeight);
     config.absoluteEncoder.inverted(LiftConstants.encoderInverted);
-    // config.encoder.inverted(LiftConstants.encoderInverted);
     config.encoder.positionConversionFactor(LiftConstants.gearRatio);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        // .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut)
         .pid(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd);
-    // .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut);
+
     SparkUtil501.tryUntilOk(
         motor,
         5,
@@ -171,7 +168,7 @@ public class Lift extends SubsystemBase implements ISubsystem {
     } else {
       new Alert("Successful REVLib Lift construction", AlertType.kInfo).set(true);
     }
-    sparkStickyFault |= origSparkStickyFault;
+    SparkUtil501.sparkStickyFault |= origSparkStickyFault;
   }
 
   /**
@@ -183,8 +180,8 @@ public class Lift extends SubsystemBase implements ISubsystem {
     // Using PID at current location
     currentMode = Mode.PID;
     // Use task of Joystick
-    Task.JOYSTICK.setTarget(position);
-    setTask(Task.JOYSTICK);
+    Task.HOLD.setTarget(position);
+    setTask(Task.HOLD);
     // no (manual) speed control
     currentSpeed = 0.0;
   }
@@ -220,12 +217,10 @@ public class Lift extends SubsystemBase implements ISubsystem {
     currentSpeed = speed;
 
     if (speed == 0) {
-      // In dead zone (so either revert to PID or ignore if currently PID)
+      // No joystick input (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
         // Use current position for hold point
-        Task.JOYSTICK.setTarget(getPosition());
-        setTask(Task.JOYSTICK);
-        currentMode = Mode.PID;
+        holdAtPositionWithPID(getPosition());
       }
     } else {
       // Valid teleop inputs (so either switch to MANUAL or just update speed)

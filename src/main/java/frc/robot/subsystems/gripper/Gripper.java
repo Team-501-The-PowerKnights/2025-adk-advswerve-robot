@@ -1,6 +1,5 @@
 package frc.robot.subsystems.gripper;
 
-import static frc.robot.util.SparkUtil.tryUntilOk;
 import static frc.robot.util.SparkUtil501.sparkStickyError;
 import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
@@ -24,15 +23,15 @@ public class Gripper extends SubsystemBase implements ISubsystem {
 
   // Hardware objects
   private final SparkMax leftMotor;
+  // private final SparkMax rightMotor;
 
   private double currentSpeed;
 
   public Gripper() {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
-    // TODO - Log error on entry
 
     // Create controller
-    leftMotor = new SparkMax(GripperConstants.gripperCanId, MotorType.kBrushless);
+    leftMotor = new SparkMax(GripperConstants.leftCanId, MotorType.kBrushless);
     // Factory reset (but don't burn to flash)
     SparkMaxConfig config = new SparkMaxConfig();
     config
@@ -40,12 +39,22 @@ public class Gripper extends SubsystemBase implements ISubsystem {
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(GripperConstants.motorCurrentLimit)
         .voltageCompensation(GripperConstants.motorVoltageComp);
-    tryUntilOk(
+    SparkUtil501.tryUntilOk(
         leftMotor,
         5,
         () ->
             leftMotor.configure(
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+
+    // Create controller
+    // rightMotor = new SparkMax(GripperConstants.rightCanId, MotorType.kBrushless);
+    // config.follow(GripperConstants.leftCanId, true);
+    // SparkUtil501.tryUntilOk(
+    //     rightMotor,
+    //     5,
+    //     () ->
+    //         rightMotor.configure(
+    //             config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Log this subsystem's status and return global
     Logger.recordOutput("Gripper/isREVLibError", !sparkStickyFault); // green=OK
@@ -57,11 +66,7 @@ public class Gripper extends SubsystemBase implements ISubsystem {
     } else {
       new Alert("Successful REVLib Gripper construction", AlertType.kInfo).set(true);
     }
-    sparkStickyFault |= origSparkStickyFault;
-  }
-
-  private void setSpeed(double speed) {
-    leftMotor.set(speed);
+    SparkUtil501.sparkStickyFault |= origSparkStickyFault;
   }
 
   /**
@@ -75,6 +80,10 @@ public class Gripper extends SubsystemBase implements ISubsystem {
       return;
     }
     currentSpeed = speed;
+  }
+
+  private void setSpeed(double speed) {
+    leftMotor.set(speed);
   }
 
   public void periodic() {

@@ -51,7 +51,6 @@ public class Climber extends SubsystemBase implements ISubsystem {
 
   public Climber() {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
-    // TODO - Log error on entry
 
     // Create controller
     motor = new SparkMax(ClimberConstants.climberCanId, MotorType.kBrushless);
@@ -82,7 +81,7 @@ public class Climber extends SubsystemBase implements ISubsystem {
     } else {
       new Alert("Successful REVLib Climber construction", AlertType.kInfo).set(true);
     }
-    sparkStickyFault |= origSparkStickyFault;
+    SparkUtil501.sparkStickyFault |= origSparkStickyFault;
   }
 
   /**
