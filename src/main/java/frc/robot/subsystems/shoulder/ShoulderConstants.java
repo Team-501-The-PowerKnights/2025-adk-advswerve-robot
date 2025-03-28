@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the constants for the <code>Arm</code> subsystem.
+ * This package contains the constants for the <code>Shoulder</code> subsystem.
  *
  * <p>More detail ...
  *
@@ -15,12 +15,12 @@
  * @author first.stu
  * @version 2025.0.0
  */
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.shoulder;
 
-class ArmConstants {
+class ShoulderConstants {
 
   /** CAN ID of the speed controller */
-  static final int armCanId = 34;
+  static final int shoulderCanID = 34;
 
   /** Is the motor inverted? (should be positive going up) */
   static final boolean motorInverted = true;

@@ -28,13 +28,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.ArmCommands;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
 import frc.robot.commands.LiftCommands;
+import frc.robot.commands.ShoulderCommands;
 import frc.robot.subsystems.ISubsystem;
-import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -44,6 +43,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.gripper.Gripper;
 import frc.robot.subsystems.lift.Lift;
+import frc.robot.subsystems.shoulder.Shoulder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
@@ -61,7 +61,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Lift lift;
-  private final Arm arm;
+  private final Shoulder shoulder;
   private final Gripper gripper;
   private final Climber climber;
   /** */
@@ -124,13 +124,14 @@ public class RobotContainer {
     } else {
       lift = null;
     }
-    Logger.recordOutput("Arm/useArm", Constants.useArm);
-    if (Constants.useArm) {
-      arm = new Arm();
-      subsystems.add(arm);
+    Logger.recordOutput("Shoulder/useShoulder", Constants.useShoulder);
+    if (Constants.useShoulder) {
+      shoulder = new Shoulder();
+      subsystems.add(shoulder);
     } else {
-      arm = null;
+      shoulder = null;
     }
+    // TODO - Put (new) Arm stuff here
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
     if (Constants.useGripper) {
       gripper = new Gripper();
@@ -226,20 +227,21 @@ public class RobotContainer {
     if (Constants.useLift) {
       // Default command, manual control via joystick
       lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.70));
-      operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
-      operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
-      operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
+      // operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
+      // operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
+      // operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
     }
 
     /*
-     * Arm is controlled by Operator
+     * Shoulder is controlled by Operator
      */
-    if (Constants.useArm) {
-      arm.setDefaultCommand(ArmCommands.manual(arm, () -> -operPad.getRightY() * 0.40));
-      // operPad.povDown().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_1));
-      // operPad.povRight().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_2));
-      // operPad.povUp().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_3));
-      // operPad.povLeft().onTrue(ArmCommands.setTask(arm, Arm.Task.REEF_4));
+    if (Constants.useShoulder) {
+      shoulder.setDefaultCommand(
+          ShoulderCommands.manual(shoulder, () -> -operPad.getRightY() * 0.40));
+      // operPad.povDown().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_1));
+      // operPad.povRight().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_2));
+      // operPad.povUp().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_3));
+      // operPad.povLeft().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_4));
     }
 
     /*

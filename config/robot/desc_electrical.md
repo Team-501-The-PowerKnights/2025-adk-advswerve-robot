@@ -16,9 +16,9 @@
 |   (M3) Drive     | Rev Spark Max   | NEO Brushless     | 14     | Right Rear  | 19     |
 |   (M3) Turn      | Rev Spark Flex  | NEO Brushless 550 | 21     | Right Rear  | 18     |
 | Lift             | Rev Spark Max   | NEO Brushless     | 33     | --          | 17     |
-| Arm              | Rev Spark Max   | NEO Brushless     | 34     | --          |  0     |
-| (L) Gripper      | Rev Spark Max   | NEO Brushless 550 | 35     | Left        |  1     |
-| (R) Gripper      | Rev Spark Max   | NEO Brushless 550 | 36?    | Right       | ??     |
+| Shoulder         | Rev Spark Max   | NEO Brushless     | 34     | --          |  0     |
+| (L) Gripper      | Rev Spark Max   | NEO Brushless 550 | 35     | Left        |  1     |  5*4*4
+| (R) Gripper      | Rev Spark Max   | NEO Brushless 550 | 36     | Right       | ??     |  5*4*4
 | Climber          | Rev Spark Max   | NEO Brushless     | 38     | --          | 16?    |
 
 
@@ -50,5 +50,5 @@
 | Subsystem      | Mechanism Type   | Sensor Type        | Port      | Position    |
 | -------------- | ---------------- | ------------------ | --------- | ----------- |
 | Lift           | Absolute Encoder |                    |           |             |
-| Arm            | Absolute Encoder |                    |           |             |
+| Shoulder       | Absolute Encoder |                    |           |             |
 |                |                  |                    |           |             |

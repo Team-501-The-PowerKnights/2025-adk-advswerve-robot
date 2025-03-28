@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the implementation of the <code>Arm</code> subsystem.
+ * This package contains the implementation of the <code>Shoulder</code> subsystem.
  *
  * <p>More detail ...
  *
@@ -16,7 +16,7 @@
  * @author2 first.fasano
  * @version 2025.0.0
  */
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.shoulder;
 
 import static frc.robot.util.SparkUtil501.sparkStickyError;
 import static frc.robot.util.SparkUtil501.sparkStickyFault;
@@ -39,7 +39,7 @@ import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
 import org.littletonrobotics.junction.Logger;
 
-public class Arm extends SubsystemBase implements ISubsystem {
+public class Shoulder extends SubsystemBase implements ISubsystem {
 
   public enum Mode {
     /** Operating based on PID set point. (Default) */
@@ -48,16 +48,18 @@ public class Arm extends SubsystemBase implements ISubsystem {
     MANUAL
   }
 
+  /** Enumeration of set positions */
   public enum Task {
-    REEF_4("Reef_4", 0.0),
-    REEF_3("Reef_3", 0.0),
-    REEF_2("Reef_2", 0.0),
-    REEF_1("Reef_1", 0.0),
-    COLLECT("Collect", 0.0),
-    HOME("Home", ArmConstants.minHeight),
-    START("Start", ArmConstants.minHeight),
-    // Special case of previously manual setting
-    JOYSTICK("Joystick", 0.0);
+    NET("Net_Pose", 0.0),
+    REEF_HI("Reef_Hi_Pose", 0.0),
+    REEF_LO("Reef_Lo_Pose", 0.0),
+    GROUND("Ground_Pose", 0.0),
+    // Position for 'homing' during match
+    HOME("Home", 0.0),
+    // Position for starting match
+    START("Start", 0.0),
+    // Special case of current position when enabled
+    HOLD("Hold", 0.0);
 
     private final String name;
     private double target;
@@ -76,7 +78,7 @@ public class Arm extends SubsystemBase implements ISubsystem {
     }
 
     public void setTarget(double target) {
-      if (this.getName().equals("Joystick")) {
+      if (this.getName().equals("Hold")) {
         this.target = target;
       } else {
         // TODO - Add a logged error here
@@ -84,13 +86,13 @@ public class Arm extends SubsystemBase implements ISubsystem {
     }
   }
 
-  // Current Intake mode
+  // Current mode
   private Mode currentMode;
-  // Current Intake task
+  // Current task
   private Task currentTask;
-  //
+  // If manual mode - then the current setting
   private double currentSpeed;
-  //
+  // If PID mode - then the current setting
   private double currentTarget;
 
   // Hardware objects
@@ -99,42 +101,38 @@ public class Arm extends SubsystemBase implements ISubsystem {
   private final SparkClosedLoopController controller;
 
   // Persistent initialization stuff (so can be logged)
-  StringBuilder encoderInitBuf;
+  private StringBuilder encoderInitBuf;
 
   /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
-  public Arm() {
+  public Shoulder() {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
-    // TODO - Log error on entry
 
     // Create controller
-    motor = new SparkMax(ArmConstants.armCanId, MotorType.kBrushless);
+    motor = new SparkMax(ShoulderConstants.shoulderCanID, MotorType.kBrushless);
     encoder = motor.getEncoder();
     controller = motor.getClosedLoopController();
 
     // Factory reset and burn new config to flash
     SparkMaxConfig config = new SparkMaxConfig();
     config
-        .inverted(ArmConstants.motorInverted)
+        .inverted(ShoulderConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(ArmConstants.motorCurrentLimit)
-        .voltageCompensation(ArmConstants.motorVoltageComp)
+        .smartCurrentLimit(ShoulderConstants.motorCurrentLimit)
+        .voltageCompensation(ShoulderConstants.motorVoltageComp)
         .softLimit
         .forwardSoftLimitEnabled(false)
+        // .forwardSoftLimit(ShoulderConstants.maxHeight)
         .reverseSoftLimitEnabled(false);
-    // .forwardSoftLimit(ArmConstants.maxHeight)
-    // .forwardSoftLimitEnabled(true);
-    // .reverseSoftLimit(ArmConstants.minHeight)
-    // .reverseSoftLimitEnabled(true);
-    // TODO - Not sure we need this any more?
-    config.absoluteEncoder.inverted(ArmConstants.encoderInverted);
-    // config.encoder.inverted(ArmConstants.encoderInverted);
-    config.encoder.positionConversionFactor(ArmConstants.gearRatio);
+    // .reverseSoftLimit(ShoulderConstants.minHeight);
+    config.absoluteEncoder.inverted(ShoulderConstants.encoderInverted);
+    config.encoder.positionConversionFactor(ShoulderConstants.gearRatio);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .pid(ArmConstants.pidKp, ArmConstants.pidKi, ArmConstants.pidKd);
-    //        .outputRange(ArmConstants.pidMaxNegOut, ArmConstants.pidMaxPosOut);
+        // .outputRange(ShoulderConstants.pidMaxNegOut, ShoulderConstants.pidMaxPosOut)
+        .pid(ShoulderConstants.pidKp, ShoulderConstants.pidKi, ShoulderConstants.pidKd);
+
     SparkUtil501.tryUntilOk(
         motor,
         5,
@@ -146,7 +144,7 @@ public class Arm extends SubsystemBase implements ISubsystem {
     double absEncoderPosScaled;
     {
       double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
-      absEncoderPosScaled = absEncoderPos * ArmConstants.gearRatio;
+      absEncoderPosScaled = absEncoderPos * ShoulderConstants.gearRatio;
 
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
@@ -155,7 +153,7 @@ public class Arm extends SubsystemBase implements ISubsystem {
       encoderInitBuf.append("absEncoder = ").append(absEncoderPos);
       encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
       encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("Arm: " + encoderInitBuf.toString());
+      System.out.println("Shoulder: " + encoderInitBuf.toString());
     }
 
     // Startup in PID at current location
@@ -164,16 +162,16 @@ public class Arm extends SubsystemBase implements ISubsystem {
     currentMode = Mode.MANUAL; // Startup in Manual
 
     // Log this subsystem's status and return global
-    Logger.recordOutput("Arm/isREVLibError", !sparkStickyFault); // green=OK
+    Logger.recordOutput("Shoulder/isREVLibError", !sparkStickyFault); // green=OK
     if (sparkStickyFault) {
       new Alert(
-              "REVLib problems in Arm construction (error = " + sparkStickyError + ")",
+              "REVLib problems in Shoulder construction (error = " + sparkStickyError + ")",
               AlertType.kError)
           .set(true);
     } else {
-      new Alert("Successful REVLib Arm construction", AlertType.kInfo).set(true);
+      new Alert("Successful REVLib Shoulder construction", AlertType.kInfo).set(true);
     }
-    sparkStickyFault |= origSparkStickyFault;
+    SparkUtil501.sparkStickyFault |= origSparkStickyFault;
   }
 
   /**
@@ -185,8 +183,8 @@ public class Arm extends SubsystemBase implements ISubsystem {
     // Using PID at current location
     currentMode = Mode.PID;
     // Use task of Joystick
-    Task.JOYSTICK.setTarget(position);
-    setTask(Task.JOYSTICK);
+    Task.HOLD.setTarget(position);
+    setTask(Task.HOLD);
     // no (manual) speed control
     currentSpeed = 0.0;
   }
@@ -222,12 +220,10 @@ public class Arm extends SubsystemBase implements ISubsystem {
     currentSpeed = speed;
 
     if (speed == 0) {
-      // In dead zone (so either revert to PID or ignore if currently PID)
+      // No joystick input (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
         // Use current position for hold point
-        Task.JOYSTICK.setTarget(getPosition());
-        setTask(Task.JOYSTICK);
-        currentMode = Mode.PID;
+        holdAtPositionWithPID(getPosition());
       }
     } else {
       // Valid teleop inputs (so either switch to MANUAL or just update speed)
@@ -275,13 +271,13 @@ public class Arm extends SubsystemBase implements ISubsystem {
       setSpeed(0);
     }
 
-    Logger.recordOutput("Arm/CurrentMode", currentMode.name());
-    Logger.recordOutput("Arm/isPID", (currentMode == Mode.PID));
-    Logger.recordOutput("Arm/CurrentTask", currentTask.getName());
-    Logger.recordOutput("Arm/CurrentSpeed", currentSpeed);
-    Logger.recordOutput("Arm/Target", currentTarget);
-    Logger.recordOutput("Arm/Position", getPosition());
-    Logger.recordOutput("Arm/Output", motor.getAppliedOutput());
-    Logger.recordOutput("Arm/EncoderConfig", encoderInitBuf.toString());
+    Logger.recordOutput("Shoulder/CurrentMode", currentMode.name());
+    Logger.recordOutput("Shoulder/isPID", (currentMode == Mode.PID));
+    Logger.recordOutput("Shoulder/CurrentTask", currentTask.getName());
+    Logger.recordOutput("Shoulder/CurrentSpeed", currentSpeed);
+    Logger.recordOutput("Shoulder/Target", currentTarget);
+    Logger.recordOutput("Shoulder/Position", getPosition());
+    Logger.recordOutput("Shoulder/Output", motor.getAppliedOutput());
+    Logger.recordOutput("Shoulder/EncoderConfig", encoderInitBuf.toString());
   }
 }

@@ -7,7 +7,7 @@
 /*------------------------------------------------------------------------*/
 
 /**
- * This package contains the implementation of the <code>Arm</code> subsystem.
+ * This package contains the implementation of the <code>Shoulder</code> subsystem.
  *
  * <p>More detail ...
  *
@@ -15,4 +15,4 @@
  * @author first.stu
  * @version 2025.0.0
  */
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.shoulder;
