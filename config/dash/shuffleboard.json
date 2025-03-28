@@ -24,33 +24,7 @@
               "_showGlyph": false
             }
           },
-          "22,7": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/CurrentTask",
-              "_title": "/AdvantageKit/RealOutputs/Intake/CurrentTask",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "22,9": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/Output",
-              "_title": "/AdvantageKit/RealOutputs/Intake/Output",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "29,12": {
+          "30,12": {
             "size": [
               5,
               2
@@ -63,7 +37,7 @@
               "_showGlyph": false
             }
           },
-          "14,7": {
+          "18,6": {
             "size": [
               4,
               2
@@ -89,7 +63,7 @@
               "_showGlyph": false
             }
           },
-          "10,5": {
+          "10,4": {
             "size": [
               4,
               2
@@ -102,7 +76,7 @@
               "_showGlyph": false
             }
           },
-          "10,7": {
+          "10,6": {
             "size": [
               4,
               2
@@ -115,7 +89,7 @@
               "_showGlyph": false
             }
           },
-          "14,9": {
+          "18,8": {
             "size": [
               4,
               2
@@ -128,7 +102,7 @@
               "_showGlyph": false
             }
           },
-          "10,9": {
+          "10,8": {
             "size": [
               4,
               2
@@ -180,7 +154,7 @@
               "_showGlyph": false
             }
           },
-          "14,5": {
+          "18,4": {
             "size": [
               4,
               2
@@ -206,7 +180,7 @@
               "_showGlyph": false
             }
           },
-          "10,3": {
+          "10,2": {
             "size": [
               4,
               2
@@ -221,9 +195,9 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "34,12": {
+          "35,12": {
             "size": [
-              5,
+              4,
               2
             ],
             "content": {
@@ -247,7 +221,7 @@
               "_showGlyph": false
             }
           },
-          "26,1": {
+          "22,0": {
             "size": [
               4,
               2
@@ -262,22 +236,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "22,1": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/useIntake",
-              "_title": "AdvantageKit/RealOutputs/Intake/useIntake",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "10,1": {
+          "10,0": {
             "size": [
               4,
               2
@@ -292,7 +251,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "14,1": {
+          "18,0": {
             "size": [
               4,
               2
@@ -305,62 +264,6 @@
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "18,1": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
-              "_title": "AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "18,3": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
-              "_title": "AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "18,7": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
-              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "18,9": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Position",
-              "_title": "AdvantageKit/RealOutputs/IntakeLift/Position",
-              "_glyph": 148,
-              "_showGlyph": false
             }
           },
           "33,7": {
@@ -389,7 +292,7 @@
               "_showGlyph": false
             }
           },
-          "14,3": {
+          "18,2": {
             "size": [
               4,
               2
@@ -404,17 +307,202 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "18,5": {
+          "26,0": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/useClimber",
+              "_title": "AdvantageKit/RealOutputs/Climber/useClimber",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "26,8": {
             "size": [
               4,
               2
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
-              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/Output",
+              "_title": "AdvantageKit/RealOutputs/Climber/Output",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          },
+          "26,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/CurrentSpeed",
+              "_title": "AdvantageKit/RealOutputs/Climber/CurrentSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/Drive/Gyro/Connected",
+              "_title": "AdvantageKit/Drive/Gyro/Connected",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "26,2": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Climber/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "22,2": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Gripper/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Gripper/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "22,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Gripper/CurrentSpeed",
+              "_title": "AdvantageKit/RealOutputs/Gripper/CurrentSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "22,8": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Gripper/Output",
+              "_title": "AdvantageKit/RealOutputs/Gripper/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "26,10": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/ClimbLimitSwitch",
+              "_title": "AdvantageKit/RealOutputs/Climber/ClimbLimitSwitch",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "26,12": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/LatchLimitSwitch",
+              "_title": "AdvantageKit/RealOutputs/Climber/LatchLimitSwitch",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "36,9": {
+            "size": [
+              3,
+              3
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/DriverStation/FMSAttached",
+              "_title": "AdvantageKit/DriverStation/FMSAttached",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "13,12": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/SystemStats/CANBus/TransmitErrorCount",
+              "_title": "AdvantageKit/SystemStats/CANBus/TransmitErrorCount",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,12": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/SystemStats/CANBus/ReceiveErrorCount",
+              "_title": "AdvantageKit/SystemStats/CANBus/ReceiveErrorCount",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,0": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/useShoulder",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/useShoulder",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
@@ -591,6 +679,35 @@
               "_title": "/AdvantageKit/RealOutputs/Lift/EncoderConfig",
               "_glyph": 148,
               "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Shoulder",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "3,1": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/useShoulder",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/useShoulder",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
             }
           }
         }
@@ -809,7 +926,7 @@
               "_showGlyph": false
             }
           },
-          "10,4": {
+          "3,1": {
             "size": [
               3,
               2
@@ -854,7 +971,7 @@
       }
     },
     {
-      "title": "Intake Lift",
+      "title": "Climber",
       "autoPopulate": false,
       "autoPopulatePrefix": "",
       "widgetPane": {
@@ -897,8 +1014,8 @@
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
-              "_title": "AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/useClimber",
+              "_title": "AdvantageKit/RealOutputs/Climber/useClimber",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
@@ -912,184 +1029,12 @@
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
-              "_title": "/AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Climber/isREVLibError",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "10,3": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
-              "_title": "/AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "10,5": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Position",
-              "_title": "/AdvantageKit/RealOutputs/IntakeLift/Position",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "10,7": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Target",
-              "_title": "/AdvantageKit/RealOutputs/IntakeLift/Target",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "15,6": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/LeftOutput",
-              "_title": "/AdvantageKit/RealOutputs/IntakeLift/LeftOutput",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "19,6": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/RightOutput",
-              "_title": "/AdvantageKit/RealOutputs/IntakeLift/RightOutput",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "7,12": {
-            "size": [
-              16,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/EncoderConfig",
-              "_title": "/AdvantageKit/RealOutputs/IntakeLift/EncoderConfig",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "10,1": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
-              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "15,3": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentSpeed",
-              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentSpeed",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "7,7": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isPID",
-              "_title": "AdvantageKit/RealOutputs/IntakeLift/isPID",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          }
-        }
-      }
-    },
-    {
-      "title": "Intake",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 32.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {
-          "33,0": {
-            "size": [
-              5,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
-              "_title": "AdvantageKit/RealMetadata/BuildDate",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "33,2": {
-            "size": [
-              5,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
-              "_title": "AdvantageKit/RealMetadata/GitBranch",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "10,3": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/CurrentTask",
-              "_title": "/AdvantageKit/RealOutputs/Intake/CurrentTask",
-              "_glyph": 148,
-              "_showGlyph": false
             }
           },
           "16,7": {
@@ -1099,25 +1044,10 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/HopperOutput",
-              "_title": "/AdvantageKit/RealOutputs/Intake/HopperOutput",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/Output",
+              "_title": "AdvantageKit/RealOutputs/Climber/Output",
               "_glyph": 148,
               "_showGlyph": false
-            }
-          },
-          "3,3": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/isREVLibError",
-              "_title": "/AdvantageKit/RealOutputs/Intake/isREVLibError",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
             }
           },
           "16,5": {
@@ -1127,21 +1057,36 @@
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/IntakeOutput",
-              "_title": "/AdvantageKit/RealOutputs/Intake/IntakeOutput",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/CurrentSpeed",
+              "_title": "AdvantageKit/RealOutputs/Climber/CurrentSpeed",
               "_glyph": 148,
               "_showGlyph": false
             }
           },
-          "3,1": {
+          "22,9": {
             "size": [
-              3,
+              4,
               2
             ],
             "content": {
               "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/useIntake",
-              "_title": "/AdvantageKit/RealOutputs/Intake/useIntake",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/LatchLimitSwitch",
+              "_title": "AdvantageKit/RealOutputs/Climber/LatchLimitSwitch",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "22,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Climber/ClimbLimitSwitch",
+              "_title": "AdvantageKit/RealOutputs/Climber/ClimbLimitSwitch",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
@@ -1234,7 +1179,7 @@
   "windowGeometry": {
     "x": -7.0,
     "y": 2.0,
-    "width": 1920.0,
+    "width": 1930.0,
     "height": 843.0
   }
 }

@@ -124,13 +124,14 @@ public class RobotContainer {
     } else {
       lift = null;
     }
-    Logger.recordOutput("Arm/useArm", Constants.useShoulder);
+    Logger.recordOutput("Shoulder/useShoulder", Constants.useShoulder);
     if (Constants.useShoulder) {
       shoulder = new Shoulder();
       subsystems.add(shoulder);
     } else {
       shoulder = null;
     }
+    // TODO - Put (new) Arm stuff here
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
     if (Constants.useGripper) {
       gripper = new Gripper();
