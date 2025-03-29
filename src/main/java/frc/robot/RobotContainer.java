@@ -34,6 +34,7 @@ import frc.robot.commands.GripperCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.commands.ShoulderCommands;
 import frc.robot.subsystems.ISubsystem;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -64,6 +65,7 @@ public class RobotContainer {
   private final Shoulder shoulder;
   private final Gripper gripper;
   private final Climber climber;
+  private final Arm arm;
   /** */
   public final List<ISubsystem> subsystems;
 
@@ -132,6 +134,13 @@ public class RobotContainer {
       shoulder = null;
     }
     // TODO - Put (new) Arm stuff here
+    Logger.recordOutput("Arm/useArm", Constants.useArm);
+    if (Constants.useArm) {
+      arm = new Arm();
+      subsystems.add(arm);
+    } else {
+      arm = null;
+    }
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
     if (Constants.useGripper) {
       gripper = new Gripper();
@@ -230,6 +239,15 @@ public class RobotContainer {
       // operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
       // operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
       // operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
+    }
+
+    /*
+     * Arm is controlled by Operator
+     */
+    if (Constants.useArm) {
+      // No defult command?
+      // arm.setDefaultCommand(
+      //     operPad.button(10).whileHeld(new ManualArmCommand(arm, () -> -operPad.getLeftX())));
     }
 
     /*
