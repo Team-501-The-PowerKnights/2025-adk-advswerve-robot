@@ -151,6 +151,14 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {}
 
+  /** This function is called once when teleop is exited. */
+  @Override
+  public void teleopExit() {
+    for (ISubsystem subsystems : robotContainer.subsystems) {
+      subsystems.teleopExit();
+    }
+  }
+
   /** This function is called once when test mode is enabled. */
   @Override
   public void testInit() {
