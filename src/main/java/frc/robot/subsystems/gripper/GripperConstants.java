@@ -13,7 +13,7 @@ public class GripperConstants {
   static final double motorVoltageComp = 12.0;
 
   /** Is the motor inverted? (should be positive pulling in) */
-  static final boolean gripperInverted = false;
+  static final boolean gripperInverted = true;
 
   /** */
   static final double gearRatio = 4 * 4 * 4;
