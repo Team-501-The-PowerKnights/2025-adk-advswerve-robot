@@ -464,9 +464,9 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "13,12": {
+          "14,12": {
             "size": [
-              3,
+              4,
               2
             ],
             "content": {
@@ -479,7 +479,7 @@
           },
           "10,12": {
             "size": [
-              3,
+              4,
               2
             ],
             "content": {
@@ -668,15 +668,82 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "7,12": {
+          "7,11": {
             "size": [
-              16,
+              12,
               2
             ],
             "content": {
               "_type": "Text View",
               "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/EncoderConfig",
               "_title": "/AdvantageKit/RealOutputs/Lift/EncoderConfig",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/doPIDTuning",
+              "_title": "/AdvantageKit/RealOutputs/Lift/doPIDTuning",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "23,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Tuning/Lift/1_pid_P",
+              "_title": "Tuning/Lift/1_pid_P",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Tuning/Lift/2_pid_I",
+              "_title": "Tuning/Lift/2_pid_I",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Tuning/Lift/3_pid_D",
+              "_title": "Tuning/Lift/3_pid_D",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,9": {
+            "size": [
+              12,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/PIDConfig",
+              "_title": "AdvantageKit/RealOutputs/Lift/PIDConfig",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -1155,6 +1222,45 @@
               "_type": "ComboBox Chooser",
               "_source0": "network_table:///SmartDashboard/Auto Delay Chooser",
               "_title": "Auto Delay Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lift/pid_P",
+              "_title": "Lift/pid_P",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "8,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lift/pid_I",
+              "_title": "Lift/pid_I",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Lift/pid_D",
+              "_title": "Lift/pid_D",
               "_glyph": 148,
               "_showGlyph": false
             }
