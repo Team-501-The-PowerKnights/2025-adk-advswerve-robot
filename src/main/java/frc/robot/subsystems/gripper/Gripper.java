@@ -23,7 +23,7 @@ public class Gripper extends SubsystemBase implements ISubsystem {
 
   // Hardware objects
   private final SparkMax leftMotor;
-  // private final SparkMax rightMotor;
+  private final SparkMax rightMotor;
 
   private double currentSpeed;
 
@@ -47,14 +47,14 @@ public class Gripper extends SubsystemBase implements ISubsystem {
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Create controller
-    // rightMotor = new SparkMax(GripperConstants.rightCanId, MotorType.kBrushless);
-    // config.follow(GripperConstants.leftCanId, true);
-    // SparkUtil501.tryUntilOk(
-    //     rightMotor,
-    //     5,
-    //     () ->
-    //         rightMotor.configure(
-    //             config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+    rightMotor = new SparkMax(GripperConstants.rightCanId, MotorType.kBrushless);
+    config.follow(GripperConstants.leftCanId, true);
+    SparkUtil501.tryUntilOk(
+        rightMotor,
+        5,
+        () ->
+            rightMotor.configure(
+                config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Log this subsystem's status and return global
     Logger.recordOutput("Gripper/isREVLibError", !sparkStickyFault); // green=OK
