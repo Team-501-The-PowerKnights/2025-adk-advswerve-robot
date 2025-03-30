@@ -131,7 +131,6 @@ public class RobotContainer {
     } else {
       shoulder = null;
     }
-    // TODO - Put (new) Arm stuff here
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
     if (Constants.useGripper) {
       gripper = new Gripper();
@@ -226,10 +225,11 @@ public class RobotContainer {
      */
     if (Constants.useLift) {
       // Default command, manual control via joystick
-      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.70));
-      // operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
-      // operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
-      // operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
+      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.20));
+      // TODO - Should be posese between subsystems
+      operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_HI));
+      operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_LO));
+      operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.GROUND));
     }
 
     /*
@@ -267,18 +267,17 @@ public class RobotContainer {
             }
             ;
           };
-
       DoubleSupplier climberUp =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return 1.0;
+              return 0.3;
             }
             ;
           };
       DoubleSupplier climberDown =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return -1.0;
+              return -0.3;
             }
             ;
           };

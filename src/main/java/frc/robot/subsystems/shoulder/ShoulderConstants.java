@@ -48,6 +48,9 @@ class ShoulderConstants {
   /** Joystick deadzone to use for manual control of subsystem */
   static final double joystickDeadZone = 0.05;
 
+  /** Whether doing PID tuning via Dashboard */
+  static final boolean doPidTuning = false;
+
   /** PID control loop constants */
   //
   static final double pidKp = 0.0;
