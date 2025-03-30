@@ -238,11 +238,12 @@ public class RobotContainer {
      */
     if (Constants.useShoulder) {
       shoulder.setDefaultCommand(
-          ShoulderCommands.manual(shoulder, () -> -operPad.getRightY() * 0.40));
-      // operPad.povDown().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_1));
-      // operPad.povRight().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_2));
-      // operPad.povUp().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_3));
-      // operPad.povLeft().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_4));
+          ShoulderCommands.manual(shoulder, () -> -operPad.getRightY() * 0.20));
+      // TODO - Should be poses between subsystems
+      // operPad.y().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_HI));
+      // operPad.b().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_LO));
+      // operPad.a().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.GROUND));
+      // operPad.x().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.HOME));
     }
 
     /*
