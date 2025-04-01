@@ -20,7 +20,7 @@ package frc.robot.subsystems.intakelift;
 public class IntakeLiftConstants {
 
   /** CAN ID of the lift speed controller */
-  static final int intakeLiftCanId = 38;
+  static final int intakeLiftCanId = 37;
 
   /** Is the motor inverted? (should be positive going up) */
   static final boolean motorInverted = true;
