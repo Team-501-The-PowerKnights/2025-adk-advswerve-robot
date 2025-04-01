@@ -19,10 +19,8 @@ package frc.robot.subsystems.intakelift;
 
 public class IntakeLiftConstants {
 
-  /** CAN ID of the left lift speed controller */
-  static final int leftCanId = 38;
-  /** CAN ID of the right lift speed controller */
-  static final int rightCanId = 39;
+  /** CAN ID of the lift speed controller */
+  static final int intakeLiftCanId = 38;
 
   /** Is the motor inverted? (should be positive going up) */
   static final boolean motorInverted = true;

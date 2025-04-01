@@ -28,6 +28,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.ISubsystem;
@@ -111,6 +112,12 @@ public class Intake extends SubsystemBase implements ISubsystem {
           // System.out.println("Intake::setTask to " + task.getTaskName());
           currentTask = task;
         });
+  }
+
+  public void acceptTeleopInput(double speed) {
+    if (!DriverStation.isTeleopEnabled()) {
+      return;
+    }
   }
 
   private void setSpeed(double instakeSpeed, double hopperSpeed) {

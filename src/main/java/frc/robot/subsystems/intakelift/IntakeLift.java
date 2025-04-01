@@ -88,7 +88,6 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
   private final SparkMax leftMotor;
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
-  private final SparkMax rightMotor;
 
   // Persistent initialization stuff (so can be logged)
   StringBuilder encoderInitBuf;
@@ -99,7 +98,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
     // Create left controller
-    leftMotor = new SparkMax(IntakeLiftConstants.leftCanId, MotorType.kBrushless);
+    leftMotor = new SparkMax(IntakeLiftConstants.intakeLiftCanId, MotorType.kBrushless);
     encoder = leftMotor.getEncoder();
     controller = leftMotor.getClosedLoopController();
 
@@ -130,9 +129,6 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
             leftMotor.configure(
                 leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
-    // Create right controller (as follower)
-    rightMotor = new SparkMax(IntakeLiftConstants.rightCanId, MotorType.kBrushless);
-
     // Factory reset and burn new config to flash
     SparkMaxConfig rightConfig = new SparkMaxConfig();
     rightConfig
@@ -140,12 +136,6 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
         .smartCurrentLimit(IntakeLiftConstants.motorCurrentLimit)
         .voltageCompensation(IntakeLiftConstants.motorVoltageComp);
     // .follow(IntakeLiftConstants.leftCanId, false);
-    SparkUtil501.tryUntilOk(
-        rightMotor,
-        5,
-        () ->
-            rightMotor.configure(
-                rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
     double absEncoderPosScaled;
@@ -261,7 +251,6 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
   private void setSpeed(double speed) {
     // controller.setReference(speed, ControlType.kDutyCycle);
     leftMotor.set(speed);
-    rightMotor.set(speed);
   }
 
   private void setTarget(double target) {
@@ -287,7 +276,6 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     Logger.recordOutput("IntakeLift/Target", currentTarget);
     Logger.recordOutput("IntakeLift/Position", getPosition());
     Logger.recordOutput("IntakeLift/LeftOutput", leftMotor.getAppliedOutput());
-    Logger.recordOutput("IntakeLift/RightOutput", rightMotor.getAppliedOutput());
     Logger.recordOutput("IntakeLift/EncoderConfig", encoderInitBuf.toString());
   }
 }

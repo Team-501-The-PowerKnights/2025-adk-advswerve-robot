@@ -42,6 +42,8 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.gripper.Gripper;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intakelift.IntakeLift;
 import frc.robot.subsystems.lift.Lift;
 import frc.robot.subsystems.shoulder.Shoulder;
 import java.util.ArrayList;
@@ -64,6 +66,8 @@ public class RobotContainer {
   private final Shoulder shoulder;
   private final Gripper gripper;
   private final Climber climber;
+  private final IntakeLift intakeLift;
+  private final Intake intake;
   /** */
   public final List<ISubsystem> subsystems;
 
@@ -144,6 +148,20 @@ public class RobotContainer {
       subsystems.add(climber);
     } else {
       climber = null;
+    }
+    Logger.recordOutput("IntakeLift/useIntakeLift", Constants.useIntakeLift);
+    if (Constants.useIntakeLift) {
+      intakeLift = new IntakeLift();
+      subsystems.add(intakeLift);
+    } else {
+      intakeLift = null;
+    }
+    Logger.recordOutput("Intake/useIntake", Constants.useIntake);
+    if (Constants.useIntake) {
+      intake = new Intake();
+      subsystems.add(intake);
+    } else {
+      intake = null;
     }
 
     // Set up auto routines
