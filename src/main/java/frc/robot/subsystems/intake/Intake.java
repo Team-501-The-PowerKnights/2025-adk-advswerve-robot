@@ -24,10 +24,8 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,18 +37,16 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase implements ISubsystem {
 
   public enum Task {
-    IDLE("Idle", 0.0, 0.0),
-    INTAKE("Intake", IntakeConstants.intakeInSpeed, IntakeConstants.hopperInSpeed),
-    EJECT("Eject", IntakeConstants.intakeOutSpeed, IntakeConstants.hopperOutSpeed);
+    IDLE("Idle", 0.0),
+    INTAKE("Intake", IntakeConstants.intakeInSpeed),
+    EJECT("Eject", IntakeConstants.intakeOutSpeed);
 
     private final String taskName;
     private final double intakeSpeed;
-    private final double hopperSpeed;
 
-    Task(String taskName, double intakeSpeed, double hopperSpeed) {
+    Task(String taskName, double intakeSpeed) {
       this.taskName = taskName;
       this.intakeSpeed = intakeSpeed;
-      this.hopperSpeed = hopperSpeed;
     }
 
     public String getTaskName() {
@@ -60,16 +56,10 @@ public class Intake extends SubsystemBase implements ISubsystem {
     public double getIntakeSpeed() {
       return this.intakeSpeed;
     }
-
-    public double getHopperSpeed() {
-      return this.hopperSpeed;
-    }
   }
 
   // Hardware objects
-  private final SparkFlex intakeMotorLeft;
-  private final SparkFlex intakeMotorRight;
-  private final SparkMax hopperMotor;
+  private final SparkFlex intakeMotor;
 
   private boolean origSparkStickyFault;
 
@@ -82,9 +72,7 @@ public class Intake extends SubsystemBase implements ISubsystem {
   public Intake() {
     origSparkStickyFault = SparkUtil501.sparkStickyFault;
     // Create controllers
-    intakeMotorLeft = new SparkFlex(IntakeConstants.intakeLeftCanId, MotorType.kBrushless);
-    intakeMotorRight = new SparkFlex(IntakeConstants.intakeRightCanId, MotorType.kBrushless);
-    hopperMotor = new SparkMax(IntakeConstants.hopperCanId, MotorType.kBrushless);
+    intakeMotor = new SparkFlex(IntakeConstants.intakeCanId, MotorType.kBrushless);
 
     // Factory reset (and burn to flash)
     SparkFlexConfig intakeConfig = new SparkFlexConfig();
@@ -94,32 +82,12 @@ public class Intake extends SubsystemBase implements ISubsystem {
         .smartCurrentLimit(IntakeConstants.intakeMotorCurrentLimit)
         .voltageCompensation(IntakeConstants.intakeMotorVoltageComp);
     SparkUtil501.tryUntilOk(
-        intakeMotorLeft,
+        intakeMotor,
         5,
         () ->
-            intakeMotorLeft.configure(
+            intakeMotor.configure(
                 intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-
-    intakeConfig.follow(IntakeConstants.intakeLeftCanId, true);
-    SparkUtil501.tryUntilOk(
-        intakeMotorRight,
-        5,
-        () ->
-            intakeMotorRight.configure(
-                intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-
-    SparkMaxConfig hopperConfig = new SparkMaxConfig();
-    hopperConfig
-        .inverted(IntakeConstants.hopperMotorInverted)
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(IntakeConstants.hopperMotorCurrentLimit)
-        .voltageCompensation(IntakeConstants.hopperMotorVoltageComp);
-    SparkUtil501.tryUntilOk(
-        hopperMotor,
-        5,
-        () ->
-            hopperMotor.configure(
-                hopperConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+    intakeConfig.follow(IntakeConstants.intakeCanId, true);
 
     // Startup in Idle
     currentTask = Task.IDLE;
@@ -146,8 +114,7 @@ public class Intake extends SubsystemBase implements ISubsystem {
   }
 
   private void setSpeed(double instakeSpeed, double hopperSpeed) {
-    intakeMotorLeft.set(instakeSpeed);
-    hopperMotor.set(hopperSpeed);
+    intakeMotor.set(instakeSpeed);
   }
 
   public void periodic() {
@@ -156,8 +123,6 @@ public class Intake extends SubsystemBase implements ISubsystem {
 
     Logger.recordOutput("Intake/CurrentTask", currentTask.getTaskName());
     Logger.recordOutput("Intake/CurrentSpeed", currentTask.getIntakeSpeed());
-    Logger.recordOutput("Intake/IntakeLeftOutput", intakeMotorLeft.get());
-    Logger.recordOutput("Intake/IntakeRightOutput", intakeMotorRight.get());
-    Logger.recordOutput("Intake/HopperOutput", hopperMotor.get());
+    Logger.recordOutput("Intake/IntakeLeftOutput", intakeMotor.get());
   }
 }
