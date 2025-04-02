@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
+import java.text.DecimalFormat;
 import org.littletonrobotics.junction.Logger;
 
 public class IntakeLift extends SubsystemBase implements ISubsystem {
@@ -144,13 +145,10 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
       absEncoderPosScaled = absEncoderPos * IntakeLiftConstants.gearRatio;
 
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
+      System.out.println("Lift: initial encoder values = " + collectEncoderValues());
 
-      double relEncoderPos = encoder.getPosition();
-      encoderInitBuf = new StringBuilder();
-      encoderInitBuf.append("absEncoder = ").append(absEncoderPos);
-      encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
-      encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("IntakeLift: " + encoderInitBuf.toString());
+      // Startup in PID at current location
+      holdAtPositionWithPID(absEncoderPosScaled);
     }
 
     // Startup in PID at current location
@@ -184,6 +182,22 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     setTask(Task.JOYSTICK);
     // no (manual) speed control
     currentSpeed = 0.0;
+  }
+
+  private String collectEncoderValues() {
+    encoderInitBuf.setLength(0);
+
+    double absEncoderPos = leftMotor.getAbsoluteEncoder().getPosition();
+    double absEncoderPosScaled = absEncoderPos * IntakeLiftConstants.gearRatio;
+    double relEncoderPos = encoder.getPosition();
+
+    DecimalFormat df = new DecimalFormat("0.00000");
+
+    encoderInitBuf.append("absEncoder = ").append(df.format(absEncoderPos));
+    encoderInitBuf.append(", scaled = ").append(df.format(absEncoderPosScaled));
+    encoderInitBuf.append(", relEncoder = ").append(df.format(relEncoderPos));
+
+    return encoderInitBuf.toString();
   }
 
   @Override
