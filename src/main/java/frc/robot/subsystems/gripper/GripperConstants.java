@@ -2,10 +2,8 @@ package frc.robot.subsystems.gripper;
 
 public class GripperConstants {
 
-  /** CAN ID of the speed controller (left, master) */
-  static final int leftCanId = 35;
-  /** CAN ID of the speed controller (right, follower) */
-  static final int rightCanId = 36;
+  /** CAN ID of the speed controller */
+  static final int canId = 35;
 
   /** */
   static final int motorCurrentLimit = 40;

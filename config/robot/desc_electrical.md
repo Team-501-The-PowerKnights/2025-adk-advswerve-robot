@@ -10,11 +10,11 @@
 |   (MO) Drive     | Rev Spark Max   | NEO Brushless     | 11     | Left Front  |  9     |
 |   (M0) Turn      | Rev Spark Flex  | NEO Brushless 550 | 21     | Left Front  |  8     |
 |   (M1) Drive     | Rev Spark Max   | NEO Brushless     | 12     | Right Front | 10     |
-|   (M1) Turn      | Rev Spark Flex  | NEO Brushless 550 | 21     | Right Front | 11     |
+|   (M1) Turn      | Rev Spark Flex  | NEO Brushless 550 | 22     | Right Front | 11     |
 |   (M2) Drive     | Rev Spark Max   | NEO Brushless     | 13     | Left Rear   | 13     |
-|   (M2) Turn      | Rev Spark Flex  | NEO Brushless 550 | 21     | Left Rear   | 12     |
+|   (M2) Turn      | Rev Spark Flex  | NEO Brushless 550 | 23     | Left Rear   | 12     |
 |   (M3) Drive     | Rev Spark Max   | NEO Brushless     | 14     | Right Rear  | 19     |
-|   (M3) Turn      | Rev Spark Flex  | NEO Brushless 550 | 21     | Right Rear  | 18     |
+|   (M3) Turn      | Rev Spark Flex  | NEO Brushless 550 | 24     | Right Rear  | 18     |
 | Lift             | Rev Spark Max   | NEO Brushless     | 33     | --          | 17     |
 | Shoulder         | Rev Spark Max   | NEO Brushless     | 34     | --          |  0     |
 | (L) Gripper      | Rev Spark Max   | NEO Brushless 550 | 35     | Left        |  1     |  5*4*4

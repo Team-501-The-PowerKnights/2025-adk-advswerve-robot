@@ -60,7 +60,7 @@ public class Intake extends SubsystemBase implements ISubsystem {
   }
 
   // Hardware objects
-  private final SparkFlex intakeMotor;
+  private final SparkFlex motor;
 
   private boolean origSparkStickyFault;
 
@@ -73,22 +73,22 @@ public class Intake extends SubsystemBase implements ISubsystem {
   public Intake() {
     origSparkStickyFault = SparkUtil501.sparkStickyFault;
     // Create controllers
-    intakeMotor = new SparkFlex(IntakeConstants.intakeCanId, MotorType.kBrushless);
+    motor = new SparkFlex(IntakeConstants.canId, MotorType.kBrushless);
 
     // Factory reset (and burn to flash)
     SparkFlexConfig intakeConfig = new SparkFlexConfig();
     intakeConfig
-        .inverted(IntakeConstants.intakeMotorInverted)
+        .inverted(IntakeConstants.motorInverted)
         .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(IntakeConstants.intakeMotorCurrentLimit)
-        .voltageCompensation(IntakeConstants.intakeMotorVoltageComp);
+        .smartCurrentLimit(IntakeConstants.motorCurrentLimit)
+        .voltageCompensation(IntakeConstants.motorVoltageComp);
     SparkUtil501.tryUntilOk(
-        intakeMotor,
+        motor,
         5,
         () ->
-            intakeMotor.configure(
+            motor.configure(
                 intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-    intakeConfig.follow(IntakeConstants.intakeCanId, true);
+    intakeConfig.follow(IntakeConstants.canId, true);
 
     // Startup in Idle
     currentTask = Task.IDLE;
@@ -121,7 +121,7 @@ public class Intake extends SubsystemBase implements ISubsystem {
   }
 
   private void setSpeed(double instakeSpeed, double hopperSpeed) {
-    intakeMotor.set(instakeSpeed);
+    motor.set(instakeSpeed);
   }
 
   public void periodic() {
@@ -130,6 +130,6 @@ public class Intake extends SubsystemBase implements ISubsystem {
 
     Logger.recordOutput("Intake/CurrentTask", currentTask.getTaskName());
     Logger.recordOutput("Intake/CurrentSpeed", currentTask.getIntakeSpeed());
-    Logger.recordOutput("Intake/IntakeLeftOutput", intakeMotor.get());
+    Logger.recordOutput("Intake/IntakeLeftOutput", motor.get());
   }
 }

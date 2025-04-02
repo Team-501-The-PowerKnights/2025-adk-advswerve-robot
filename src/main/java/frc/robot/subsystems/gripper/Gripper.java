@@ -22,8 +22,7 @@ import org.littletonrobotics.junction.Logger;
 public class Gripper extends SubsystemBase implements ISubsystem {
 
   // Hardware objects
-  private final SparkMax leftMotor;
-  private final SparkMax rightMotor;
+  private final SparkMax motor;
 
   private double currentSpeed;
 
@@ -31,7 +30,7 @@ public class Gripper extends SubsystemBase implements ISubsystem {
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
     // Create controller
-    leftMotor = new SparkMax(GripperConstants.leftCanId, MotorType.kBrushless);
+    motor = new SparkMax(GripperConstants.canId, MotorType.kBrushless);
     // Factory reset (but don't burn to flash)
     SparkMaxConfig config = new SparkMaxConfig();
     config
@@ -40,20 +39,10 @@ public class Gripper extends SubsystemBase implements ISubsystem {
         .smartCurrentLimit(GripperConstants.motorCurrentLimit)
         .voltageCompensation(GripperConstants.motorVoltageComp);
     SparkUtil501.tryUntilOk(
-        leftMotor,
+        motor,
         5,
         () ->
-            leftMotor.configure(
-                config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-
-    // Create controller
-    rightMotor = new SparkMax(GripperConstants.rightCanId, MotorType.kBrushless);
-    config.follow(GripperConstants.leftCanId, true);
-    SparkUtil501.tryUntilOk(
-        rightMotor,
-        5,
-        () ->
-            rightMotor.configure(
+            motor.configure(
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Log this subsystem's status and return global
@@ -83,13 +72,13 @@ public class Gripper extends SubsystemBase implements ISubsystem {
   }
 
   private void setSpeed(double speed) {
-    leftMotor.set(speed);
+    motor.set(speed);
   }
 
   public void periodic() {
     // Update current task
     setSpeed(currentSpeed);
     Logger.recordOutput("Gripper/CurrentSpeed", currentSpeed);
-    Logger.recordOutput("Gripper/Output", leftMotor.get());
+    Logger.recordOutput("Gripper/Output", motor.get());
   }
 }

@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.IntakeLiftCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.commands.ShoulderCommands;
@@ -291,14 +292,14 @@ public class RobotContainer {
       DoubleSupplier climberUp =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return 0.3;
+              return 1.0;
             }
             ;
           };
       DoubleSupplier climberDown =
           new DoubleSupplier() {
             public double getAsDouble() {
-              return -0.3;
+              return -1.0;
             }
             ;
           };
@@ -321,6 +322,15 @@ public class RobotContainer {
     if (Constants.useIntakeLift) {
       operPad.button(8).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
       operPad.button(7).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
+    }
+
+    /*
+     * Intake is controlled by driver via triggers.
+     */
+    if (Constants.useIntake) {
+      intake.setDefaultCommand(
+          IntakeCommands.manual(
+              intake, () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
     }
   }
 

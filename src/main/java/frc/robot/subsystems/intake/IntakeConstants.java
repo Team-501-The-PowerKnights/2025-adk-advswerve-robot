@@ -20,14 +20,14 @@ package frc.robot.subsystems.intake;
 class IntakeConstants {
 
   /** CAN ID of the intake speed controller */
-  static final int intakeCanId = 40;
+  static final int canId = 40;
 
   /** Is the motor inverted? (should be positive pulling in) */
-  static final boolean intakeMotorInverted = false;
+  static final boolean motorInverted = false;
   /** */
-  static final int intakeMotorCurrentLimit = 30;
+  static final int motorCurrentLimit = 30;
   /** */
-  static final double intakeMotorVoltageComp = 12.0;
+  static final double motorVoltageComp = 12.0;
 
   // In (ingest) is +, out (eject) is -
   static final double intakeInSpeed = 0.40;

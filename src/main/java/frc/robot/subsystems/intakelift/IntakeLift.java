@@ -92,7 +92,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
   //
   private double currentTarget;
 
-  private final SparkMax leftMotor;
+  private final SparkMax motor;
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
@@ -116,37 +116,39 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
 
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
-    // Create left controller
-    leftMotor = new SparkMax(IntakeLiftConstants.intakeLiftCanId, MotorType.kBrushless);
-    encoder = leftMotor.getEncoder();
-    controller = leftMotor.getClosedLoopController();
+    // Create controller
+    motor = new SparkMax(IntakeLiftConstants.canId, MotorType.kBrushless);
+    encoder = motor.getEncoder();
+    controller = motor.getClosedLoopController();
 
     // Factory reset and burn new config to flash
-    SparkMaxConfig leftConfig = new SparkMaxConfig();
-    leftConfig
+    SparkMaxConfig config = new SparkMaxConfig();
+    config
         .inverted(IntakeLiftConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(IntakeLiftConstants.motorCurrentLimit)
         .voltageCompensation(IntakeLiftConstants.motorVoltageComp)
         .softLimit
         .forwardSoftLimitEnabled(false)
-        .reverseSoftLimitEnabled(false)
-        .forwardSoftLimit(IntakeLiftConstants.maxHeight)
-        .forwardSoftLimitEnabled(true);
-    leftConfig.encoder.inverted(IntakeLiftConstants.encoderInverted);
-    leftConfig.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
-    leftConfig
+        .reverseSoftLimitEnabled(false);
+    // .forwardSoftLimit(IntakeLiftConstants.maxHeight)
+    // .forwardSoftLimitEnabled(true)
+    // .reverseSoftLimit(IntakeLiftConstants.minHeight)
+    // .reverseSoftLimitEnabled(true);
+    // config.encoder.inverted(IntakeLiftConstants.encoderInverted);
+    // config.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
+    config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // .outputRange(IntakeLiftConstants.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut);
         .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
 
     SparkUtil501.tryUntilOk(
-        leftMotor,
+        motor,
         5,
         () ->
-            leftMotor.configure(
-                leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+            motor.configure(
+                config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Factory reset and burn new config to flash
     SparkMaxConfig rightConfig = new SparkMaxConfig();
@@ -159,7 +161,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     // Initialize encoder based on absolute
     double absEncoderPosScaled;
     {
-      double absEncoderPos = leftMotor.getAbsoluteEncoder().getPosition();
+      double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
       absEncoderPosScaled = absEncoderPos * IntakeLiftConstants.gearRatio;
 
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
@@ -215,7 +217,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
   private String collectEncoderValues() {
     encoderInitBuf.setLength(0);
 
-    double absEncoderPos = leftMotor.getAbsoluteEncoder().getPosition();
+    double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
     double absEncoderPosScaled = absEncoderPos * IntakeLiftConstants.gearRatio;
     double relEncoderPos = encoder.getPosition();
 
@@ -233,9 +235,9 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
 
     DecimalFormat df = new DecimalFormat("0.00000");
 
-    double curP = leftMotor.configAccessor.closedLoop.getP();
-    double curI = leftMotor.configAccessor.closedLoop.getI();
-    double curD = leftMotor.configAccessor.closedLoop.getD();
+    double curP = motor.configAccessor.closedLoop.getP();
+    double curI = motor.configAccessor.closedLoop.getI();
+    double curD = motor.configAccessor.closedLoop.getD();
 
     pidConfigBuf.append("P=").append(df.format(curP));
     pidConfigBuf.append(" [").append(df.format(pidP.get())).append("]");
@@ -266,10 +268,10 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
       config.closedLoop.pid(pidP.get(), pidI.get(), pidD.get());
 
       SparkUtil501.tryUntilOk(
-          leftMotor,
+          motor,
           5,
           () ->
-              leftMotor.configure(
+              motor.configure(
                   config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
 
       System.out.println("Lift::teleopExit: " + collectPIDValues());
@@ -363,7 +365,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     Logger.recordOutput("IntakeLift/CurrentSpeed", currentSpeed);
     Logger.recordOutput("IntakeLift/Target", currentTarget);
     Logger.recordOutput("IntakeLift/Position", getPosition());
-    Logger.recordOutput("IntakeLift/LeftOutput", leftMotor.getAppliedOutput());
+    Logger.recordOutput("IntakeLift/LeftOutput", motor.getAppliedOutput());
     Logger.recordOutput("IntakeLift/EncoderConfig", encoderInitBuf.toString());
     Logger.recordOutput("Lift/doPIDTuning", IntakeLiftConstants.doPidTuning);
     Logger.recordOutput("Lift/PIDConfig", pidConfigBuf.toString());
