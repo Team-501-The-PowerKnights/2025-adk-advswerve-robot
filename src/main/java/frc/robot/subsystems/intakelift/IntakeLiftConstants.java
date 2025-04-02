@@ -42,7 +42,7 @@ public class IntakeLiftConstants {
   static final double pidMaxNegOut = -0.3;
   static final double pidMaxPosOut = 0.3;
 
-  static final double gearRatio = 4 * 5;
+  static final double gearRatio = 4 * 4 * 3;
 
   /** Is the absolute encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;

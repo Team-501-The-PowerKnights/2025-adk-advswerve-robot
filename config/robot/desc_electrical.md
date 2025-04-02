@@ -27,7 +27,7 @@
 | Hopper           | Rev Spark Max   | NEO Brushless     | 37     | --          | --     |
 |                  |                 |                   |        |             | 14     |
 | Intake Right     | Rev Spark Flex  | NEO Brushless     | 40     | Right (F)   | 15     |
-| IntakeLift Right | Rev Spark Max   |                   | 39     | Right (F)   | 16     |
+| IntakeLift Right | Rev Spark flex  |                   | 39     | Right (F)   | 16     |  4*4*3
 
 
 ## Modules
