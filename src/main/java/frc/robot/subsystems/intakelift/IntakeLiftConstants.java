@@ -35,14 +35,20 @@ public class IntakeLiftConstants {
   static final double minHeight = 97.0; // Should this be higher?
   static final double maxHeight = 5;
 
+  static final double gearRatio = 4 * 4 * 3;
+
+  /** Joystick deadzone to use for manual control of subsystem */
+  static final double joystickDeadZone = 0.05;
+
+  /** Whether doing PID tuning via Dashboard */
+  static final boolean doPidTuning = true;
+
   /* PID control loop constants */
   static final double pidKp = 0.1;
   static final double pidKi = 0.0;
   static final double pidKd = 0.0;
   static final double pidMaxNegOut = -0.3;
   static final double pidMaxPosOut = 0.3;
-
-  static final double gearRatio = 4 * 4 * 3;
 
   /** Is the absolute encoder inverted? (should be positive going up) */
   static final boolean encoderInverted = false;

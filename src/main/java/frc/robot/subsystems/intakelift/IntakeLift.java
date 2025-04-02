@@ -21,11 +21,13 @@ import static frc.robot.util.SparkUtil501.sparkStickyError;
 import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.Alert;
@@ -36,6 +38,7 @@ import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
 import java.text.DecimalFormat;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class IntakeLift extends SubsystemBase implements ISubsystem {
 
@@ -77,6 +80,9 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     }
   }
 
+  // Flag for whether first periodic() has run
+  private boolean firstPeriodic;
+
   // Current mode
   private Mode currentMode;
   // Current task
@@ -91,11 +97,23 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
   private final SparkClosedLoopController controller;
 
   // Persistent initialization stuff (so can be logged)
-  StringBuilder encoderInitBuf;
+  private final StringBuilder encoderInitBuf;
+  // Persistent PID tuning stuff (so can be logged)
+  private final StringBuilder pidConfigBuf;
+
+  // AdvantageKit editiable numbers for tuning on dashboard
+  private final LoggedNetworkNumber pidP;
+  private final LoggedNetworkNumber pidI;
+  private final LoggedNetworkNumber pidD;
 
   /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
   public IntakeLift() {
+    firstPeriodic = false;
+
+    encoderInitBuf = new StringBuilder();
+    pidConfigBuf = new StringBuilder();
+
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
     // Create left controller
@@ -115,14 +133,14 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
         .reverseSoftLimitEnabled(false)
         .forwardSoftLimit(IntakeLiftConstants.maxHeight)
         .forwardSoftLimitEnabled(true);
-    leftConfig.absoluteEncoder.inverted(IntakeLiftConstants.encoderInverted);
-    // config.encoder.inverted(LiftConstants.encoderInverted);
+    leftConfig.encoder.inverted(IntakeLiftConstants.encoderInverted);
     leftConfig.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
-    // leftConfig
-    //     .closedLoop
-    //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    //     .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
-    //     .outputRange(IntakeLiftConstant.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut);
+    leftConfig
+        .closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        // .outputRange(IntakeLiftConstants.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut);
+        .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
+
     SparkUtil501.tryUntilOk(
         leftMotor,
         5,
@@ -167,9 +185,19 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
       new Alert("Successful REVLib IntakeLift construction", AlertType.kInfo).set(true);
     }
     sparkStickyFault |= origSparkStickyFault;
+
+    // Put PID tuning on dashboard
+    pidP = new LoggedNetworkNumber("/Tuning/Lift/1_pid_P", IntakeLiftConstants.pidKp);
+    pidP.set(IntakeLiftConstants.pidKp);
+    pidI = new LoggedNetworkNumber("/Tuning/Lift/2_pid_I", IntakeLiftConstants.pidKi);
+    pidI.set(IntakeLiftConstants.pidKi);
+    pidD = new LoggedNetworkNumber("/Tuning/Lift/3_pid_D", IntakeLiftConstants.pidKd);
+    pidD.set(IntakeLiftConstants.pidKd);
+    //
+    System.out.println("Lift: initial PID values = " + collectPIDValues());
   }
 
-  /**
+  /*
    * Sets the subsystem to use the current position with PID control.
    *
    * @param position - Encoder position to use
@@ -200,10 +228,52 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     return encoderInitBuf.toString();
   }
 
+  private String collectPIDValues() {
+    pidConfigBuf.setLength(0);
+
+    DecimalFormat df = new DecimalFormat("0.00000");
+
+    double curP = leftMotor.configAccessor.closedLoop.getP();
+    double curI = leftMotor.configAccessor.closedLoop.getI();
+    double curD = leftMotor.configAccessor.closedLoop.getD();
+
+    pidConfigBuf.append("P=").append(df.format(curP));
+    pidConfigBuf.append(" [").append(df.format(pidP.get())).append("]");
+    pidConfigBuf.append(",  ");
+    pidConfigBuf.append("I=").append(df.format(curI));
+    pidConfigBuf.append(" [").append(df.format(pidI.get())).append("]");
+    pidConfigBuf.append(",  ");
+    pidConfigBuf.append("D=").append(df.format(curD));
+    pidConfigBuf.append(" [").append(df.format(pidD.get())).append("]");
+
+    return pidConfigBuf.toString();
+  }
+
   @Override
   public void teleopInit() {
+    if (IntakeLiftConstants.doPidTuning) {
+      System.out.println("Lift::teleopInit: " + collectPIDValues());
+    }
+
     // Set the PID target to be the current position so it doesn't move
     holdAtPositionWithPID(getPosition());
+  }
+
+  @Override
+  public void teleopExit() {
+    if (IntakeLiftConstants.doPidTuning) {
+      SparkMaxConfig config = new SparkMaxConfig();
+      config.closedLoop.pid(pidP.get(), pidI.get(), pidD.get());
+
+      SparkUtil501.tryUntilOk(
+          leftMotor,
+          5,
+          () ->
+              leftMotor.configure(
+                  config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+
+      System.out.println("Lift::teleopExit: " + collectPIDValues());
+    }
   }
 
   /**
@@ -235,9 +305,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
       // In dead zone (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
         // Use current position for hold point
-        Task.JOYSTICK.setTarget(getPosition());
-        setTask(Task.JOYSTICK);
-        currentMode = Mode.PID;
+        holdAtPositionWithPID(getPosition());
       }
     } else {
       // Valid teleop inputs (so either switch to MANUAL or just update speed)
@@ -263,24 +331,30 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
    * @param speed
    */
   private void setSpeed(double speed) {
-    // controller.setReference(speed, ControlType.kDutyCycle);
-    leftMotor.set(speed);
+    controller.setReference(speed, ControlType.kDutyCycle);
   }
 
-  private void setTarget(double target) {
-    // FIXME - Enable PID target setting when ready
-    // controller.setReference(target, ControlType.kPosition);
+  /**
+   * Sets the controller to use a PID-based position reference.
+   *
+   * @param position
+   */
+  private void setTarget(double position) {
+    controller.setReference(position, ControlType.kPosition);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (!firstPeriodic) {
+      collectEncoderValues();
+      firstPeriodic = true;
+    }
+
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
-      // FIXME - Enable PID target setting when ready
-      // setTarget(currentTarget);
-      setSpeed(0);
+      setTarget(currentTarget);
+      // setSpeed(0);
     }
 
     Logger.recordOutput("IntakeLift/CurrentMode", currentMode.name());
@@ -291,5 +365,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     Logger.recordOutput("IntakeLift/Position", getPosition());
     Logger.recordOutput("IntakeLift/LeftOutput", leftMotor.getAppliedOutput());
     Logger.recordOutput("IntakeLift/EncoderConfig", encoderInitBuf.toString());
+    Logger.recordOutput("Lift/doPIDTuning", IntakeLiftConstants.doPidTuning);
+    Logger.recordOutput("Lift/PIDConfig", pidConfigBuf.toString());
   }
 }

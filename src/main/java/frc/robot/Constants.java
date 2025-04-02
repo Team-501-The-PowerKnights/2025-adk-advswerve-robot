@@ -35,8 +35,8 @@ public final class Constants {
     REPLAY
   }
 
-  public static final boolean useIntake = false;
-  public static final boolean useIntakeLift = false;
+  public static final boolean useIntake = true;
+  public static final boolean useIntakeLift = true;
 
   public static final boolean doSysId = false;
 
