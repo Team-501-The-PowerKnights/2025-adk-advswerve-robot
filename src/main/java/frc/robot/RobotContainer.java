@@ -67,9 +67,9 @@ public class RobotContainer {
   private final Lift lift;
   private final Shoulder shoulder;
   private final Gripper gripper;
-  private final Climber climber;
   private final IntakeLift intakeLift;
   private final Intake intake;
+  private final Climber climber;
   /** */
   public final List<ISubsystem> subsystems;
 
@@ -144,13 +144,6 @@ public class RobotContainer {
     } else {
       gripper = null;
     }
-    Logger.recordOutput("Climber/useClimber", Constants.useClimber);
-    if (Constants.useClimber) {
-      climber = new Climber();
-      subsystems.add(climber);
-    } else {
-      climber = null;
-    }
     Logger.recordOutput("IntakeLift/useIntakeLift", Constants.useIntakeLift);
     if (Constants.useIntakeLift) {
       intakeLift = new IntakeLift();
@@ -164,6 +157,13 @@ public class RobotContainer {
       subsystems.add(intake);
     } else {
       intake = null;
+    }
+    Logger.recordOutput("Climber/useClimber", Constants.useClimber);
+    if (Constants.useClimber) {
+      climber = new Climber();
+      subsystems.add(climber);
+    } else {
+      climber = null;
     }
 
     // Set up auto routines
@@ -277,6 +277,23 @@ public class RobotContainer {
     }
 
     /*
+     * Intake lift is controlled by PID on the operater controller via start and back buttons.
+     */
+    if (Constants.useIntakeLift) {
+      operPad.button(8).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
+      operPad.button(7).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
+    }
+
+    /*
+     * Intake is controlled by driver via triggers.
+     */
+    if (Constants.useIntake) {
+      intake.setDefaultCommand(
+          IntakeCommands.manual(
+              intake, () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
+    }
+
+    /*
      * Climber is controlled by Operator
      */
     if (Constants.useClimber) {
@@ -314,23 +331,6 @@ public class RobotContainer {
           .povDown()
           .whileTrue(ClimberCommands.manual(climber, climberDown))
           .onFalse(ClimberCommands.manual(climber, climberStop));
-    }
-
-    /*
-     * Intake lift is controlled by PID on the operater controller via start and back buttons.
-     */
-    if (Constants.useIntakeLift) {
-      operPad.button(8).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
-      operPad.button(7).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
-    }
-
-    /*
-     * Intake is controlled by driver via triggers.
-     */
-    if (Constants.useIntake) {
-      intake.setDefaultCommand(
-          IntakeCommands.manual(
-              intake, () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
     }
   }
 

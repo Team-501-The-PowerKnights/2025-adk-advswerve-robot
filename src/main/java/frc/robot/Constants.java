@@ -41,8 +41,8 @@ public final class Constants {
   public static final boolean useShoulder = true;
   public static final boolean useGripper = true;
 
-  public static final boolean useIntake = false;
   public static final boolean useIntakeLift = false;
+  public static final boolean useIntake = false;
 
   public static final boolean useClimber = true;
 }
