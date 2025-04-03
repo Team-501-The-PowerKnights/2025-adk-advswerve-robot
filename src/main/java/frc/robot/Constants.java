@@ -42,7 +42,7 @@ public final class Constants {
   public static final boolean useGripper = true;
 
   public static final boolean useIntakeLift = true;
-  public static final boolean useIntake = false;
+  public static final boolean useIntake = true;
 
   public static final boolean useClimber = true;
 }

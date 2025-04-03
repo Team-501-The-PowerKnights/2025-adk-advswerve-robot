@@ -53,8 +53,8 @@ public class IntakeLiftConstants {
   static final double pidMaxPosOut = 0.3;
 
   // TODO - Determine values for min and max height
-  static final double minHeight = 350;
-  static final double maxHeight = 134;
+  static final double minHeight = 250;
+  static final double maxHeight = 225;
 
   static final double intakeDeploy = 0.25;
   static final double intakeRecall = 0.0;
