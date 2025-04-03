@@ -1,8 +1,8 @@
 {
   "hubs": [
     {
-      "x": 1912,
-      "y": -2,
+      "x": -8,
+      "y": -8,
       "width": 1936,
       "height": 1176,
       "state": {
@@ -12,14 +12,15 @@
             "/Drive/Module2",
             "/Drive/Module3",
             "/Tuning",
-            "/Tuning/Lift",
-            "/Tuning/Shoulder",
             "/RealOutputs",
-            "/RealOutputs/Shoulder"
+            "/RealOutputs/Shoulder",
+            "/RealOutputs/IntakeLift",
+            "/Tuning/IntakeLift",
+            "/RealOutputs/Lift"
           ]
         },
         "tabs": {
-          "selected": 5,
+          "selected": 4,
           "tabs": [
             {
               "type": 0,
@@ -326,6 +327,15 @@
                     "options": {
                       "color": "#2b66a2"
                     }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/RealOutputs/Lift/CurrentTask",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#e48b32"
+                    }
                   }
                 ],
                 "leftLockedRange": null,
@@ -392,6 +402,15 @@
                     "options": {
                       "color": "#2b66a2"
                     }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/RealOutputs/Shoulder/CurrentTask",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#e48b32"
+                    }
                   }
                 ],
                 "leftLockedRange": null,
@@ -408,6 +427,81 @@
                 "rightFilter": 0
               },
               "controllerUUID": "b7ogy17ou44rhn1kxgqc5l3651y382tn",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
+              "title": "Intake Lift PID Tuning",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/IntakeLift/Target",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b",
+                      "size": "normal"
+                    }
+                  },
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/IntakeLift/Position",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#af2437",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/IntakeLift/Output",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#80588e",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "discreteSources": [
+                  {
+                    "type": "stripes",
+                    "logKey": "/RealOutputs/IntakeLift/CurrentMode",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/RealOutputs/IntakeLift/CurrentTask",
+                    "logType": "String",
+                    "visible": true,
+                    "options": {
+                      "color": "#e48b32"
+                    }
+                  }
+                ],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "rightUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "rahq5gwobrspd13r7fdcpeq9ic3uujf1",
               "renderer": null,
               "controlsHeight": 200
             },
