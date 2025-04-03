@@ -280,6 +280,10 @@ public class RobotContainer {
      * Intake lift is controlled by PID on the operater controller via start and back buttons.
      */
     if (Constants.useIntakeLift) {
+      intakeLift.setDefaultCommand(
+          IntakeLiftCommands.manual(
+              intakeLift,
+              () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
       operPad.button(8).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
       operPad.button(7).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
     }

@@ -54,9 +54,9 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     RECALL("Recall", IntakeLiftConstants.maxHeight),
     DEPLOY("Deploy", IntakeLiftConstants.minHeight),
     // Position for 'homing' during match
-    HOME("Home", IntakeLiftConstants.minHeight),
+    HOME("Home", 14),
     // Position for starting match
-    START("Start", IntakeLiftConstants.minHeight),
+    START("Start", 14),
     // Special case of current position when enabled
     HOLD("Hold", 0.0);
 
@@ -143,7 +143,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     // .reverseSoftLimitEnabled(true);
     // FIXME - Why don't these work? (it is brushless)
     // config.encoder.inverted(IntakeLiftConstants.encoderInverted);
-    // config.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
+    config.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -298,7 +298,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
       return;
     }
 
-    currentSpeed = speed;
+    currentSpeed = speed * 0.3;
 
     if (speed == 0) {
       // In dead zone (so either revert to PID or ignore if currently PID)

@@ -42,7 +42,7 @@ public class IntakeLiftConstants {
   static final boolean doPidTuning = true;
 
   /* PID control loop constants */
-  static final double pidKp = 0.0;
+  static final double pidKp = 0.002;
   //
   static final double pidKi = 0.0;
   //
@@ -53,8 +53,8 @@ public class IntakeLiftConstants {
   static final double pidMaxPosOut = 0.3;
 
   // TODO - Determine values for min and max height
-  static final double minHeight = 0; // Should this be higher?
-  static final double maxHeight = 0;
+  static final double minHeight = 350;
+  static final double maxHeight = 134;
 
   static final double intakeDeploy = 0.25;
   static final double intakeRecall = 0.0;
