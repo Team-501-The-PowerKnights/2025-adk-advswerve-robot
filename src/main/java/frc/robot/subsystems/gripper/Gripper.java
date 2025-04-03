@@ -76,8 +76,8 @@ public class Gripper extends SubsystemBase implements ISubsystem {
   }
 
   public void periodic() {
-    // Update current task
     setSpeed(currentSpeed);
+
     Logger.recordOutput("Gripper/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Gripper/Output", motor.get());
   }

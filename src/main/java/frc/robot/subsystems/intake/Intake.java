@@ -29,7 +29,6 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
@@ -37,35 +36,12 @@ import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase implements ISubsystem {
 
-  public enum Task {
-    IDLE("Idle", 0.0),
-    INTAKE("Intake", IntakeConstants.intakeInSpeed),
-    EJECT("Eject", IntakeConstants.intakeOutSpeed);
-
-    private final String taskName;
-    private final double intakeSpeed;
-
-    Task(String taskName, double intakeSpeed) {
-      this.taskName = taskName;
-      this.intakeSpeed = intakeSpeed;
-    }
-
-    public String getTaskName() {
-      return taskName;
-    }
-
-    public double getIntakeSpeed() {
-      return this.intakeSpeed;
-    }
-  }
-
   // Hardware objects
   private final SparkFlex motor;
 
-  private boolean origSparkStickyFault;
+  private double currentSpeed;
 
-  // Current Intake task
-  private Task currentTask;
+  private boolean origSparkStickyFault;
 
   // TODO - Fix the initialization of Spark to match Shoulder & Lift
   // TODO - Fix to use the control loop kDutyCycle?
@@ -76,8 +52,8 @@ public class Intake extends SubsystemBase implements ISubsystem {
     motor = new SparkFlex(IntakeConstants.canId, MotorType.kBrushless);
 
     // Factory reset (and burn to flash)
-    SparkFlexConfig intakeConfig = new SparkFlexConfig();
-    intakeConfig
+    SparkFlexConfig config = new SparkFlexConfig();
+    config
         .inverted(IntakeConstants.motorInverted)
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit(IntakeConstants.motorCurrentLimit)
@@ -87,11 +63,7 @@ public class Intake extends SubsystemBase implements ISubsystem {
         5,
         () ->
             motor.configure(
-                intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-    intakeConfig.follow(IntakeConstants.canId, true);
-
-    // Startup in Idle
-    currentTask = Task.IDLE;
+                config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Log this subsystem's status and return global
     Logger.recordOutput("Intake/isREVLibError", !sparkStickyFault); // green=OK
@@ -106,30 +78,21 @@ public class Intake extends SubsystemBase implements ISubsystem {
     sparkStickyFault |= origSparkStickyFault;
   }
 
-  public Command setTask(Task task) {
-    return this.runOnce(
-        () -> {
-          // System.out.println("Intake::setTask to " + task.getTaskName());
-          currentTask = task;
-        });
-  }
-
   public void acceptTeleopInput(double speed) {
     if (!DriverStation.isTeleopEnabled()) {
       return;
     }
+    currentSpeed = speed;
   }
 
-  private void setSpeed(double instakeSpeed, double hopperSpeed) {
-    motor.set(instakeSpeed);
+  private void setSpeed(double speed) {
+    motor.set(speed);
   }
 
   public void periodic() {
-    // Update current task
-    setSpeed(currentTask.getIntakeSpeed(), currentTask.getIntakeSpeed());
+    setSpeed(currentSpeed);
 
-    Logger.recordOutput("Intake/CurrentTask", currentTask.getTaskName());
-    Logger.recordOutput("Intake/CurrentSpeed", currentTask.getIntakeSpeed());
-    Logger.recordOutput("Intake/IntakeLeftOutput", motor.get());
+    Logger.recordOutput("Intake/CurrentSpeed", currentSpeed);
+    Logger.recordOutput("Intake/Output", motor.get());
   }
 }

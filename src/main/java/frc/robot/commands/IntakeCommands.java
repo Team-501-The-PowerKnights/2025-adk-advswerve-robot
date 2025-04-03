@@ -21,12 +21,4 @@ public class IntakeCommands {
         },
         intake);
   }
-
-  public static Command setTask(Intake intake, Intake.Task task) {
-    return Commands.runOnce(
-        () -> {
-          intake.setTask(task);
-        },
-        intake);
-  }
 }
