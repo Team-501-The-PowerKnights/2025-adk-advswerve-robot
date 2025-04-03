@@ -24,7 +24,7 @@
               "_showGlyph": false
             }
           },
-          "30,12": {
+          "22,12": {
             "size": [
               5,
               2
@@ -33,19 +33,6 @@
               "_type": "Text View",
               "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
               "_title": "/AdvantageKit/RealMetadata/BuildDate",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "18,6": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/CurrentTask",
-              "_title": "/AdvantageKit/RealOutputs/Arm/CurrentTask",
               "_glyph": 148,
               "_showGlyph": false
             }
@@ -63,7 +50,7 @@
               "_showGlyph": false
             }
           },
-          "10,4": {
+          "9,4": {
             "size": [
               4,
               2
@@ -76,7 +63,7 @@
               "_showGlyph": false
             }
           },
-          "10,6": {
+          "9,6": {
             "size": [
               4,
               2
@@ -89,20 +76,7 @@
               "_showGlyph": false
             }
           },
-          "18,8": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/Position",
-              "_title": "AdvantageKit/RealOutputs/Arm/Position",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "10,8": {
+          "9,8": {
             "size": [
               4,
               2
@@ -154,19 +128,6 @@
               "_showGlyph": false
             }
           },
-          "18,4": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/CurrentMode",
-              "_title": "AdvantageKit/RealOutputs/Arm/CurrentMode",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
           "33,0": {
             "size": [
               6,
@@ -180,7 +141,7 @@
               "_showGlyph": false
             }
           },
-          "10,2": {
+          "9,2": {
             "size": [
               4,
               2
@@ -221,7 +182,7 @@
               "_showGlyph": false
             }
           },
-          "22,0": {
+          "17,0": {
             "size": [
               4,
               2
@@ -236,7 +197,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "10,0": {
+          "9,0": {
             "size": [
               4,
               2
@@ -245,21 +206,6 @@
               "_type": "Boolean Box",
               "_source0": "network_table:///AdvantageKit/RealOutputs/Lift/useLift",
               "_title": "AdvantageKit/RealOutputs/Lift/useLift",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "18,0": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/useArm",
-              "_title": "AdvantageKit/RealOutputs/Arm/useArm",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
@@ -292,22 +238,7 @@
               "_showGlyph": false
             }
           },
-          "18,2": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Arm/isREVLibError",
-              "_title": "AdvantageKit/RealOutputs/Arm/isREVLibError",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "26,0": {
+          "29,0": {
             "size": [
               4,
               2
@@ -322,7 +253,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "26,8": {
+          "29,8": {
             "size": [
               4,
               2
@@ -335,7 +266,7 @@
               "_showGlyph": false
             }
           },
-          "26,6": {
+          "29,6": {
             "size": [
               4,
               2
@@ -363,7 +294,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "26,2": {
+          "29,2": {
             "size": [
               4,
               2
@@ -378,7 +309,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "22,2": {
+          "17,2": {
             "size": [
               4,
               2
@@ -393,7 +324,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "22,6": {
+          "17,6": {
             "size": [
               4,
               2
@@ -406,7 +337,7 @@
               "_showGlyph": false
             }
           },
-          "22,8": {
+          "17,8": {
             "size": [
               4,
               2
@@ -419,7 +350,7 @@
               "_showGlyph": false
             }
           },
-          "26,10": {
+          "29,10": {
             "size": [
               4,
               2
@@ -434,7 +365,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "26,12": {
+          "29,12": {
             "size": [
               4,
               2
@@ -464,7 +395,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "14,12": {
+          "13,12": {
             "size": [
               4,
               2
@@ -477,7 +408,7 @@
               "_showGlyph": false
             }
           },
-          "10,12": {
+          "9,12": {
             "size": [
               4,
               2
@@ -490,7 +421,7 @@
               "_showGlyph": false
             }
           },
-          "14,0": {
+          "13,0": {
             "size": [
               4,
               2
@@ -503,6 +434,185 @@
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "13,2": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "13,4": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/CurrentMode",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "13,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/CurrentTask",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "13,8": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/Position",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "25,0": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/useIntake",
+              "_title": "/AdvantageKit/RealOutputs/Intake/useIntake",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "21,0": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
+              "_title": "/AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "25,2": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/isREVLibError",
+              "_title": "/AdvantageKit/RealOutputs/Intake/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "25,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/CurrentSpeed",
+              "_title": "AdvantageKit/RealOutputs/Intake/CurrentSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "25,8": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/Output",
+              "_title": "AdvantageKit/RealOutputs/Intake/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "21,2": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "21,4": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "21,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "21,8": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Output",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/Output",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }
@@ -775,6 +885,220 @@
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "10,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/CurrentMode",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/CurrentTask",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/Position",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/Target",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/Target",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,7": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/isPID",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/isPID",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "15,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/CurrentSpeed",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/CurrentSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "15,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/Output",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "7,11": {
+            "size": [
+              12,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/EncoderConfig",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/EncoderConfig",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/doPIDTuning",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/doPIDTuning",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "23,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Tuning/Shoulder/1_pid_P",
+              "_title": "Tuning/Shoulder/1_pid_P",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Tuning/Shoulder/2_pid_I",
+              "_title": "Tuning/Shoulder/2_pid_I",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Tuning/Shoulder/3_pid_D",
+              "_title": "Tuning/Shoulder/3_pid_D",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,9": {
+            "size": [
+              12,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Shoulder/PIDConfig",
+              "_title": "AdvantageKit/RealOutputs/Shoulder/PIDConfig",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }
@@ -1279,6 +1603,249 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {}
+      }
+    },
+    {
+      "title": "Intake Lift",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "3,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "3,1": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/useIntakeLift",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "7,7": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/isPID",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/isPID",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "10,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentMode",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentTask",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Target",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/Target",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "10,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Position",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/Position",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "15,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/CurrentSpeed",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/CurrentSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "15,6": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/Output",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "7,11": {
+            "size": [
+              12,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/EncoderConfig",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/EncoderConfig",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,1": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/doPIDTuning",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/doPIDTuning",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "23,3": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Tuning/IntakeLift/1_pid_P",
+              "_title": "Tuning/IntakeLift/1_pid_P",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Tuning/IntakeLift/2_pid_I",
+              "_title": "Tuning/IntakeLift/2_pid_I",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///Tuning/IntakeLift/3_pid_D",
+              "_title": "Tuning/IntakeLift/3_pid_D",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "23,9": {
+            "size": [
+              12,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/IntakeLift/PIDConfig",
+              "_title": "AdvantageKit/RealOutputs/IntakeLift/PIDConfig",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
       }
     }
   ],
