@@ -48,9 +48,9 @@ public class IntakeLiftConstants {
   //
   static final double pidKd = 0.0;
   //
-  static final double pidMaxNegOut = -0.3;
+  static final double pidMaxNegOut = -0.5;
   //
-  static final double pidMaxPosOut = 0.3;
+  static final double pidMaxPosOut = 0.5;
 
   // TODO - Determine values for min and max height
   static final double minHeight = 250;

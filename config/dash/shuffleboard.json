@@ -1730,7 +1730,7 @@
         }
       }
     },
-	{
+    {
       "title": "SmartDashboard",
       "autoPopulate": true,
       "autoPopulatePrefix": "SmartDashboard/",
