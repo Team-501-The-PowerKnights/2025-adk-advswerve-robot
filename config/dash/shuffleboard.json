@@ -1745,6 +1745,102 @@
         }
       }
     },
+	{
+      "title": "Intake",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 32.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "titleType": 0,
+        "tiles": {
+          "14,5": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/CurrentSpeed",
+              "_title": "AdvantageKit/RealOutputs/Intake/CurrentSpeed",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "14,7": {
+            "size": [
+              4,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/Output",
+              "_title": "AdvantageKit/RealOutputs/Intake/Output",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,3": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/isREVLibError",
+              "_title": "AdvantageKit/RealOutputs/Intake/isREVLibError",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "3,1": {
+            "size": [
+              3,
+              2
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/useIntake",
+              "_title": "AdvantageKit/RealOutputs/Intake/useIntake",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "33,0": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
+              "_title": "AdvantageKit/RealMetadata/BuildDate",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "33,2": {
+            "size": [
+              5,
+              2
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
+              "_title": "AdvantageKit/RealMetadata/GitBranch",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          }
+        }
+      }
+    },
     {
       "title": "SmartDashboard",
       "autoPopulate": true,
@@ -1861,102 +1957,6 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {}
-      }
-    },
-    {
-      "title": "Intake",
-      "autoPopulate": false,
-      "autoPopulatePrefix": "",
-      "widgetPane": {
-        "gridSize": 32.0,
-        "showGrid": true,
-        "hgap": 16.0,
-        "vgap": 16.0,
-        "titleType": 0,
-        "tiles": {
-          "14,5": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/CurrentSpeed",
-              "_title": "AdvantageKit/RealOutputs/Intake/CurrentSpeed",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "14,7": {
-            "size": [
-              4,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/Output",
-              "_title": "AdvantageKit/RealOutputs/Intake/Output",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "3,3": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/isREVLibError",
-              "_title": "AdvantageKit/RealOutputs/Intake/isREVLibError",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "3,1": {
-            "size": [
-              3,
-              2
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///AdvantageKit/RealOutputs/Intake/useIntake",
-              "_title": "AdvantageKit/RealOutputs/Intake/useIntake",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "33,0": {
-            "size": [
-              5,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealMetadata/BuildDate",
-              "_title": "AdvantageKit/RealMetadata/BuildDate",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "33,2": {
-            "size": [
-              5,
-              2
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///AdvantageKit/RealMetadata/GitBranch",
-              "_title": "AdvantageKit/RealMetadata/GitBranch",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          }
-        }
       }
     }
   ],
