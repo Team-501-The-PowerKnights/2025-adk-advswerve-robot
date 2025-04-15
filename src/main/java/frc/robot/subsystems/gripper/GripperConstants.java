@@ -2,10 +2,8 @@ package frc.robot.subsystems.gripper;
 
 public class GripperConstants {
 
-  /** CAN ID of the speed controller (left, master) */
-  static final int leftCanId = 35;
-  /** CAN ID of the speed controller (right, follower) */
-  static final int rightCanId = 36;
+  /** CAN ID of the speed controller */
+  static final int canId = 35;
 
   /** */
   static final int motorCurrentLimit = 40;
@@ -13,7 +11,7 @@ public class GripperConstants {
   static final double motorVoltageComp = 12.0;
 
   /** Is the motor inverted? (should be positive pulling in) */
-  static final boolean gripperInverted = false;
+  static final boolean gripperInverted = true;
 
   /** */
   static final double gearRatio = 4 * 4 * 4;

@@ -31,6 +31,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
+import frc.robot.commands.IntakeCommands;
+import frc.robot.commands.IntakeLiftCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.commands.ShoulderCommands;
 import frc.robot.subsystems.ISubsystem;
@@ -42,6 +44,8 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.gripper.Gripper;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intakelift.IntakeLift;
 import frc.robot.subsystems.lift.Lift;
 import frc.robot.subsystems.shoulder.Shoulder;
 import java.util.ArrayList;
@@ -63,6 +67,8 @@ public class RobotContainer {
   private final Lift lift;
   private final Shoulder shoulder;
   private final Gripper gripper;
+  private final IntakeLift intakeLift;
+  private final Intake intake;
   private final Climber climber;
   /** */
   public final List<ISubsystem> subsystems;
@@ -131,13 +137,26 @@ public class RobotContainer {
     } else {
       shoulder = null;
     }
-    // TODO - Put (new) Arm stuff here
     Logger.recordOutput("Gripper/useGripper", Constants.useGripper);
     if (Constants.useGripper) {
       gripper = new Gripper();
       subsystems.add(gripper);
     } else {
       gripper = null;
+    }
+    Logger.recordOutput("IntakeLift/useIntakeLift", Constants.useIntakeLift);
+    if (Constants.useIntakeLift) {
+      intakeLift = new IntakeLift();
+      subsystems.add(intakeLift);
+    } else {
+      intakeLift = null;
+    }
+    Logger.recordOutput("Intake/useIntake", Constants.useIntake);
+    if (Constants.useIntake) {
+      intake = new Intake();
+      subsystems.add(intake);
+    } else {
+      intake = null;
     }
     Logger.recordOutput("Climber/useClimber", Constants.useClimber);
     if (Constants.useClimber) {
@@ -193,9 +212,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> driverPad.getLeftY() * 0.6,
-            () -> driverPad.getLeftX() * 0.6,
-            () -> -driverPad.getRightX() * 0.4));
+            () -> driverPad.getLeftY() * 0.8,
+            () -> driverPad.getLeftX() * 0.8,
+            () -> -driverPad.getRightX() * 0.55));
 
     // Lock to 0° when A button is held
     driverPad
@@ -203,8 +222,8 @@ public class RobotContainer {
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> driverPad.getLeftY() * 0.6,
-                () -> driverPad.getLeftX() * 0.6,
+                () -> driverPad.getLeftY() * 0.8,
+                () -> driverPad.getLeftX() * 0.8,
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
@@ -226,10 +245,12 @@ public class RobotContainer {
      */
     if (Constants.useLift) {
       // Default command, manual control via joystick
-      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.70));
-      // operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_3));
-      // operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_2));
-      // operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_1));
+      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.20));
+      // TODO - Should be poses between subsystems
+      operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_HI));
+      operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_LO));
+      operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.GROUND));
+      operPad.x().onTrue(LiftCommands.setTask(lift, Lift.Task.HOME));
     }
 
     /*
@@ -237,11 +258,12 @@ public class RobotContainer {
      */
     if (Constants.useShoulder) {
       shoulder.setDefaultCommand(
-          ShoulderCommands.manual(shoulder, () -> -operPad.getRightY() * 0.40));
-      // operPad.povDown().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_1));
-      // operPad.povRight().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_2));
-      // operPad.povUp().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_3));
-      // operPad.povLeft().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_4));
+          ShoulderCommands.manual(shoulder, () -> -operPad.getRightY() * 0.20));
+      // TODO - Should be poses between subsystems
+      // operPad.y().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_HI));
+      // operPad.b().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_LO));
+      // operPad.a().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.GROUND));
+      // operPad.x().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.HOME));
     }
 
     /*
@@ -252,6 +274,27 @@ public class RobotContainer {
       gripper.setDefaultCommand(
           GripperCommands.manual(
               gripper, () -> (operPad.getLeftTriggerAxis() + -operPad.getRightTriggerAxis())));
+    }
+
+    /*
+     * Intake lift is controlled by PID on the operater controller via start and back buttons.
+     */
+    if (Constants.useIntakeLift) {
+      // intakeLift.setDefaultCommand(
+      // IntakeLiftCommands.manual(
+      //     intakeLift,
+      //     () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
+      operPad.button(8).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
+      operPad.button(7).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
+    }
+
+    /*
+     * Intake is controlled by driver via triggers.
+     */
+    if (Constants.useIntake) {
+      intake.setDefaultCommand(
+          IntakeCommands.manual(
+              intake, () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
     }
 
     /*
@@ -267,7 +310,6 @@ public class RobotContainer {
             }
             ;
           };
-
       DoubleSupplier climberUp =
           new DoubleSupplier() {
             public double getAsDouble() {

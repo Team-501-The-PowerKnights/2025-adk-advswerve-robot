@@ -37,7 +37,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
+import java.text.DecimalFormat;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Shoulder extends SubsystemBase implements ISubsystem {
 
@@ -86,6 +88,9 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
     }
   }
 
+  // Flag for whether first periodic() has run
+  private boolean firstPeriodic;
+
   // Current mode
   private Mode currentMode;
   // Current task
@@ -100,12 +105,24 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
-  // Persistent initialization stuff (so can be logged)
-  private StringBuilder encoderInitBuf;
+  // Persistent encoder init stuff (so can be logged)
+  private final StringBuilder encoderInitBuf;
+  // Persistent PID tuning stuff (so can be logged)
+  private final StringBuilder pidConfigBuf;
+
+  // AdvantageKit editiable numbers for tuning on dashboard
+  private final LoggedNetworkNumber pidP;
+  private final LoggedNetworkNumber pidI;
+  private final LoggedNetworkNumber pidD;
 
   /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
   public Shoulder() {
+    firstPeriodic = false;
+
+    encoderInitBuf = new StringBuilder();
+    pidConfigBuf = new StringBuilder();
+
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
     // Create controller
@@ -141,25 +158,19 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
-    double absEncoderPosScaled;
     {
       double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
-      absEncoderPosScaled = absEncoderPos * ShoulderConstants.gearRatio;
+      double absEncoderPosScaled = absEncoderPos * ShoulderConstants.gearRatio;
 
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
-      double relEncoderPos = encoder.getPosition();
-      encoderInitBuf = new StringBuilder();
-      encoderInitBuf.append("absEncoder = ").append(absEncoderPos);
-      encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
-      encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("Shoulder: " + encoderInitBuf.toString());
-    }
+      System.out.println("Shoulder: initial encoder values = " + collectEncoderValues());
 
-    // Startup in PID at current location
-    holdAtPositionWithPID(absEncoderPosScaled);
-    // FIXME - Initialize in PID when it works
-    currentMode = Mode.MANUAL; // Startup in Manual
+      // Startup in PID at current location
+      holdAtPositionWithPID(absEncoderPosScaled);
+      // FIXME - Initialize in PID when it works
+      currentMode = Mode.MANUAL; // Startup in Manual
+    }
 
     // Log this subsystem's status and return global
     Logger.recordOutput("Shoulder/isREVLibError", !sparkStickyFault); // green=OK
@@ -172,6 +183,16 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
       new Alert("Successful REVLib Shoulder construction", AlertType.kInfo).set(true);
     }
     SparkUtil501.sparkStickyFault |= origSparkStickyFault;
+
+    // Put PID tuning on dashboard
+    pidP = new LoggedNetworkNumber("/Tuning/Shoulder/1_pid_P", ShoulderConstants.pidKp);
+    pidP.set(ShoulderConstants.pidKp);
+    pidI = new LoggedNetworkNumber("/Tuning/Shoulder/2_pid_I", ShoulderConstants.pidKi);
+    pidI.set(ShoulderConstants.pidKi);
+    pidD = new LoggedNetworkNumber("/Tuning/Shoulder/3_pid_D", ShoulderConstants.pidKd);
+    pidD.set(ShoulderConstants.pidKd);
+    //
+    collectPIDValues();
   }
 
   /**
@@ -189,10 +210,68 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
     currentSpeed = 0.0;
   }
 
+  private String collectEncoderValues() {
+    encoderInitBuf.setLength(0);
+
+    double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
+    double absEncoderPosScaled = absEncoderPos * ShoulderConstants.gearRatio;
+    double relEncoderPos = encoder.getPosition();
+
+    DecimalFormat df = new DecimalFormat("0.00000");
+
+    encoderInitBuf.append("absEncoder = ").append(df.format(absEncoderPos));
+    encoderInitBuf.append(", scaled = ").append(df.format(absEncoderPosScaled));
+    encoderInitBuf.append(", relEncoder = ").append(df.format(relEncoderPos));
+
+    return encoderInitBuf.toString();
+  }
+
+  private String collectPIDValues() {
+    pidConfigBuf.setLength(0);
+
+    DecimalFormat df = new DecimalFormat("0.00000");
+
+    double curP = motor.configAccessor.closedLoop.getP();
+    double curI = motor.configAccessor.closedLoop.getI();
+    double curD = motor.configAccessor.closedLoop.getD();
+
+    pidConfigBuf.append("P=").append(df.format(curP));
+    pidConfigBuf.append(" [").append(df.format(pidP.get())).append("]");
+    pidConfigBuf.append(",  ");
+    pidConfigBuf.append("I=").append(df.format(curI));
+    pidConfigBuf.append(" [").append(df.format(pidI.get())).append("]");
+    pidConfigBuf.append(",  ");
+    pidConfigBuf.append("D=").append(df.format(curD));
+    pidConfigBuf.append(" [").append(df.format(pidD.get())).append("]");
+
+    return pidConfigBuf.toString();
+  }
+
   @Override
   public void teleopInit() {
+    if (ShoulderConstants.doPidTuning) {
+      System.out.println("Shoulder::teleopInit: " + collectPIDValues());
+    }
+
     // Set the PID target to be the current position so it doesn't move
     holdAtPositionWithPID(getPosition());
+  }
+
+  @Override
+  public void teleopExit() {
+    if (ShoulderConstants.doPidTuning) {
+      SparkMaxConfig config = new SparkMaxConfig();
+      config.closedLoop.pid(pidP.get(), pidI.get(), pidD.get());
+
+      SparkUtil501.tryUntilOk(
+          motor,
+          5,
+          () ->
+              motor.configure(
+                  config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+
+      System.out.println("Shoulder::teleopExit: " + collectPIDValues());
+    }
   }
 
   /**
@@ -263,6 +342,11 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
 
   @Override
   public void periodic() {
+    if (!firstPeriodic) {
+      collectEncoderValues();
+      firstPeriodic = true;
+    }
+
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
@@ -279,5 +363,7 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
     Logger.recordOutput("Shoulder/Position", getPosition());
     Logger.recordOutput("Shoulder/Output", motor.getAppliedOutput());
     Logger.recordOutput("Shoulder/EncoderConfig", encoderInitBuf.toString());
+    Logger.recordOutput("Shoulder/doPIDTuning", ShoulderConstants.doPidTuning);
+    Logger.recordOutput("Shoulder/PIDConfig", pidConfigBuf.toString());
   }
 }

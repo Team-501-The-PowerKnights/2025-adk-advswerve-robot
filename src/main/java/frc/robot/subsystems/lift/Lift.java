@@ -36,7 +36,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
+import java.text.DecimalFormat;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Lift extends SubsystemBase implements ISubsystem {
 
@@ -50,9 +52,9 @@ public class Lift extends SubsystemBase implements ISubsystem {
   /** Enumeration of set positions */
   public enum Task {
     NET("Net_Pose", 0.0),
-    REEF_HI("Reef_Hi_Pose", 0.0),
-    REEF_LO("Reef_Lo_Pose", 0.0),
-    GROUND("Ground_Pose", 0.0),
+    REEF_HI("Reef_Hi_Pose", 15763.0),
+    REEF_LO("Reef_Lo_Pose", 9779.0),
+    GROUND("Ground_Pose", 4987.0),
     // Position for 'homing' during match
     HOME("Home", LiftConstants.minHeight),
     // Position for starting match
@@ -85,6 +87,9 @@ public class Lift extends SubsystemBase implements ISubsystem {
     }
   }
 
+  // Flag for whether first periodic() has run
+  private boolean firstPeriodic;
+
   // Current mode
   private Mode currentMode;
   // Current task
@@ -99,12 +104,24 @@ public class Lift extends SubsystemBase implements ISubsystem {
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
 
-  // Persistent initialization stuff (so can be logged)
-  private StringBuilder encoderInitBuf;
+  // Persistent encoder init stuff (so can be logged)
+  private final StringBuilder encoderInitBuf;
+  // Persistent PID tuning stuff (so can be logged)
+  private final StringBuilder pidConfigBuf;
+
+  // AdvantageKit editiable numbers for tuning on dashboard
+  private final LoggedNetworkNumber pidP;
+  private final LoggedNetworkNumber pidI;
+  private final LoggedNetworkNumber pidD;
 
   /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
   public Lift() {
+    firstPeriodic = false;
+
+    encoderInitBuf = new StringBuilder();
+    pidConfigBuf = new StringBuilder();
+
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
     // Create controller
@@ -120,6 +137,8 @@ public class Lift extends SubsystemBase implements ISubsystem {
         .smartCurrentLimit(LiftConstants.motorCurrentLimit)
         .voltageCompensation(LiftConstants.motorVoltageComp)
         .softLimit
+        // .forwardSoftLimitEnabled(false)
+        // .reverseSoftLimitEnabled(false);
         .forwardSoftLimitEnabled(true)
         .forwardSoftLimit(LiftConstants.maxHeight)
         .reverseSoftLimitEnabled(true)
@@ -140,23 +159,17 @@ public class Lift extends SubsystemBase implements ISubsystem {
                 config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
-    double absEncoderPosScaled;
     {
       double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
-      absEncoderPosScaled = absEncoderPos * LiftConstants.gearRatio;
+      double absEncoderPosScaled = absEncoderPos * LiftConstants.gearRatio;
 
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
-      double relEncoderPos = encoder.getPosition();
-      encoderInitBuf = new StringBuilder();
-      encoderInitBuf.append("absEncoder = ").append(absEncoderPos);
-      encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
-      encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("Lift: " + encoderInitBuf.toString());
-    }
+      System.out.println("Lift: initial encoder values = " + collectEncoderValues());
 
-    // Startup in PID at current location
-    holdAtPositionWithPID(absEncoderPosScaled);
+      // Startup in PID at current location
+      holdAtPositionWithPID(absEncoderPosScaled);
+    }
 
     // Log this subsystem's status and return global
     Logger.recordOutput("Lift/isREVLibError", !sparkStickyFault); // green=OK
@@ -169,6 +182,16 @@ public class Lift extends SubsystemBase implements ISubsystem {
       new Alert("Successful REVLib Lift construction", AlertType.kInfo).set(true);
     }
     SparkUtil501.sparkStickyFault |= origSparkStickyFault;
+
+    // Put PID tuning on dashboard
+    pidP = new LoggedNetworkNumber("/Tuning/Lift/1_pid_P", LiftConstants.pidKp);
+    pidP.set(LiftConstants.pidKp);
+    pidI = new LoggedNetworkNumber("/Tuning/Lift/2_pid_I", LiftConstants.pidKi);
+    pidI.set(LiftConstants.pidKi);
+    pidD = new LoggedNetworkNumber("/Tuning/Lift/3_pid_D", LiftConstants.pidKd);
+    pidD.set(LiftConstants.pidKd);
+    //
+    System.out.println("Lift: initial PID values = " + collectPIDValues());
   }
 
   /**
@@ -186,10 +209,68 @@ public class Lift extends SubsystemBase implements ISubsystem {
     currentSpeed = 0.0;
   }
 
+  private String collectEncoderValues() {
+    encoderInitBuf.setLength(0);
+
+    double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
+    double absEncoderPosScaled = absEncoderPos * LiftConstants.gearRatio;
+    double relEncoderPos = encoder.getPosition();
+
+    DecimalFormat df = new DecimalFormat("0.00000");
+
+    encoderInitBuf.append("absEncoder = ").append(df.format(absEncoderPos));
+    encoderInitBuf.append(", scaled = ").append(df.format(absEncoderPosScaled));
+    encoderInitBuf.append(", relEncoder = ").append(df.format(relEncoderPos));
+
+    return encoderInitBuf.toString();
+  }
+
+  private String collectPIDValues() {
+    pidConfigBuf.setLength(0);
+
+    DecimalFormat df = new DecimalFormat("0.00000");
+
+    double curP = motor.configAccessor.closedLoop.getP();
+    double curI = motor.configAccessor.closedLoop.getI();
+    double curD = motor.configAccessor.closedLoop.getD();
+
+    pidConfigBuf.append("P=").append(df.format(curP));
+    pidConfigBuf.append(" [").append(df.format(pidP.get())).append("]");
+    pidConfigBuf.append(",  ");
+    pidConfigBuf.append("I=").append(df.format(curI));
+    pidConfigBuf.append(" [").append(df.format(pidI.get())).append("]");
+    pidConfigBuf.append(",  ");
+    pidConfigBuf.append("D=").append(df.format(curD));
+    pidConfigBuf.append(" [").append(df.format(pidD.get())).append("]");
+
+    return pidConfigBuf.toString();
+  }
+
   @Override
   public void teleopInit() {
+    if (LiftConstants.doPidTuning) {
+      System.out.println("Lift::teleopInit: " + collectPIDValues());
+    }
+
     // Set the PID target to be the current position so it doesn't move
     holdAtPositionWithPID(getPosition());
+  }
+
+  @Override
+  public void teleopExit() {
+    if (LiftConstants.doPidTuning) {
+      SparkMaxConfig config = new SparkMaxConfig();
+      config.closedLoop.pid(pidP.get(), pidI.get(), pidD.get());
+
+      SparkUtil501.tryUntilOk(
+          motor,
+          5,
+          () ->
+              motor.configure(
+                  config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+
+      System.out.println("Lift::teleopExit: " + collectPIDValues());
+    }
   }
 
   /**
@@ -260,6 +341,11 @@ public class Lift extends SubsystemBase implements ISubsystem {
 
   @Override
   public void periodic() {
+    if (!firstPeriodic) {
+      collectEncoderValues();
+      firstPeriodic = true;
+    }
+
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
@@ -275,5 +361,7 @@ public class Lift extends SubsystemBase implements ISubsystem {
     Logger.recordOutput("Lift/Position", getPosition());
     Logger.recordOutput("Lift/Output", motor.getAppliedOutput());
     Logger.recordOutput("Lift/EncoderConfig", encoderInitBuf.toString());
+    Logger.recordOutput("Lift/doPIDTuning", LiftConstants.doPidTuning);
+    Logger.recordOutput("Lift/PIDConfig", pidConfigBuf.toString());
   }
 }

@@ -21,11 +21,13 @@ import static frc.robot.util.SparkUtil501.sparkStickyError;
 import static frc.robot.util.SparkUtil501.sparkStickyFault;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.Alert;
@@ -34,7 +36,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.ISubsystem;
 import frc.robot.util.SparkUtil501;
+import java.text.DecimalFormat;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class IntakeLift extends SubsystemBase implements ISubsystem {
 
@@ -47,9 +51,14 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
 
   /** Enumeration of set positions */
   public enum Task {
-    DEPLOY("Deploy", IntakeLiftConstants.minHeight),
-    RECALL("Recall", IntakeLiftConstants.maxHeight),
-    JOYSTICK("Joystick", 0.0);
+    RECALL("Recall", 5),
+    DEPLOY("Deploy", 250),
+    // Position for 'homing' during match
+    HOME("Home", 14),
+    // Position for starting match
+    START("Start", 14),
+    // Special case of current position when enabled
+    HOLD("Hold", 0.0);
 
     private final String taskName;
     private double target;
@@ -68,7 +77,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     }
 
     public void setTarget(double target) {
-      if (this.getName().equals("Joystick")) {
+      if (this.getName().equals("Hold")) {
         this.target = target;
       } else {
         // TODO - Add a logged error here
@@ -76,95 +85,92 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     }
   }
 
+  // Flag for whether first periodic() has run
+  private boolean firstPeriodic;
+
   // Current mode
   private Mode currentMode;
   // Current task
   private Task currentTask;
-  //
+  // If manual mode - then the current setting
   private double currentSpeed;
-  //
+  // If PID mode - then the current setting
   private double currentTarget;
 
-  private final SparkMax leftMotor;
+  // Hardware objects
+  private final SparkMax motor;
   private final RelativeEncoder encoder;
   private final SparkClosedLoopController controller;
-  private final SparkMax rightMotor;
 
-  // Persistent initialization stuff (so can be logged)
-  StringBuilder encoderInitBuf;
+  // Persistent encoder init stuff (so can be logged)
+  private final StringBuilder encoderInitBuf;
+  // Persistent PID tuning stuff (so can be logged)
+  private final StringBuilder pidConfigBuf;
+
+  // AdvantageKit editiable numbers for tuning on dashboard
+  private final LoggedNetworkNumber pidP;
+  private final LoggedNetworkNumber pidI;
+  private final LoggedNetworkNumber pidD;
 
   /** Constructs a new instance of the subsystem. */
   @SuppressWarnings("resource")
   public IntakeLift() {
+    firstPeriodic = false;
+
+    encoderInitBuf = new StringBuilder();
+    pidConfigBuf = new StringBuilder();
+
     boolean origSparkStickyFault = SparkUtil501.sparkStickyFault;
 
-    // Create left controller
-    leftMotor = new SparkMax(IntakeLiftConstants.leftCanId, MotorType.kBrushless);
-    encoder = leftMotor.getEncoder();
-    controller = leftMotor.getClosedLoopController();
+    // Create controller
+    motor = new SparkMax(IntakeLiftConstants.canId, MotorType.kBrushless);
+    encoder = motor.getEncoder();
+    controller = motor.getClosedLoopController();
 
     // Factory reset and burn new config to flash
-    SparkMaxConfig leftConfig = new SparkMaxConfig();
-    leftConfig
+    SparkMaxConfig config = new SparkMaxConfig();
+    config
         .inverted(IntakeLiftConstants.motorInverted)
         .idleMode(IdleMode.kBrake)
         .smartCurrentLimit(IntakeLiftConstants.motorCurrentLimit)
         .voltageCompensation(IntakeLiftConstants.motorVoltageComp)
         .softLimit
         .forwardSoftLimitEnabled(false)
-        .reverseSoftLimitEnabled(false)
-        .forwardSoftLimit(IntakeLiftConstants.maxHeight)
-        .forwardSoftLimitEnabled(true);
-    leftConfig.absoluteEncoder.inverted(IntakeLiftConstants.encoderInverted);
-    // config.encoder.inverted(LiftConstants.encoderInverted);
-    leftConfig.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
-    // leftConfig
-    //     .closedLoop
-    //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    //     .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
-    //     .outputRange(IntakeLiftConstant.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut);
+        .reverseSoftLimitEnabled(false);
+    // .forwardSoftLimit(IntakeLiftConstants.maxHeight)
+    // .forwardSoftLimitEnabled(true)
+    // .reverseSoftLimit(IntakeLiftConstants.minHeight)
+    // .reverseSoftLimitEnabled(true);
+    // FIXME - Why don't these work? (it is brushless)
+    // config.encoder.inverted(IntakeLiftConstants.encoderInverted);
+    config.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
+    config
+        .closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        // .outputRange(IntakeLiftConstants.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut)
+        .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
+
     SparkUtil501.tryUntilOk(
-        leftMotor,
+        motor,
         5,
         () ->
-            leftMotor.configure(
-                leftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
-
-    // Create right controller (as follower)
-    rightMotor = new SparkMax(IntakeLiftConstants.rightCanId, MotorType.kBrushless);
-
-    // Factory reset and burn new config to flash
-    SparkMaxConfig rightConfig = new SparkMaxConfig();
-    rightConfig
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(IntakeLiftConstants.motorCurrentLimit)
-        .voltageCompensation(IntakeLiftConstants.motorVoltageComp);
-    // .follow(IntakeLiftConstants.leftCanId, false);
-    SparkUtil501.tryUntilOk(
-        rightMotor,
-        5,
-        () ->
-            rightMotor.configure(
-                rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
+            motor.configure(
+                config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters));
 
     // Initialize encoder based on absolute
     double absEncoderPosScaled;
     {
-      double absEncoderPos = leftMotor.getAbsoluteEncoder().getPosition();
+      double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
       absEncoderPosScaled = absEncoderPos * IntakeLiftConstants.gearRatio;
 
       SparkUtil501.tryUntilOk(encoder, 5, () -> encoder.setPosition(absEncoderPosScaled));
 
-      double relEncoderPos = encoder.getPosition();
-      encoderInitBuf = new StringBuilder();
-      encoderInitBuf.append("absEncoder = ").append(absEncoderPos);
-      encoderInitBuf.append(", scaled = ").append(absEncoderPosScaled);
-      encoderInitBuf.append(", relEncoder = ").append(relEncoderPos);
-      System.out.println("IntakeLift: " + encoderInitBuf.toString());
+      System.out.println("IntakeLift: initial encoder values = " + collectEncoderValues());
+
+      // Startup in PID at current location
+      holdAtPositionWithPID(absEncoderPosScaled);
     }
 
-    // Startup in PID at current location
-    holdAtPositionWithPID(absEncoderPosScaled);
     // FIXME - Initialize in PID when it works
     currentMode = Mode.MANUAL; // Startup in Manual
 
@@ -179,9 +185,19 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
       new Alert("Successful REVLib IntakeLift construction", AlertType.kInfo).set(true);
     }
     sparkStickyFault |= origSparkStickyFault;
+
+    // Put PID tuning on dashboard
+    pidP = new LoggedNetworkNumber("/Tuning/IntakeLift/1_pid_P", IntakeLiftConstants.pidKp);
+    pidP.set(IntakeLiftConstants.pidKp);
+    pidI = new LoggedNetworkNumber("/Tuning/IntakeLift/2_pid_I", IntakeLiftConstants.pidKi);
+    pidI.set(IntakeLiftConstants.pidKi);
+    pidD = new LoggedNetworkNumber("/Tuning/IntakeLift/3_pid_D", IntakeLiftConstants.pidKd);
+    pidD.set(IntakeLiftConstants.pidKd);
+    //
+    System.out.println("IntakeLift: initial PID values = " + collectPIDValues());
   }
 
-  /**
+  /*
    * Sets the subsystem to use the current position with PID control.
    *
    * @param position - Encoder position to use
@@ -190,16 +206,74 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     // Using PID at current location
     currentMode = Mode.PID;
     // Use task of Joystick
-    Task.JOYSTICK.setTarget(position);
-    setTask(Task.JOYSTICK);
+    Task.HOLD.setTarget(position);
+    setTask(Task.HOLD);
     // no (manual) speed control
     currentSpeed = 0.0;
   }
 
+  private String collectEncoderValues() {
+    encoderInitBuf.setLength(0);
+
+    double absEncoderPos = motor.getAbsoluteEncoder().getPosition();
+    double absEncoderPosScaled = absEncoderPos * IntakeLiftConstants.gearRatio;
+    double relEncoderPos = encoder.getPosition();
+
+    DecimalFormat df = new DecimalFormat("0.00000");
+
+    encoderInitBuf.append("absEncoder = ").append(df.format(absEncoderPos));
+    encoderInitBuf.append(", scaled = ").append(df.format(absEncoderPosScaled));
+    encoderInitBuf.append(", relEncoder = ").append(df.format(relEncoderPos));
+
+    return encoderInitBuf.toString();
+  }
+
+  private String collectPIDValues() {
+    pidConfigBuf.setLength(0);
+
+    DecimalFormat df = new DecimalFormat("0.00000");
+
+    double curP = motor.configAccessor.closedLoop.getP();
+    double curI = motor.configAccessor.closedLoop.getI();
+    double curD = motor.configAccessor.closedLoop.getD();
+
+    pidConfigBuf.append("P=").append(df.format(curP));
+    pidConfigBuf.append(" [").append(df.format(pidP.get())).append("]");
+    pidConfigBuf.append(",  ");
+    pidConfigBuf.append("I=").append(df.format(curI));
+    pidConfigBuf.append(" [").append(df.format(pidI.get())).append("]");
+    pidConfigBuf.append(",  ");
+    pidConfigBuf.append("D=").append(df.format(curD));
+    pidConfigBuf.append(" [").append(df.format(pidD.get())).append("]");
+
+    return pidConfigBuf.toString();
+  }
+
   @Override
   public void teleopInit() {
+    if (IntakeLiftConstants.doPidTuning) {
+      System.out.println("IntakeLift::teleopInit: " + collectPIDValues());
+    }
+
     // Set the PID target to be the current position so it doesn't move
     holdAtPositionWithPID(getPosition());
+  }
+
+  @Override
+  public void teleopExit() {
+    if (IntakeLiftConstants.doPidTuning) {
+      SparkMaxConfig config = new SparkMaxConfig();
+      config.closedLoop.pid(pidP.get(), pidI.get(), pidD.get());
+
+      SparkUtil501.tryUntilOk(
+          motor,
+          5,
+          () ->
+              motor.configure(
+                  config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters));
+
+      System.out.println("IntakeLift::teleopExit: " + collectPIDValues());
+    }
   }
 
   /**
@@ -224,16 +298,13 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
       return;
     }
 
-    // This comes in as fraction of DoubleSupplier (0.2 -> 0.111111)
-    currentSpeed = speed;
+    currentSpeed = speed * 0.3;
 
     if (speed == 0) {
       // In dead zone (so either revert to PID or ignore if currently PID)
       if (currentMode == Mode.MANUAL) {
         // Use current position for hold point
-        Task.JOYSTICK.setTarget(getPosition());
-        setTask(Task.JOYSTICK);
-        currentMode = Mode.PID;
+        holdAtPositionWithPID(getPosition());
       }
     } else {
       // Valid teleop inputs (so either switch to MANUAL or just update speed)
@@ -259,25 +330,30 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
    * @param speed
    */
   private void setSpeed(double speed) {
-    // controller.setReference(speed, ControlType.kDutyCycle);
-    leftMotor.set(speed);
-    rightMotor.set(speed);
+    controller.setReference(speed, ControlType.kDutyCycle);
   }
 
-  private void setTarget(double target) {
-    // FIXME - Enable PID target setting when ready
-    // controller.setReference(target, ControlType.kPosition);
+  /**
+   * Sets the controller to use a PID-based position reference.
+   *
+   * @param position
+   */
+  private void setTarget(double position) {
+    controller.setReference(position, ControlType.kPosition);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (!firstPeriodic) {
+      collectEncoderValues();
+      firstPeriodic = true;
+    }
+
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
-      // FIXME - Enable PID target setting when ready
-      // setTarget(currentTarget);
-      setSpeed(0);
+      setTarget(currentTarget);
+      // setSpeed(0);
     }
 
     Logger.recordOutput("IntakeLift/CurrentMode", currentMode.name());
@@ -286,8 +362,9 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     Logger.recordOutput("IntakeLift/CurrentSpeed", currentSpeed);
     Logger.recordOutput("IntakeLift/Target", currentTarget);
     Logger.recordOutput("IntakeLift/Position", getPosition());
-    Logger.recordOutput("IntakeLift/LeftOutput", leftMotor.getAppliedOutput());
-    Logger.recordOutput("IntakeLift/RightOutput", rightMotor.getAppliedOutput());
+    Logger.recordOutput("IntakeLift/Output", motor.getAppliedOutput());
     Logger.recordOutput("IntakeLift/EncoderConfig", encoderInitBuf.toString());
+    Logger.recordOutput("IntakeLift/doPIDTuning", IntakeLiftConstants.doPidTuning);
+    Logger.recordOutput("IntakeLift/PIDConfig", pidConfigBuf.toString());
   }
 }

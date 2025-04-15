@@ -19,10 +19,8 @@ package frc.robot.subsystems.intakelift;
 
 public class IntakeLiftConstants {
 
-  /** CAN ID of the left lift speed controller */
-  static final int leftCanId = 38;
-  /** CAN ID of the right lift speed controller */
-  static final int rightCanId = 39;
+  /** CAN ID of the lift speed controller */
+  static final int canId = 37;
 
   /** Is the motor inverted? (should be positive going up) */
   static final boolean motorInverted = true;
@@ -31,21 +29,33 @@ public class IntakeLiftConstants {
   /** */
   static final double motorVoltageComp = 12.0;
 
-  static final double intakeDeploy = 0.25;
-  static final double intakeRecall = 0.0;
+  /** Is the encoder inverted? (should be positive going up) */
+  static final boolean encoderInverted = false;
 
-  static final double minHeight = 97.0; // Should this be higher?
-  static final double maxHeight = 5;
+  /** */
+  static final double gearRatio = 4 * 4 * 3;
+
+  /** Joystick deadzone to use for manual control of subsystem */
+  static final double joystickDeadZone = 0.05;
+
+  /** Whether doing PID tuning via Dashboard */
+  static final boolean doPidTuning = true;
 
   /* PID control loop constants */
-  static final double pidKp = 0.1;
+  static final double pidKp = 0.002;
+  //
   static final double pidKi = 0.0;
+  //
   static final double pidKd = 0.0;
-  static final double pidMaxNegOut = -0.3;
-  static final double pidMaxPosOut = 0.3;
+  //
+  static final double pidMaxNegOut = -0.5;
+  //
+  static final double pidMaxPosOut = 0.5;
 
-  static final double gearRatio = 4 * 5;
+  // TODO - Determine values for min and max height
+  static final double minHeight = 250;
+  static final double maxHeight = 225;
 
-  /** Is the absolute encoder inverted? (should be positive going up) */
-  static final boolean encoderInverted = false;
+  static final double intakeDeploy = 0.25;
+  static final double intakeRecall = 0.0;
 }
