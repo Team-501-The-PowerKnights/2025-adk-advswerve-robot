@@ -37,9 +37,9 @@ public final class Constants {
 
   public static final boolean doSysId = false;
 
-  public static final boolean useLift = false;
-  public static final boolean useShoulder = false;
-  public static final boolean useGripper = false;
+  public static final boolean useLift = true;
+  public static final boolean useShoulder = true;
+  public static final boolean useGripper = true;
 
   public static final boolean useIntakeLift = true;
   public static final boolean useIntake = true;

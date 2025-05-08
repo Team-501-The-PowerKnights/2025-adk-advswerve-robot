@@ -52,8 +52,8 @@ public class Lift extends SubsystemBase implements ISubsystem {
   /** Enumeration of set positions */
   public enum Task {
     NET("Net_Pose", 0.0),
-    REEF_HI("Reef_Hi_Pose", 15763.0),
-    REEF_LO("Reef_Lo_Pose", 9779.0),
+    REEF_HI("Reef_Hi_Pose", 21792.0), // top tape
+    REEF_LO("Reef_Lo_Pose", 3395.0), // middle tape
     GROUND("Ground_Pose", 4987.0),
     // Position for 'homing' during match
     HOME("Home", LiftConstants.minHeight),
@@ -148,7 +148,7 @@ public class Lift extends SubsystemBase implements ISubsystem {
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        // .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut)
+        .outputRange(LiftConstants.pidMaxNegOut, LiftConstants.pidMaxPosOut)
         .pid(LiftConstants.pidKp, LiftConstants.pidKi, LiftConstants.pidKd);
 
     SparkUtil501.tryUntilOk(

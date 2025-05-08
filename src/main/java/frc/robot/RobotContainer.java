@@ -247,10 +247,10 @@ public class RobotContainer {
       // Default command, manual control via joystick
       lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.20));
       // TODO - Should be poses between subsystems
-      operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_HI));
-      operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_LO));
-      operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.GROUND));
-      operPad.x().onTrue(LiftCommands.setTask(lift, Lift.Task.HOME));
+      // operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_HI));
+      // operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_LO));
+      // operPad.a().onTrue(LiftCommands.setTask(lift, Lift.Task.GROUND));
+      // operPad.x().onTrue(LiftCommands.setTask(lift, Lift.Task.HOME));
     }
 
     /*
@@ -264,6 +264,21 @@ public class RobotContainer {
       // operPad.b().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_LO));
       // operPad.a().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.GROUND));
       // operPad.x().onTrue(ShoulderCommands.setTask(shoulder, Shoulder.Task.HOME));
+    }
+
+    if (Constants.useLift && Constants.useShoulder) {
+      operPad
+          .y()
+          .onTrue(
+              Commands.parallel(
+                  LiftCommands.setTask(lift, Lift.Task.REEF_HI),
+                  ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_HI)));
+      operPad
+          .b()
+          .onTrue(
+              Commands.parallel(
+                  LiftCommands.setTask(lift, Lift.Task.REEF_LO),
+                  ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_LO)));
     }
 
     /*

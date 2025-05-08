@@ -53,7 +53,7 @@ class ShoulderConstants {
 
   /** PID control loop constants */
   //
-  static final double pidKp = 0.0;
+  static final double pidKp = 0.002;
   //
   static final double pidKi = 0.0;
   //

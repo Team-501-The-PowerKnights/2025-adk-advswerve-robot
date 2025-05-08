@@ -53,11 +53,11 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
   /** Enumeration of set positions */
   public enum Task {
     NET("Net_Pose", 0.0),
-    REEF_HI("Reef_Hi_Pose", 0.0),
-    REEF_LO("Reef_Lo_Pose", 0.0),
-    GROUND("Ground_Pose", 0.0),
+    REEF_HI("Reef_Hi_Pose", 15464.0), // 13697 parallel
+    REEF_LO("Reef_Lo_Pose", 15464.0), // 15396 30 down
+    GROUND("Ground_Pose", 17860.0),
     // Position for 'homing' during match
-    HOME("Home", 0.0),
+    HOME("Home", 19664.0),
     // Position for starting match
     START("Start", 0.0),
     // Special case of current position when enabled
@@ -147,7 +147,7 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        // .outputRange(ShoulderConstants.pidMaxNegOut, ShoulderConstants.pidMaxPosOut)
+        .outputRange(ShoulderConstants.pidMaxNegOut, ShoulderConstants.pidMaxPosOut)
         .pid(ShoulderConstants.pidKp, ShoulderConstants.pidKi, ShoulderConstants.pidKd);
 
     SparkUtil501.tryUntilOk(
@@ -350,9 +350,9 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
     if (currentMode == Mode.MANUAL) {
       setSpeed(currentSpeed);
     } else {
-      // FIXME - Enable PID target setting when ready
-      // setTarget(currentTarget);
-      setSpeed(0);
+      setTarget(currentTarget);
+      // FIXME: Set to speed when not doing PID
+      // setSpeed(0);
     }
 
     Logger.recordOutput("Shoulder/CurrentMode", currentMode.name());
