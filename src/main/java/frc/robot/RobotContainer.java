@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
-import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.IntakeLiftCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.commands.ShoulderCommands;
@@ -296,9 +295,9 @@ public class RobotContainer {
      */
     if (Constants.useIntakeLift) {
       // intakeLift.setDefaultCommand(
-      // IntakeLiftCommands.manual(
-      //     intakeLift,
-      //     () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
+      //     IntakeLiftCommands.manual(
+      //         intakeLift,
+      //         () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
       operPad.button(8).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.DEPLOY));
       operPad.button(7).onTrue(IntakeLiftCommands.setTask(intakeLift, IntakeLift.Task.RECALL));
     }
@@ -307,9 +306,10 @@ public class RobotContainer {
      * Intake is controlled by driver via triggers.
      */
     if (Constants.useIntake) {
-      intake.setDefaultCommand(
-          IntakeCommands.manual(
-              intake, () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
+      // intake.setDefaultCommand(
+      //     IntakeCommands.manual(
+      //         intake, () -> (driverPad.getLeftTriggerAxis() +
+      // -driverPad.getRightTriggerAxis())));
     }
 
     /*

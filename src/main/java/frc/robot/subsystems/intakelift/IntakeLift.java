@@ -52,7 +52,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
   /** Enumeration of set positions */
   public enum Task {
     RECALL("Recall", 5),
-    DEPLOY("Deploy", 250),
+    DEPLOY("Deploy", 350),
     // Position for 'homing' during match
     HOME("Home", 14),
     // Position for starting match
@@ -141,8 +141,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     // .forwardSoftLimitEnabled(true)
     // .reverseSoftLimit(IntakeLiftConstants.minHeight)
     // .reverseSoftLimitEnabled(true);
-    // FIXME - Why don't these work? (it is brushless)
-    // config.encoder.inverted(IntakeLiftConstants.encoderInverted);
+    config.absoluteEncoder.inverted(IntakeLiftConstants.encoderInverted);
     config.encoder.positionConversionFactor(IntakeLiftConstants.gearRatio);
     config
         .closedLoop
