@@ -12,9 +12,12 @@
             "/Drive/Module2",
             "/Drive/Module3",
             "/Tuning",
-            "/Tuning/IntakeLift",
             "/RealOutputs",
-            "/RealOutputs/LoggedRobot"
+            "/RealOutputs/LoggedRobot",
+            "/Tuning/Shoulder",
+            "/Tuning/Lift",
+            "/Tuning/IntakeLift",
+            "/DriverStation"
           ]
         },
         "tabs": {
@@ -204,7 +207,7 @@
                     "type": "stepped",
                     "logKey": "/RealOutputs/LoggedRobot/FullCycleMS",
                     "logType": "Number",
-                    "visible": true,
+                    "visible": false,
                     "options": {
                       "color": "#3b875a",
                       "size": "normal"
@@ -457,6 +460,15 @@
                     "options": {
                       "color": "#e48b32"
                     }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#c0b487"
+                    }
                   }
                 ],
                 "leftLockedRange": null,
@@ -531,6 +543,15 @@
                     "visible": true,
                     "options": {
                       "color": "#e48b32"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#c0b487"
                     }
                   }
                 ],
@@ -616,6 +637,15 @@
                     "visible": true,
                     "options": {
                       "color": "#e48b32"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#858584"
                     }
                   }
                 ],
@@ -953,5 +983,5 @@
     }
   ],
   "satellites": [],
-  "version": "4.1.5"
+  "version": "4.1.6"
 }

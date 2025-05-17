@@ -246,7 +246,7 @@ public class RobotContainer {
      */
     if (Constants.useLift) {
       // Default command, manual control via joystick
-      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.20));
+      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.40));
       // TODO - Should be poses between subsystems
       // operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_HI));
       // operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_LO));
