@@ -52,7 +52,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
   /** Enumeration of set positions */
   public enum Task {
     RECALL("Recall", 5),
-    DEPLOY("Deploy", 350),
+    DEPLOY("Deploy", 200), // 350
     // Position for 'homing' during match
     HOME("Home", 14),
     // Position for starting match
@@ -146,7 +146,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        // .outputRange(IntakeLiftConstants.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut)
+        .outputRange(IntakeLiftConstants.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut)
         .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
 
     SparkUtil501.tryUntilOk(
