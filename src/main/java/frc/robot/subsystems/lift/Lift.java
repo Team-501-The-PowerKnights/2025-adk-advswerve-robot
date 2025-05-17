@@ -51,7 +51,12 @@ public class Lift extends SubsystemBase implements ISubsystem {
 
   /** Enumeration of set positions */
   public enum Task {
+    //
+    // Position for climbing
+    CLIMB("Climb", 3980), // backside of robot
+    // Positions for net / barge during match
     NET("Net_Pose", 0.0),
+    // Positions for reef during match
     REEF_HI("Reef_Hi_Pose", 21792.0), // top tape
     REEF_LO("Reef_Lo_Pose", 3395.0), // middle tape
     GROUND("Ground_Pose", 4987.0),

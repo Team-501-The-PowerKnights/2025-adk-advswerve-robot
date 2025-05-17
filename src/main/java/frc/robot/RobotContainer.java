@@ -280,6 +280,12 @@ public class RobotContainer {
               Commands.parallel(
                   LiftCommands.setTask(lift, Lift.Task.REEF_LO),
                   ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_LO)));
+      operPad
+          .rightBumper()
+          .onTrue(
+              Commands.parallel(
+                  LiftCommands.setTask(lift, Lift.Task.CLIMB),
+                  ShoulderCommands.setTask(shoulder, Shoulder.Task.CLIMB)));
     }
 
     /*
