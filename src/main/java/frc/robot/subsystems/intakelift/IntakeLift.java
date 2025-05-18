@@ -170,9 +170,6 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
       holdAtPositionWithPID(absEncoderPosScaled);
     }
 
-    // FIXME - Initialize in PID when it works
-    currentMode = Mode.MANUAL; // Startup in Manual
-
     // Log this subsystem's status and return global
     Logger.recordOutput("IntakeLift/isREVLibError", !sparkStickyFault); // green=OK
     if (sparkStickyFault) {
