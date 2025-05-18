@@ -456,7 +456,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("Delay Auto Start", Commands.sequence(new DelayAutoCommand()));
 
     //
-    NamedCommands.registerCommand("Release Climber Latch", Commands.sequence(new WaitCommand(0.5)));
+    NamedCommands.registerCommand(
+        "Release Climber Latch",
+        Commands.sequence(
+            Commands.race(ClimberCommands.unlatch(climber), new WaitCommand(0.1)),
+            ClimberCommands.stop(climber)));
   }
 }
 

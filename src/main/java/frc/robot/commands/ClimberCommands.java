@@ -38,4 +38,22 @@ public class ClimberCommands {
         },
         climber);
   }
+
+  public static Command unlatch(Climber climber) {
+    return Commands.run(
+        () -> {
+          double speed = 0.25;
+          climber.acceptTeleopInput(speed);
+        },
+        climber);
+  }
+
+  public static Command stop(Climber climber) {
+    return Commands.run(
+        () -> {
+          double speed = 0;
+          climber.acceptTeleopInput(speed);
+        },
+        climber);
+  }
 }
