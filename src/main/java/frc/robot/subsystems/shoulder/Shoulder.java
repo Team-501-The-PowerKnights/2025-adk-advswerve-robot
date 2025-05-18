@@ -52,7 +52,11 @@ public class Shoulder extends SubsystemBase implements ISubsystem {
 
   /** Enumeration of set positions */
   public enum Task {
+    // Position for climbing
+    CLIMB("Climb", 743), // backside of robot
+    // Positions for net / barge during match
     NET("Net_Pose", 0.0),
+    // Positions for reef during match
     REEF_HI("Reef_Hi_Pose", 15464.0), // 13697 parallel
     REEF_LO("Reef_Lo_Pose", 15464.0), // 15396 30 down
     GROUND("Ground_Pose", 17860.0),

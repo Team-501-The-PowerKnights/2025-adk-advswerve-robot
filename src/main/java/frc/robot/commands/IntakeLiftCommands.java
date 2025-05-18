@@ -43,7 +43,6 @@ public class IntakeLiftCommands {
   public static Command setTask(IntakeLift intakeLift, IntakeLift.Task task) {
     return Commands.runOnce(
         () -> {
-          System.out.println("Calling intakeLift setTask");
           intakeLift.setTask(task);
         },
         intakeLift);

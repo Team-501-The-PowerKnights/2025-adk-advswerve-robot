@@ -52,7 +52,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
   /** Enumeration of set positions */
   public enum Task {
     RECALL("Recall", 5),
-    DEPLOY("Deploy", 350),
+    DEPLOY("Deploy", 200), // 350
     // Position for 'homing' during match
     HOME("Home", 14),
     // Position for starting match
@@ -146,7 +146,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
     config
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        // .outputRange(IntakeLiftConstants.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut)
+        .outputRange(IntakeLiftConstants.pidMaxNegOut, IntakeLiftConstants.pidMaxPosOut)
         .pid(IntakeLiftConstants.pidKp, IntakeLiftConstants.pidKi, IntakeLiftConstants.pidKd);
 
     SparkUtil501.tryUntilOk(
@@ -169,9 +169,6 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
       // Startup in PID at current location
       holdAtPositionWithPID(absEncoderPosScaled);
     }
-
-    // FIXME - Initialize in PID when it works
-    currentMode = Mode.MANUAL; // Startup in Manual
 
     // Log this subsystem's status and return global
     Logger.recordOutput("IntakeLift/isREVLibError", !sparkStickyFault); // green=OK

@@ -26,11 +26,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ClimberCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.GripperCommands;
+import frc.robot.commands.IntakeCommands;
 import frc.robot.commands.IntakeLiftCommands;
 import frc.robot.commands.LiftCommands;
 import frc.robot.commands.ShoulderCommands;
@@ -244,7 +246,7 @@ public class RobotContainer {
      */
     if (Constants.useLift) {
       // Default command, manual control via joystick
-      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.20));
+      lift.setDefaultCommand(LiftCommands.manual(lift, () -> -operPad.getLeftY() * 0.40));
       // TODO - Should be poses between subsystems
       // operPad.y().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_HI));
       // operPad.b().onTrue(LiftCommands.setTask(lift, Lift.Task.REEF_LO));
@@ -278,6 +280,12 @@ public class RobotContainer {
               Commands.parallel(
                   LiftCommands.setTask(lift, Lift.Task.REEF_LO),
                   ShoulderCommands.setTask(shoulder, Shoulder.Task.REEF_LO)));
+      operPad
+          .rightBumper()
+          .onTrue(
+              Commands.parallel(
+                  LiftCommands.setTask(lift, Lift.Task.CLIMB),
+                  ShoulderCommands.setTask(shoulder, Shoulder.Task.CLIMB)));
     }
 
     /*
@@ -306,10 +314,9 @@ public class RobotContainer {
      * Intake is controlled by driver via triggers.
      */
     if (Constants.useIntake) {
-      // intake.setDefaultCommand(
-      //     IntakeCommands.manual(
-      //         intake, () -> (driverPad.getLeftTriggerAxis() +
-      // -driverPad.getRightTriggerAxis())));
+      intake.setDefaultCommand(
+          IntakeCommands.manual(
+              intake, () -> (driverPad.getLeftTriggerAxis() + -driverPad.getRightTriggerAxis())));
     }
 
     /*
@@ -447,5 +454,17 @@ public class RobotContainer {
   void configurePathPlannerCommands() {
     //
     NamedCommands.registerCommand("Delay Auto Start", Commands.sequence(new DelayAutoCommand()));
+
+    //
+    NamedCommands.registerCommand(
+        "Release Climber Latch",
+        Commands.sequence(
+            Commands.race(ClimberCommands.unlatch(climber), new WaitCommand(0.1)),
+            ClimberCommands.stop(climber)));
   }
 }
+
+// m_mast.setTask(Mast.Task.LAUCNHNOTEPRE),
+// m_launcher.setTask(Launcher.Task.LAUCNHNOTEPRE),
+// new WaitUntilCommand(m_launcher::atSpeed),
+// m_incrementer.setTask(Incrementer.Task.LAUNCHMAN))
