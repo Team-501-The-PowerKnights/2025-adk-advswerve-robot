@@ -42,13 +42,13 @@ public class IntakeLiftConstants {
   static final boolean doPidTuning = true;
 
   /* PID control loop constants */
-  static final double pidKp = 0.004;
+  static final double pidKp = 0.0033;
   //
-  static final double pidKi = 0.0;
+  static final double pidKi = 0.00001;
   //
   static final double pidKd = 0.0;
   //
-  static final double pidMaxNegOut = -0.3; // goes up
+  static final double pidMaxNegOut = -0.2; // goes up
   //
   static final double pidMaxPosOut = 0.2; // goes down
 
