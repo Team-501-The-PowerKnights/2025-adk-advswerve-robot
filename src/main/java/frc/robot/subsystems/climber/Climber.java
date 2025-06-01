@@ -97,6 +97,19 @@ public class Climber extends SubsystemBase implements ISubsystem {
     currentSpeed = speed;
   }
 
+  public void acceptAutoInput(double speed) {
+    System.out.println("*************** acceptAutoInput");
+    if (!DriverStation.isAutonomousEnabled()) {
+      return;
+    }
+    currentSpeed = speed;
+  }
+
+  public void acceptInput(double speed) {
+    System.out.println("*************** acceptInput");
+    currentSpeed = speed;
+  }
+
   private void setSpeed(double speed) {
     motor.set(speed);
   }

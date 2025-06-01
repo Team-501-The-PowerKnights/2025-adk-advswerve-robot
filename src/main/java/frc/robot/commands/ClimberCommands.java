@@ -43,7 +43,7 @@ public class ClimberCommands {
     return Commands.run(
         () -> {
           double speed = 0.25;
-          climber.acceptTeleopInput(speed);
+          climber.acceptAutoInput(speed);
         },
         climber);
   }
@@ -52,7 +52,7 @@ public class ClimberCommands {
     return Commands.run(
         () -> {
           double speed = 0;
-          climber.acceptTeleopInput(speed);
+          climber.acceptInput(speed);
         },
         climber);
   }

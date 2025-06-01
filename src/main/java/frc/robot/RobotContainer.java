@@ -168,11 +168,11 @@ public class RobotContainer {
     }
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
     // Create auto delay chooser
     createAutoDelayChooser();
     // Register the commands for Path Planner
     configurePathPlannerCommands();
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // TODO - SysID routines
     // Set up SysId routines
