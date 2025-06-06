@@ -95,6 +95,7 @@ public class Intake extends SubsystemBase implements ISubsystem {
     Logger.recordOutput("Intake/CurrentSpeed", currentSpeed);
     Logger.recordOutput("Intake/Output", motor.get());
 
+    Logger.recordOutput("Intake/MotorCurrent", motor.getOutputCurrent());
     double motorTemp = motor.getMotorTemperature();
     Logger.recordOutput("Intake/MotorTemp", motorTemp);
     // Invert so green is OK and red is too hot
