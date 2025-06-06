@@ -32,4 +32,7 @@ class IntakeConstants {
   // In (ingest) is +, out (eject) is -
   static final double intakeInSpeed = 0.40;
   static final double intakeOutSpeed = -0.40;
+
+  /** Trigger value for motor overtemp (C) */
+  static final double motorOverTemp = 0.0;
 }
