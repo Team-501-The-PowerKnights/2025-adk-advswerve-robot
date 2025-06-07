@@ -17,11 +17,12 @@
             "/Tuning/Shoulder",
             "/Tuning/Lift",
             "/Tuning/IntakeLift",
-            "/DriverStation"
+            "/DriverStation",
+            "/RealOutputs/Intake"
           ]
         },
         "tabs": {
-          "selected": 3,
+          "selected": 7,
           "tabs": [
             {
               "type": 0,
@@ -406,6 +407,71 @@
             },
             {
               "type": 1,
+              "title": "Intake TLM",
+              "controller": {
+                "leftSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/Intake/MotorTemp",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#3b875a",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "rightSources": [
+                  {
+                    "type": "stepped",
+                    "logKey": "/RealOutputs/Intake/MotorCurrent",
+                    "logType": "Number",
+                    "visible": true,
+                    "options": {
+                      "color": "#2b66a2",
+                      "size": "normal"
+                    }
+                  }
+                ],
+                "discreteSources": [
+                  {
+                    "type": "stripes",
+                    "logKey": "/RealOutputs/Intake/MotorOvertemp",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#858584"
+                    }
+                  },
+                  {
+                    "type": "stripes",
+                    "logKey": "/DriverStation/Enabled",
+                    "logType": "Boolean",
+                    "visible": true,
+                    "options": {
+                      "color": "#e5b31b"
+                    }
+                  }
+                ],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "rightUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "f37o7pyjdkmyf80nf85virigkswiuzti",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 1,
               "title": "Lift PID Tuning",
               "controller": {
                 "leftSources": [
@@ -601,7 +667,7 @@
                     "type": "stepped",
                     "logKey": "/DriverStation/MatchTime",
                     "logType": "Number",
-                    "visible": true,
+                    "visible": false,
                     "options": {
                       "color": "#c0b487",
                       "size": "normal"

@@ -52,7 +52,7 @@ public class IntakeLift extends SubsystemBase implements ISubsystem {
   /** Enumeration of set positions */
   public enum Task {
     RECALL("Recall", 5),
-    DEPLOY("Deploy", 200), // 350
+    DEPLOY("Deploy", 250), // 200
     // Position for 'homing' during match
     HOME("Home", 14),
     // Position for starting match
