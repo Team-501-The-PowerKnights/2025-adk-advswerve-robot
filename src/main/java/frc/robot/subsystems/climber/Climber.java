@@ -85,8 +85,8 @@ public class Climber extends SubsystemBase implements ISubsystem {
   }
 
   /**
-   * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
-   * of the position. Note this only runs if in Teleop mode.
+   * Accepts a manual input of the speed to allow <i>Operator</i> adjustment of the position. Note
+   * this only runs if in Teleop mode.
    *
    * <p>Positive values lift and negative values lower.
    *
@@ -100,8 +100,8 @@ public class Climber extends SubsystemBase implements ISubsystem {
   }
 
   /**
-   * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
-   * of the position. Note this only runs if in Autonomous mode.
+   * Accepts a manual input of the speed to allow <i>Operator</i> adjustment of the position. Note
+   * this only runs if in Autonomous mode.
    *
    * <p>Positive values lift and negative values lower.
    *
@@ -115,8 +115,8 @@ public class Climber extends SubsystemBase implements ISubsystem {
   }
 
   /**
-   * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
-   * of the position. Note this runs in any and all modes.
+   * Accepts a manual input of the speed to allow <i>Operator</i> adjustment of the position. Note
+   * this runs in any and all modes.
    *
    * <p>Positive values lift and negative values lower.
    *
