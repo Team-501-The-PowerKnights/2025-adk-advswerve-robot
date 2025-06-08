@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Simple Backup"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Release Climber Latch"
+            "pathName": "Short Auto Backup"
           }
         }
       ]
