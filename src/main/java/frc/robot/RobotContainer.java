@@ -459,8 +459,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Release Climber Latch",
         Commands.sequence(
-            Commands.race(ClimberCommands.unlatch(climber), new WaitCommand(0.1)),
-            ClimberCommands.stop(climber)));
+            ClimberCommands.unlatch(climber), new WaitCommand(0.5), ClimberCommands.stop(climber)));
   }
 }
 

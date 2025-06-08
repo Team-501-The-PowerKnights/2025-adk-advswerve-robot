@@ -40,16 +40,16 @@ public class ClimberCommands {
   }
 
   public static Command unlatch(Climber climber) {
-    return Commands.run(
+    return Commands.runOnce(
         () -> {
-          double speed = 0.25;
+          double speed = 0.20;
           climber.acceptAutoInput(speed);
         },
         climber);
   }
 
   public static Command stop(Climber climber) {
-    return Commands.run(
+    return Commands.runOnce(
         () -> {
           double speed = 0;
           climber.acceptInput(speed);

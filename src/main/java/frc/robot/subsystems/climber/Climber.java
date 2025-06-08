@@ -86,7 +86,9 @@ public class Climber extends SubsystemBase implements ISubsystem {
 
   /**
    * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
-   * of the position. Positive values lift and negative values lower.
+   * of the position. Note this only runs if in Teleop mode.
+   *
+   * <p>Positive values lift and negative values lower.
    *
    * @param speed - The speed to set. Value should be between -1.0 and +1.0.
    */
@@ -94,19 +96,33 @@ public class Climber extends SubsystemBase implements ISubsystem {
     if (!DriverStation.isTeleopEnabled()) {
       return;
     }
-    currentSpeed = speed;
+    acceptInput(speed);
   }
 
+  /**
+   * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
+   * of the position. Note this only runs if in Autonomous mode.
+   *
+   * <p>Positive values lift and negative values lower.
+   *
+   * @param speed - The speed to set. Value should be between -1.0 and +1.0.
+   */
   public void acceptAutoInput(double speed) {
-    System.out.println("*************** acceptAutoInput");
     if (!DriverStation.isAutonomousEnabled()) {
       return;
     }
-    currentSpeed = speed;
+    acceptInput(speed);
   }
 
+  /**
+   * Accepts a manual override of the PID controlled set points to allow <i>Operator</i> adjustment
+   * of the position. Note this runs in any and all modes.
+   *
+   * <p>Positive values lift and negative values lower.
+   *
+   * @param speed - The speed to set. Value should be between -1.0 and +1.0.
+   */
   public void acceptInput(double speed) {
-    System.out.println("*************** acceptInput");
     currentSpeed = speed;
   }
 
@@ -114,6 +130,7 @@ public class Climber extends SubsystemBase implements ISubsystem {
     motor.set(speed);
   }
 
+  @Override
   public void periodic() {
     // Update current task
     setSpeed(currentSpeed);
