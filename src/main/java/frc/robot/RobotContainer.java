@@ -203,7 +203,7 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
+   * Use this method to define your button->command mappings. Buttons can be created by n
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
@@ -213,8 +213,8 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> driverPad.getLeftY() * 0.80, // index 1
-            () -> driverPad.getLeftX() * 0.80, // index 0
+            () -> driverPad.getLeftY() * 0.90, // index 1
+            () -> driverPad.getLeftX() * 0.90, // index 0
             () -> -driverPad.getRightX() * 0.55));
 
     // Lock to 0° when A button is held
@@ -223,8 +223,8 @@ public class RobotContainer {
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> driverPad.getLeftY() * 0.8,
-                () -> driverPad.getLeftX() * 0.8,
+                () -> driverPad.getLeftY() * 0.9,
+                () -> driverPad.getLeftX() * 0.9,
                 () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
